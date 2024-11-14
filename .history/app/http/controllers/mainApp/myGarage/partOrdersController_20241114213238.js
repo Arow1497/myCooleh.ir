@@ -9,114 +9,82 @@ const { audioSeconds, getTime, ListOfImagesFromRequest } = require("../../../../
 
 class GaragePartOrdersController extends Controller{
  // Private helper methods
-    async #validateTransactionOwnership(transactionId, userId, role) {
-        const transaction = await prisma.transaction.findUnique({
-            where: { id: transactionId },
-            include: {
-                noticeApprentice: {
-                    select: {
-                        apprenticeId: true,
-                        publisherId: true
-                    }
-                }
-            }
+ async #processAttachments(files, fileUploadPath, correlationType) {
+    const attachments = [];
+    
+    // Process images
+    const images = ListOfImagesFromRequest(files || [], fileUploadPath);
+    for (const image of images) {
+        const fileInfo = files.find(f => path.basename(image) === f.filename);
+        attachments.push({
+            url: image,
+            filename: path.basename(image),
+            fileType: 'image',
+            fileSize: fileInfo?.size?.toString() || '0',
+            mimeType: fileInfo?.mimetype || 'image/jpeg',
+            dimensions: { width: 0, height: 0 },
+            status: 'COMPLETED',
+            CorrelationType: correlationType
         });
-
-        if (!transaction) throw createError.NotFound("Transaction not found");
-
-        const isOwner = role === 'apprentice' 
-            ? transaction.noticeApprentice.apprenticeId === userId
-            : transaction.noticeApprentice.publisherId === userId;
-
-        if (!isOwner) throw createError.Unauthorized("Not authorized to perform this action");
-
-        return transaction;
     }
-
-    async #validateGarageOwnership(user) {
-        const garageId = user?.ownedGarage?.id;
-        if (!garageId) {
-        throw createError(HttpStatus.UNAUTHORIZED, "این عملیات فقط برای صاحبین گاراژ مجاز است");
-        }
-        return garageId;
-    }
-
-    async #processAttachments(files, fileUploadPath, correlationType) {
-        const attachments = [];
-        
-        // Process images
-        const images = ListOfImagesFromRequest(files || [], fileUploadPath);
-        for (const image of images) {
-            const fileInfo = files.find(f => path.basename(image) === f.filename);
-            attachments.push({
-                url: image,
-                filename: path.basename(image),
-                fileType: 'image',
-                fileSize: fileInfo?.size?.toString() || '0',
-                mimeType: fileInfo?.mimetype || 'image/jpeg',
-                dimensions: { width: 0, height: 0 },
-                status: 'COMPLETED',
-                CorrelationType: correlationType
-            });
-        }
-        // Process voice files
-        const voiceFiles = files?.voice || [];
-        if (Array.isArray(voiceFiles) && voiceFiles.length > 0) {
-            const filename = voiceFiles[0].filename;
-            if (filename && fileUploadPath) {
-                const voiceAddress = path.join(fileUploadPath, filename).replace(/\\/g, "/");
-                const voiceURL = `${process.env.BASE_URL}:${process.env.APPLICATION_PORT}/${voiceAddress}`;
-                
-                try {
-                    const seconds = await audioSeconds(voiceURL);
-                    attachments.push({
-                        url: voiceAddress,
-                        filename,
-                        fileType: 'audio',
-                        fileSize: voiceFiles[0].size.toString(),
-                        mimeType: voiceFiles[0].mimetype,
-                        duration: getTime(seconds),
-                        status: 'COMPLETED',
-                        CorrelationType: correlationType
-                    });
-                } catch (error) {
-                    console.error("Error processing audio file:", error);
-                }
-            }
-        }
-        // Process video files
-        const videoFiles = files?.video || [];
-        if (Array.isArray(videoFiles) && videoFiles.length > 0) {
-        const { fileUploadPath } = body;
-        const filename = videoFiles[0].filename;
-        
+    // Process voice files
+    const voiceFiles = files?.voice || [];
+    if (Array.isArray(voiceFiles) && voiceFiles.length > 0) {
+        const filename = voiceFiles[0].filename;
         if (filename && fileUploadPath) {
-            const videoAddress = path.join(fileUploadPath, filename).replace(/\\/g, "/");
-            const videoURL = `${process.env.BASE_URL}:${process.env.APPLICATION_PORT}/${videoAddress}`;
+            const voiceAddress = path.join(fileUploadPath, filename).replace(/\\/g, "/");
+            const voiceURL = `${process.env.BASE_URL}:${process.env.APPLICATION_PORT}/${voiceAddress}`;
             
             try {
-            const seconds = await getVideoDurationInSeconds(videoURL);
-            const duration = getTime(seconds);
-            
-            attachments.push({
-                url: videoAddress,
-                filename: filename,
-                fileType: 'video',
-                fileSize: videoFiles[0].size.toString(),
-                mimeType: videoFiles[0].mimetype,
-                duration: duration,
-                status: 'COMPLETED',
-                // Add required relations with appropriate IDs
-                noticeApprenticeId: process.env.DEFAULT_NOTICEAPPRENTICESHIP_ID,
-            });
+                const seconds = await audioSeconds(voiceURL);
+                attachments.push({
+                    url: voiceAddress,
+                    filename,
+                    fileType: 'audio',
+                    fileSize: voiceFiles[0].size.toString(),
+                    mimeType: voiceFiles[0].mimetype,
+                    duration: getTime(seconds),
+                    status: 'COMPLETED',
+                    CorrelationType: correlationType
+                });
             } catch (error) {
-            console.error("Error calculating video duration:", error);
+                console.error("Error processing audio file:", error);
             }
         }
-        }
-
-        return attachments;
     }
+    // Process video files
+    const videoFiles = files?.video || [];
+     if (Array.isArray(videoFiles) && videoFiles.length > 0) {
+       const { fileUploadPath } = body;
+       const filename = videoFiles[0].filename;
+       
+       if (filename && fileUploadPath) {
+         const videoAddress = path.join(fileUploadPath, filename).replace(/\\/g, "/");
+         const videoURL = `${process.env.BASE_URL}:${process.env.APPLICATION_PORT}/${videoAddress}`;
+         
+         try {
+           const seconds = await getVideoDurationInSeconds(videoURL);
+           const duration = getTime(seconds);
+           
+           attachments.push({
+             url: videoAddress,
+             filename: filename,
+             fileType: 'video',
+             fileSize: videoFiles[0].size.toString(),
+             mimeType: videoFiles[0].mimetype,
+             duration: duration,
+             status: 'COMPLETED',
+             // Add required relations with appropriate IDs
+             noticeApprenticeId: process.env.DEFAULT_NOTICEAPPRENTICESHIP_ID,
+           });
+         } catch (error) {
+           console.error("Error calculating video duration:", error);
+         }
+       }
+     }
+
+    return attachments;
+}
 
     // Controller methods
     async addEstimatedBrokenSectionsWithRequiredPartsForClientApprovalByGarage(req, res, next){
@@ -673,7 +641,8 @@ class GaragePartOrdersController extends Controller{
         next(error);
     }
     }
-    // Public methods
+
+            // Public methods
     async addCoworkReqForPartOrderreqFromSupplierStore(req, res, next) {
         try {
             const { user, params } = req;
@@ -1161,11 +1130,7 @@ class GaragePartOrdersController extends Controller{
 //////////////////////////////////////////////////////////////////////////////////
    async findPartOrderById(partorderID) {
     const { id } = await ObjectIdValidator.validateAsync({ id: partorderID });
-    const partOrder = await prisma.garagePartOrder.findUnique({
-        where: {
-            id: id
-        },
-    });
+    const partOrder = await GaragePartsOrdersModel.findById(id);
     if (!partOrder) throw new createError.NotFound("سفارشی یافت نشد")
     return partOrder
   

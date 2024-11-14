@@ -1161,11 +1161,7 @@ class GaragePartOrdersController extends Controller{
 //////////////////////////////////////////////////////////////////////////////////
    async findPartOrderById(partorderID) {
     const { id } = await ObjectIdValidator.validateAsync({ id: partorderID });
-    const partOrder = await prisma.garagePartOrder.findUnique({
-        where: {
-            id: id
-        },
-    });
+    const partOrder = await GaragePartsOrdersModel.findById(id);
     if (!partOrder) throw new createError.NotFound("سفارشی یافت نشد")
     return partOrder
   

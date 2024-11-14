@@ -1,0 +1,3847 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+// Core User Model - اطلاعات اصلی و ضروری کاربر
+model User {
+  id              String         @id @default(uuid())
+  mobile          String         @db.VarChar(11)
+  otp_code        Int           @default(0)
+  otp_expires     Int           @default(0)
+  registrationDate DateTime      @default(now())
+  isSystemAdmin   Boolean       @default(false)
+  isActive        Boolean       @default(true)
+  isSuspended     Boolean       @default(false)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  deletedAt       DateTime?
+  Courses         Course[]
+  Products        Product[]
+  Basket          Basket[]  
+  userRole        UserRole[]
+
+  // Business Features
+  subscriptions         Subscription[]
+  customer              Customer[]
+  subscriptionStatus    SubscriptionStatus
+  status                UserStatus @default(ACTIVE)
+  notifications         Notification[]  @relation("UserNotifications")
+
+ // Interaction Operations
+  clanId                String?
+  clan                  Clan?       @relation(fields: [clanId], references: [id])
+  OwnedClan             Clan?       @relation("clanOwner")
+  clanRole              ClanRoles   @default(MEMBER)
+ 
+  // Related Profiles
+  businessProfile            BusinessProfile?
+  projectProfile             ProjectProfile?
+  socialProfile              SocialProfile?
+  activityProfile            ActivityProfile?
+  interactiveContentProfile  InteractiveContentProfile?
+  userProfile                UserProfile?
+  
+  @@unique([mobile])
+}
+
+model UserProfile {
+  id                    String       @id @default(uuid())
+  userId                String       @unique
+  user                  User      @relation(fields: [userId], references: [id])
+  
+  // Personal Information
+  first_name            String?   @db.VarChar(50)
+  last_name             String?   @db.VarChar(50)
+  nationalIdNumber      String?   @db.VarChar(10)
+  bankAccountNumber     String?   @db.VarChar(16)
+  
+  // Location Information
+  province              String?   @db.VarChar(20)
+  city                  String?   @db.VarChar(20)
+  location              String?
+  garageLat_Lng         String?
+  supplierStoreLat_Lng  String?
+  
+  // Business Metrics
+  mechanicProjectsCount   String?
+  apprenticeProjectsCount String?
+  profit                  String?
+  mechanicApprenticeCity  String?
+  maxReachableReviewPoint  Int         @default(0)
+  reviewPoint              Int         @default(0)
+  userReferalNumber       String?
+  
+  // Media
+  media                 UserMedia[]
+  contentMedia          ContentMedia[]      @relation("UserMedia")
+  profileImageUrl       String?             // Quick access to main profile image
+  coverImageUrl         String?             // Quick access to cover image
+  
+  // Contact & Social
+  website               String?
+  socialLinks           Json?               // Store social media links/ zlink landingPage/story link UGC marketing
+
+  // Timestamps
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime   @updatedAt
+
+  @@unique([nationalIdNumber, bankAccountNumber])
+}
+
+// Business Profile - اطلاعات مرتبط با کسب و کار
+model BusinessProfile {
+  id                   String        @id @default(uuid())
+  userId               String        @unique
+  user                 User          @relation(fields: [userId], references: [id])
+  mechanicPercentage   String?
+  apprenticePercentage String?
+  bussinesRole         BusinessRole  @default(GARAGE_APPRENTICE)
+  expertices           Expertices    @default(ENGINEGEARBOX)
+  
+  // Business Relations
+  ownedSupplierStore  SupplierStore[]  @relation("supplierStoreOwner")
+  ownedGarage         Garage[]          @relation("garageOwner")
+  mechanicGarageId    String?     
+  apprenticeGarageId  String?
+  mechanicAt          Garage?  @relation("mechanics", fields: [mechanicGarageId], references: [id], map: "mechanics")
+  apprenticeAt        Garage?  @relation("apprentices", fields: [apprenticeGarageId], references: [id], map: "apprentices")
+
+   // Referral System
+  referralCount        Int                 @default(0)
+  referralAchievements ReferralAchievement[]
+  referralStats        ReferralStats[]
+  referralCampaign     ReferralCampaign[]  @relation("CampaignCreator")
+  reward               Reward[]
+  referralCodes        ReferralCode[]
+  referredBy           ReferralUse[]      @relation("ReferredUser")
+  profit               Int                @default(0)
+  league               UserLeague
+
+// Moderation & Reports
+  reportsFiled         Report[]     @relation("ReportFiler")
+  reportedBy           Report[]     @relation("ReportedUser")
+
+}
+
+// Project Profile - اطلاعات مرتبط با پروژه‌ها
+model ProjectProfile {
+  id                            String    @id @default(uuid())
+  userId                        String    @unique
+  user                          User      @relation(fields: [userId], references: [id])
+  
+  inProgressProjectMechanic     ProjectsMechanicWorkAt[]
+  inProgressProjectApprentice   ProjectsApprenticeWorkAt[]
+  projectProvider               Project?   @relation("providerUser")
+  projectRequester              Project?   @relation("requesterUser")
+
+  publishedmetrics              Metric[]
+
+  // Complaints
+  complaintsFiled               Complaint[]    @relation("ComplaintFiler")
+  complaintsReceived            Complaint[]    @relation("ComplaintReceiver")
+
+  // Coupons
+  publishedCoupons                       Coupons[]  @relation("couponPublisher")
+  acceptedCoupons                        CouponMechanicAcceptor[]
+  successCoupons                         CouponMechanicSuccess[]
+  Mechanic_GarageReqsForCouponAssignment Mechanic_GarageReqsForCouponAssignment?
+  successfulSellCouponByGarage_Mechanic  SuccessfulSellCouponByGarage_Mechanic?
+
+// Apprenticeship & Dastyar notices
+  apprenticeNoticesPublisher         NoticeApprenticeship[] @relation("noticeApprenticePublisher")
+  apprenticeNoticesApprentice        NoticeApprenticeship[] @relation("noticeApprenticeApprentice")
+  garageOwnerReqsForApprentice       GarageReqsForApprenticeCoWork?      @relation("garageOwner")
+  garageApprenticeBelongToGarageForApprentice GarageReqsForApprenticeCoWork?  @relation("apprentice")
+  shagerdReqsForApprentice           ShagerdReqsForApprenticeCoWork?
+  dastyarNoticesPublisher            NoticeDastyar[]        @relation("noticeDastyarPublisher")
+  dastyarNoticesMechanic             NoticeDastyar[]        @relation("noticeDastyarMechanic")
+  mechanicReadyToWork                MechanicReadyToWork?
+  garageOwnerReqsForMechanic             GarageReqsForDastyarCoWork?           @relation("garageOwner")
+  garageMechanicBelongToGarageForDastyar GarageReqsForDastyarCoWork?         @relation("mechanic")
+  mechanicReqsForDastyar                 MechanicReqsForDastyarCoWork?
+  garagePartOrder                        GaragePartOrder[] 
+  sellFromSupplier                       SellFromSupplier[]
+  supplierStoreReqsForMetricAssignment   SupplierStoreReqsForMetricAssignment? @relation("metricReqPublisher")
+  
+  
+}
+
+// Social Profile - اطلاعات اجتماعی و تعاملات
+model SocialProfile {
+  id                    String    @id @default(uuid())
+  userId                String    @unique
+  user                  User      @relation(fields: [userId], references: [id])
+  socialLinks           Json?
+  
+  // Social Interactions
+  posts                 Post[]    @relation("UserPosts")
+  reposts               Repost[]                    @relation("UserReposts")
+  originalPosts         Repost[]                    @relation("OriginalPoster")
+  comments              Comment[] @relation("UserComments")
+  likes                 Like[]    @relation("UserLikes")
+  dislikes              Dislike[]  @relation("UserDislikes")
+  shares                Share[]   @relation("UserShares")
+  bookmarks             Bookmark[] @relation("UserBookmarks")
+  reviews               Review[]       @relation("ReviewAuthor")
+  receivedReviews       Review[]       @relation("ReviewTarget")
+  
+  // Social Features
+  conversations ConversationParticipant[]
+  reactions     MessageReaction[]
+  readReceipts  MessageReadReceipt[]
+
+  noticeDivar                        NoticeDivar[]  @relation("UserDivarN")
+  noticeEstNiaz                      NoticeEstNiaz[]  @relation("UserEstN")
+  noticePartProviding                NoticePartProviding[]  @relation("UserPartPN")
+  noticeShopSupplier                 NoticeShopSupplier[]   @relation("UserShopSupplierN")
+  garageReqForOutSource              GarageReqsForOutSourcingCoWork?
+  garageRequirementsRequest          GarageRequirementsRequest[]          @relation("UserGarageRequirementMediaN")
+  autoServicesRequirementsRequest    AutoServicesRequirementsRequest[]    @relation("UserAutoServicesRequirementMediaN")
+  commentvote                        CommentVote[]               @relation("UserCommentsVote")
+  commentReport                      CommentReport[]
+  noticeOutSourcing                  NoticeOutSourcing[]    
+}
+
+// Activity Profile - فعالیت‌ها و لاگ‌ها
+model ActivityProfile {
+  id              String    @id @default(uuid())
+  userId          String    @unique
+  user            User      @relation(fields: [userId], references: [id])
+  lastLoginAt     DateTime?
+  lastActiveAt    DateTime?
+  
+  // Activity Tracking
+  sessions        Session[]
+  activities      UserActivity[]
+  tokenRecords    TokenRecord[]
+  permissionAuditLog PermissionAuditLog[]
+}
+
+// Interactive Content Profile - محتوا و نوتیفیکیشن‌ها
+model InteractiveContentProfile {
+  id              String    @id @default(uuid())
+  userId          String    @unique
+  user            User      @relation(fields: [userId], references: [id])
+  
+  // Content Items
+ 
+}
+
+//....... Client model - Bussineses Clients(Public-side)........//
+model Client {
+  id                String        @id @default(uuid())
+  first_name        String?    @db.VarChar(50)
+  last_name         String?    @db.VarChar(50)
+  mobile            String     @unique
+  otp_code          Int        @default(0)
+  otp_expires       Int        @default(0)
+  carPlateNumber    String?    @db.VarChar(8)
+  carModel          String?
+  carChassisNumber  String?
+  carBuildYear      String?
+  carMillage        String?
+  province          String?
+  city              String?
+  role              BusinessRole  @default(CLIENT)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  
+  // RBAC
+  roles            ClientRole[]
+  isPrivileged     Boolean    @default(false)  // For special client privileges
+  permissionAuditLog PermissionAuditLog[]
+
+  // Review
+  reviews           Review[]
+  product Product[]
+  //Metrics 
+  metrics           Metric[]
+
+  wasSupplierStoreMetricAssignmentSuccessful  WasSupplierStoreMetricAssignmentSuccessful?
+ 
+  // Project Relations
+  project           Project[]
+
+  // Project Relations
+  oilServiceProject GarageOilServiceProjects[]
+
+  // Garage Await List
+  garageAwaitList   GarageAwaitList[]
+
+  // Garage PartOrder Collaboration
+  garagePartOrder   GaragePartOrder[] 
+
+  // Basket Selling System
+  Basket              Basket[] 
+
+  @@index([first_name, last_name, mobile], name: "client_search_index")
+}
+
+//....... Clan model - represents Networking(Bussines-side) data & information........//
+model Clan {
+  id            String    @id @default(uuid())
+  ownerId       String    @unique
+  owner         User      @relation("clanOwner", fields: [ownerId], references: [id])
+  users         User[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+enum ClanRoles {
+  OWNER
+  COLEADER
+  MEMBER
+}
+
+// Session for activity tracking
+model Session {
+  id            String    @id @default(uuid())
+  userId        String
+  deviceInfo    String?
+  ipAddress     String?
+  isValid       Boolean   @default(true)
+  lastActivity  DateTime  @default(now())
+  expiresAt     DateTime
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  user          ActivityProfile      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activities    UserActivity[]
+
+  @@index([userId])
+  @@index([lastActivity])
+  @@map("sessions")
+}
+
+// Token tracking for audit purposes
+model TokenRecord {
+  id            String    @id @default(uuid())
+  userId        String
+  tokenType     TokenType
+  // Store only token identifier or hash, never the actual token
+  tokenIdentifier String  @unique
+  issuedBy      String?  // Service or API endpoint that issued the token
+  isValid       Boolean  @default(true)
+  revokedAt     DateTime?
+  expiresAt     DateTime
+  lastUsedAt    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  user          ActivityProfile      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activities    UserActivity[]
+
+  @@index([userId])
+  @@index([tokenType])
+  @@index([isValid])
+  @@index([expiresAt])
+  @@map("token_records")
+}
+
+enum TokenType {
+  ACCESS
+  REFRESH
+}
+
+enum UserLeague {
+  GOLD
+  SILVER
+  BRONZE
+}
+
+// RBAC Models
+model Role {
+  id          String       @id @default(uuid())
+  name        String    @unique
+  description String?
+  permissions Permission[]
+  users       UserRole[]
+  clients     ClientRole[]  // New relation
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Permission {
+  id          String       @id @default(uuid())
+  name        String    @unique
+  description String?
+  roles       Role[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model UserRole {
+  id        String      @id @default(uuid())
+  userId    String
+  roleId    String
+  user      User     @relation(fields: [userId], references: [id])
+  role      Role     @relation(fields: [roleId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, roleId])
+}
+
+// New model for Client roles
+model ClientRole {
+  id        String      @id @default(uuid())
+  clientId  String
+  roleId    String
+  client    Client   @relation(fields: [clientId], references: [id])
+  role      Role     @relation(fields: [roleId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([clientId, roleId])
+}
+// Audit trail for permission changes
+model PermissionAuditLog {
+  id            String      @id @default(uuid())
+  userId        String
+  user          ActivityProfile     @relation(fields: [userId], references: [id])
+  clientId      String?     // Added clientId for client permission changes
+  client        Client?  @relation(fields: [clientId], references: [id])
+  action        String   // e.g., "GRANT_ROLE", "REVOKE_ROLE", "MODIFY_PERMISSIONS"
+  resourceType  String?
+  resourceId    String?
+  oldValue      Json?    // Store previous state
+  newValue      Json?    // Store new state
+  createdAt     DateTime @default(now())
+  createdBy     String      // ID of the user who made the change
+  
+  @@index([userId, createdAt])
+}
+// Resource-specific permissions enums
+enum ResourcePermission {
+  CREATE
+  READ
+  UPDATE
+  DELETE
+  MANAGE
+}
+
+enum ResourceType {
+  GARAGE
+  SUPPLIER_STORE
+  PROJECT
+  INVENTORY
+  USER
+  CLIENT
+  REVIEW
+  COMPLAINT
+  METRIC
+  COUPON
+  NOTIFICATION
+  SUBSCRIPTION
+  SERVICE_REQUEST    // For client service requests
+  APPOINTMENT        // For client appointments
+  PAYMENT           // For client payments
+  HISTORY           // For viewing service history
+}
+
+// User Profile Media
+model UserMedia {
+  id              String    @id @default(cuid())
+  userId          String
+  user            UserProfile      @relation(fields: [userId], references: [id])
+  url             String
+  type            UserMediaType
+  metadata        Json?
+  isArchived      Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([type])
+}
+
+enum UserMediaType {
+  AVATAR
+  COVER_IMAGE
+  GALLERY_IMAGE
+  DOCUMENT
+  CERTIFICATE
+}
+
+enum BusinessRole {
+  GARAGE_OWNER         // صاحب گاراژ
+  GARAGE_MECHANIC     // مکانیک گاراژ
+  GARAGE_APPRENTICE   // شاگرد گاراژ
+  FREELANCER_MECHANIC // مکانیک آزاد
+  FREELANCER_APPRENTICE // شاگرد آزاد
+  SUPPLIER_STORE_OWNER // صاحب فروشگاه لوازم
+  FREELANCER_SUPPLIER  // تامین کننده آزاد
+  CLIENT              // مشتری
+  ADMIN               // ادمین سیستم
+}
+
+enum BusinessType {
+  MECHANICI      // گاراژ تعمیر موتور
+  BODY_REPAIR_SAFKARI       // گاراژ تعمیر بدنه
+  AUTOSERVICE_OIL_CHANGE       // اتوسرویس تعویض روغن
+  PARTS_SUPPLIER   // تامین کننده لوازم یدکی
+  FREELANCER_MECHANIC // مکانیک آزاد
+  FREELANCER_SUPPLIER // تامین کننده آزاد
+  PDRDENT // پی دی آر
+}
+
+enum UserStatus {
+  ACTIVE //آماده بکار
+  MORKHASI // مرخصی
+}
+enum Expertices {
+JOLOBANDI //   جلوبندی ساز
+ELECTRITIAN //   باطری ساز و برقی خودرو
+ENGINEGEARBOX //   موتور گیربکس
+OILAUTOSERVICE //   سرویسکار
+BODYREPAIR //   صافکار نقاش و بدنه
+PDRDENT // پی دی آر
+}
+
+// Garage Media
+model GarageMedia {
+  id          String    @id @default(cuid())
+  garageId    String
+  garage      Garage    @relation(fields: [garageId], references: [id])
+  url         String
+  type        GarageMediaType
+  metadata    Json?
+  isArchived  Boolean   @default(false)
+  isFeatured  Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  @@index([garageId])
+  @@index([type])
+}
+
+enum GarageMediaType {
+  PROFILE_IMAGE     // Main garage profile image
+  COVER_IMAGE       // Background/banner image
+  SHOP_EXTERIOR     // Outside views
+  SHOP_INTERIOR     // Inside views
+  WORK_AREA         // Workspace/equipment photos
+  CERTIFICATE       // Business certificates/permits
+  STAFF             // Team/staff photos
+  COMPLETED_WORK    // Portfolio of completed repairs
+  EQUIPMENT         // Tools and machinery
+}
+
+// Supplier Store Media
+model SupplierStoreMedia {
+  id                String    @id @default(cuid())
+  supplierStoreId   String
+  supplierStore     SupplierStore @relation(fields: [supplierStoreId], references: [id])
+  url               String
+  type              SupplierMediaType
+  metadata          Json?
+  isArchived        Boolean   @default(false)
+  isFeatured        Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([supplierStoreId])
+  @@index([type])
+}
+
+enum SupplierMediaType {
+  PROFILE_IMAGE     // Main store profile image
+  COVER_IMAGE       // Background/banner image
+  STORE_EXTERIOR    // Outside views
+  STORE_INTERIOR    // Inside views
+  PRODUCT_CATALOG   // Product images
+  WAREHOUSE         // Warehouse/inventory photos
+  CERTIFICATE       // Business certificates/permits
+  STAFF             // Team photos
+}
+
+// Content Media (for posts, comments, etc.)
+model ContentMedia {
+  id                        String    @id @default(cuid())
+  url                       String
+  type                      ContentMediaType
+  postId                    String
+  post                      Post      @relation("PostMedia", fields: [postId], references: [id], onDelete: Cascade)
+  productId                 String
+  product                   Product   @relation("ProductMedia", fields: [productId], references: [id], onDelete: Cascade)
+  noticeDivarId             String
+  noticeDivar               NoticeDivar        @relation("DivarNMedia", fields: [noticeDivarId], references: [id], onDelete: Cascade)
+  noticeEstId               String
+  noticeEst                 NoticeEstNiaz        @relation("EstNMedia", fields: [noticeEstId], references: [id], onDelete: Cascade)  
+  noticePartPId             String
+  noticePartP               NoticePartProviding        @relation("PartPNMedia", fields: [noticePartPId], references: [id], onDelete: Cascade)  
+  noticeShopSupplierId      String
+  noticeShopSupplier        NoticeShopSupplier        @relation("ShopSupplierNMedia", fields: [noticeShopSupplierId], references: [id], onDelete: Cascade)  
+  garageRequirementsRequestId        String
+  garageRequirementsRequest          GarageRequirementsRequest        @relation("GarageRequirementMedia", fields: [garageRequirementsRequestId], references: [id], onDelete: Cascade)  
+  autoServicesRequirementsRequestId  String
+  autoServicesRequirementsRequest    AutoServicesRequirementsRequest        @relation("AutoServicesRequirementMedia", fields: [autoServicesRequirementsRequestId], references: [id], onDelete: Cascade)  
+
+  userId    String
+  user      UserProfile      @relation("UserMedia", fields: [userId], references: [id], onDelete: Cascade)
+  caption   String?
+  altText   String?
+  order     Int       @default(0)
+  metadata  Json?
+  filename             String
+  fileSize             String
+  mimeType             String
+
+  // Metadata
+  duration             String?           // For audio/video files
+  dimensions           Json?          // For images
+  thumbnailUrl         String?
+  
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([postId])
+  @@index([userId])
+}
+
+enum ContentMediaType {
+  IMAGE
+  VIDEO
+  AUDIO
+  DOCUMENT
+  GIF
+  EMBEDDED
+}
+
+//....... Report model - forum posts Bussines-side........//
+model Report {
+  id               String       @id @default(uuid())
+  reporter          BusinessProfile      @relation("ReportFiler", fields: [reporterId], references: [id])
+  reporterId        String
+  reportedUser      BusinessProfile      @relation("ReportedUser", fields: [reportedUserId], references: [id])
+  reportedUserId    String
+  reason            ReportReason
+  description       String    @db.Text
+  status            ReportStatus @default(PENDING)
+  createdAt         DateTime  @default(now())
+  resolvedAt        DateTime?
+  resolution        String?   @db.Text
+
+  @@index([reporterId])
+  @@index([reportedUserId])
+  @@index([status])
+}
+enum ReportReason {
+  HARASSMENT
+  SPAM
+  INAPPROPRIATE_CONTENT
+  IMPERSONATION
+  OTHER
+}
+
+enum ReportStatus {
+  PENDING
+  INVESTIGATING
+  RESOLVED
+  DISMISSED
+}
+
+// ..........................UserActivity tracking model ..................................//
+model UserActivity {
+  id            String    @id @default(cuid())
+  user          ActivityProfile      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  type          ActivityType
+  sessionId     String
+  session       Session     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  tokenRecordId String?   // Optional link to the token used
+  tokenRecord   TokenRecord? @relation(fields: [tokenRecordId], references: [id])
+  entityType    String    
+  entityId      String 
+  metadata      Json?     // Additional activity data
+  ipAddress     String?
+  userAgent     String?
+  statusCode    String?     
+  createdAt     DateTime  @default(now())
+
+  @@index([userId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+enum ActivityType {
+  POST_CREATE
+  POST_UPDATE
+  POST_DELETE
+  COMMENT_CREATE
+  COMMENT_UPDATE
+  COMMENT_DELETE
+  METRIC
+  COUPON
+  DASTYARREQ
+  FAILED_LOGIN
+  PERMISSION_DENIED
+  TOKEN_REFRESH
+  TOKEN_REVOKED
+  TOKEN_CREATED
+  FOLLOW
+  UNFOLLOW
+  VOTE
+  BOOKMARK
+  SHARE
+  PROFILE_UPDATE
+  LOGIN
+  LOGOUT
+}
+
+//................... Post model - forum posts Bussines-side......................//
+model Post {
+  id          String       @id @default(uuid())
+  title       String
+  description String
+  content     String    @db.Text
+  published   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  postField   PostFields
+  postType    PostType
+
+ // Media - Changed to one-to-many relation
+  featuredImage   String?
+  contentMedia    ContentMedia[]      @relation("PostMedia")
+
+ // repost related
+  isRepost            Boolean     @default(false)
+  originalPostId      String?     // آیدی پست اصلی در صورت ریپست بودن
+  originalPost        Post?       @relation("Reposts", fields: [originalPostId], references: [id])
+  reposts             Post[]      @relation("Reposts")
+  repostCount         Int         @default(0)
+
+  postReposts         Repost[]    @relation("PostReposts")
+
+  // Author
+  authorId    String
+  author      SocialProfile      @relation("UserPosts", fields: [authorId], references: [id], onDelete: Cascade)
+
+  // Categories and tags
+  categories  CategoryOnPost[]
+  tags        TagOnPost[]
+
+  // Stringeractions
+  comments    Comment[] 
+  likes       Like[]     @relation("PostLikes")
+  dislikes    Dislike[]  @relation("PostDislikes")
+  bookmarks   Bookmark[] @relation("PostBookmarks")
+  shares      Share[]    @relation("PostShares")
+
+  // Meta
+  viewCount   Int       @default(0)
+  shareCount  Int       @default(0)
+  slug        String    @unique
+  metadata    Json?     // For SEO and other metadata
+
+  @@index([authorId])
+  @@index([slug])
+  @@index([createdAt])
+}
+
+//................... Repost model - forum reposts Bussines-side......................//
+model Repost {
+  id                String    @id @default(uuid())
+  
+  // رابطه با کاربری که ریپست کرده
+  userId            String
+  user              SocialProfile      @relation("UserReposts", fields: [userId], references: [id])
+  
+  // رابطه با پست اصلی
+  postId            String
+  post              Post      @relation("PostReposts", fields: [postId], references: [id])
+  
+  // رابطه با کاربر اصلی پست
+  originalPosterId  String
+  originalPoster    SocialProfile      @relation("OriginalPoster", fields: [originalPosterId], references: [id])
+  
+  // متن اضافی که کاربر موقع ریپست می‌تواند اضافه کند
+  additionalContent String?   @db.Text
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@unique([userId, postId])
+  @@index([userId])
+  @@index([postId])
+  @@index([originalPosterId])
+}
+
+enum PostFields {
+mechanics
+autoServices
+bodyShops
+suppliers
+ }
+
+enum PostType {
+experts 
+public
+}
+
+model Product {
+  id               String        @id @default(uuid())
+  providerId       String
+  provider        User          @relation(fields: [providerId], references: [id])
+  clientId         String
+  client           Client          @relation(fields: [clientId], references: [id])
+ 
+  supplierStoreId  String        
+  supplierStore    SupplierStore @relation(fields: [supplierStoreId], references: [id])
+  count            Int           @default(1)
+  price       Float
+  discount    Float? // درصد تخفیف یا مقدار عددی
+  inventoryCount     Int      @default(0) //تعداد موجود در انبار
+  minOrderQuantity   Int?     @default(1) // حداقل تعداد خرید عمده
+  maxOrderQuantity   Int?                 // حداکثر تعداد برای یک سفارش
+  warranty         WarrantyStatus
+  warrantyPeriod   Int?
+  basketId         String?
+  basket           Basket?       @relation(fields: [basketId], references: [id])
+  status           ProductStatus @default(BRANDNEW)
+  sellsStatus      SellsStatus   @default(SINGLE)
+  title            String
+  description      String
+  city             String
+  regionLatLng     String
+  rating           Float?    @default(0) // امتیاز فروشنده و مسیولیت پذیریش
+  published        Boolean   @default(false)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  
+  // Media - 
+  featuredImage   String?   // preview image-title image thumbnail image
+  contentMedia    ContentMedia[]      @relation("ProductMedia")
+
+// Categories and tags
+  categories  CategoryOnProduct[]
+  tags        TagOnProduct[]
+
+  bookmarks   Bookmark[] @relation("ProductBookmarks")
+  shares      Share[]    @relation("ProductShares")
+
+  // Meta
+  viewCount   Int       @default(0)
+  shareCount  Int       @default(0)
+  slug        String   
+  metadata    Json?     // For SEO and other metadata
+
+
+  @@unique([basketId, providerId, clientId])
+
+}
+
+enum ProductStatus {
+  BRANDNEW
+  STOCK
+}
+
+enum WarrantyStatus {
+  HAS
+  HASNOT
+}
+
+enum SellsStatus {
+  SINGLE
+  BULK
+}
+
+model Basket {
+  id               String         @id @default(uuid())
+  userId           String
+  user             User        @relation(fields: [userId], references: [id])
+  clientId         String
+  client           Client      @relation(fields: [clientId], references: [id])
+  courses          Course[]
+  products         Product[]
+
+  @@unique([clientId, userId])
+
+}
+
+model Course {
+  id              String         @id @default(uuid())
+  userId           String
+  user             User        @relation(fields: [userId], references: [id])
+  count            Int         @default(1)
+  basketId         String?
+  Basket           Basket?     @relation(fields: [basketId], references: [id])
+
+  @@unique([basketId, userId])
+}
+
+//.................. Customer model - represents payment/billing information..............//
+model Customer {
+  id               String       @id @default(uuid())
+
+  // FreeLancer Relation
+  userId            String       @unique
+  user              User      @relation(fields: [userId], references: [id])
+  
+  // SupplierStore Relation
+  supplierStoreId   String            @unique
+  supplierStore     SupplierStore  @relation(fields: [supplierStoreId], references: [id])
+
+  // Garage Relation
+  garageId          String       @unique
+  garage            Garage    @relation(fields: [garageId], references: [id])
+
+  // Billing information
+  billingMobile     String?
+  billingName       String?
+  billingAddress    Json?     // Stored as JSON for flexibility
+  
+  // Payment methods and history
+  paymentMethods    PaymentMethod[]
+  invoices          Invoice[]
+}
+
+//.................. Subscription model - tracks active and historical subscriptions...............//
+model Subscription {
+  id          String       @id @default(uuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id])
+  plan            Plan      @relation(fields: [planId], references: [id])
+  planId          String
+  
+  // Subscription status
+  status          SubscriptionStatus @default(ACTIVE)
+  startDate       DateTime  @default(now())
+  endDate         DateTime?
+  canceledAt      DateTime?
+  
+  // Billing cycle
+  currentPeriodStart  DateTime
+  currentPeriodEnd    DateTime
+  
+  billingRecords      BillingRecord[]
+  subscriptionChanges SubscriptionChange[]
+  usageLogs          UsageLog[]
+  tierId             String
+  currentTier        SubscriptionTier    @relation(fields: [tierId], references: [id])
+  
+  // Usage tracking
+  usage           Usage[]
+  
+  // Track referral rewards
+  referralRewards     ReferralAchievement[]
+  totalRewardMonths   Int                   @default(0)
+
+  // Metadata
+  metadata        Json?     // Flexible field for additional data
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+// Enhanced Subscription Tracking
+model SubscriptionTier {
+  id              String           @id @default(uuid())
+  name            String
+  description     String?
+  features        Json          // Detailed feature set
+  referralRequirements Json     // Requirements for referral-based upgrades
+  plans           Plan[]        // Different payment plans for this tier
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  subscription    Subscription[]
+}
+
+// Track Feature Usage Limits
+model FeatureLimit {
+  id              String           @id @default(uuid())
+  planId          String
+  plan            Plan          @relation(fields: [planId], references: [id])
+  featureKey      String        // Identifier for the feature
+  monthlyLimit    String           // Monthly usage limit
+  overage_price   Float?        // Price per unit over limit
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([planId, featureKey])
+}
+
+// Enhanced Usage Tracking
+model UsageLog {
+  id              String           @id @default(uuid())
+  subscriptionId  String
+  subscription    Subscription  @relation(fields: [subscriptionId], references: [id])
+  featureKey      String
+  quantity        String
+  timestamp       DateTime      @default(now())
+  billingPeriodStart DateTime
+  billingPeriodEnd   DateTime
+  
+  @@index([subscriptionId, featureKey, billingPeriodStart, billingPeriodEnd])
+}
+
+// Referral Tracking
+model ReferralCode {
+  id              String           @id @default(uuid())
+  code            String        @unique
+  userId          String
+  user            BusinessProfile          @relation(fields: [userId], references: [id])
+  maxUses         String?
+  usedCount       Int           @default(0)
+  expiresAt       DateTime?
+  isActive        Boolean       @default(true)
+  referrals       ReferralUse[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([code])
+}
+
+model ReferralUse {
+  id              String           @id @default(uuid())
+  referralCode    ReferralCode  @relation(fields: [referralCodeId], references: [id])
+  referralCodeId  String
+  referredUserId  String
+  referredUser    BusinessProfile          @relation("ReferredUser", fields: [referredUserId], references: [id])
+  status          ReferralStatus
+  rewardClaimed   Boolean       @default(false)
+  usedAt          DateTime      @default(now())
+
+  @@unique([referralCodeId, referredUserId])
+}
+
+// Billing History
+model BillingRecord {
+  id              String           @id @default(uuid())
+  subscriptionId  String
+  subscription    Subscription  @relation(fields: [subscriptionId], references: [id])
+  amount          Float
+  billingDate     DateTime
+  nextBillingDate DateTime
+  status          BillingStatus
+  paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+  paymentMethodId String
+  invoice         Invoice?      @relation(fields: [invoiceId], references: [id])
+  invoiceId       String?
+  metadata        Json?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+// Subscription Changes History
+model SubscriptionChange {
+  id              String           @id @default(uuid())
+  subscriptionId  String
+  subscription    Subscription  @relation(fields: [subscriptionId], references: [id])
+  fromPlanId      String?
+  toPlanId        String
+  fromPlan        Plan?         @relation("FromPlan", fields: [fromPlanId], references: [id])
+  toPlan          Plan          @relation("ToPlan", fields: [toPlanId], references: [id])
+  changeType      ChangeType
+  reason          String?
+  effectiveDate   DateTime
+  createdAt       DateTime      @default(now())
+}
+
+// Referral Reward Rules
+model ReferralRewardRule {
+  id              String           @id @default(uuid())
+  requiredReferrals String
+  rewardType      RewardType
+  rewardAmount    Float         // Can be months of subscription or monetary value
+  description     String
+  isActive        Boolean       @default(true)
+  minimumPlanTier PlanTier?    // Minimum plan tier required for this reward
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+//............. Plan model - defines different subscription tiers ...............//
+model Plan {
+  id          String       @id @default(uuid())
+  name        String
+  description String?
+  price       Float
+  interval    BillingStringerval
+  tier        PlanTier  // نوع پلن
+  
+  featureLimits     FeatureLimit[]
+  fromChanges       SubscriptionChange[] @relation("FromPlan")
+  toChanges         SubscriptionChange[] @relation("ToPlan")
+  subscriptionTier  SubscriptionTier    @relation(fields: [tierId], references: [id])
+  tierId            String
+  
+  // محدودیت‌های هر پلن
+  maxMechanics    String     // حداکثر تعداد مکانیک
+  maxApprentices  String     // حداکثر تعداد شاگرد
+  
+  // ویژگی‌های اضافی هر پلن
+  features    Json      // ذخیره ویژگی‌ها به صورت JSON array
+  
+  // Plan status
+  isActive    Boolean   @default(true)
+  
+  // Related subscriptions
+  subscriptions Subscription[]
+  
+  // Metadata
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum ReferralStatus {
+  PENDING
+  COMPLETED
+  EXPIRED
+  INVALID
+}
+
+enum BillingStatus {
+  PENDING
+  SUCCESSFUL
+  FAILED
+  REFUNDED
+}
+
+enum ChangeType {
+  UPGRADE
+  DOWNGRADE
+  REFERRAL_REWARD
+  CANCELLATION
+  REACTIVATION
+}
+
+// تعریف محدودیت‌های هر پلن
+enum PlanTier {
+  BASIC       // پلن پایه
+  STANDARD    // پلن استاندارد
+  PRO         // پلن حرفه‌ای
+  ENTERPRISE  // پلن فوق‌العاده
+}
+
+//............. Usage model - tracks feature/service usage ...................//
+model Usage {
+  id          String       @id @default(uuid())
+  subscription    Subscription @relation(fields: [subscriptionId], references: [id])
+  subscriptionId  String
+  feature         String    // Feature being tracked
+  quantity        String       // Amount used
+  date           DateTime  @default(now())
+}
+
+//........................ Payment method model..............................//
+model PaymentMethod {
+  id          String       @id @default(uuid())
+  customer    Customer  @relation(fields: [customerId], references: [id])
+  customerId  String
+  type        PaymentType
+  last4       String?   // Last 4 digits of card
+  expMonth    String?      // Expiration month
+  expYear     String?      // Expiration year
+  isDefault   Boolean   @default(false)
+   billingRecords    BillingRecord[]
+  paymentDate String
+  amount      String
+  description String    @default("بابت خرید اشتراک")
+  verify      String
+  basket      String
+  refID       String
+  cardHash    String
+}
+
+//............................ Invoice model ................................//
+model Invoice {
+  id          String       @id @default(uuid())
+  customer    Customer  @relation(fields: [customerId], references: [id])
+  customerId  String
+  amount      Float
+  status      InvoiceStatus
+  dueDate     DateTime
+  paidAt      DateTime?
+  billingRecords    BillingRecord[]
+
+  // Invoice items breakdown
+  items       Json      // Store line items as JSON
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// Enums for various statuses and types
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  PAUSED
+  TRIAL
+  REWARD // New status for free reward periods
+}
+
+enum BillingStringerval {
+  MONTHLY
+  YEARLY
+  QUARTERLY
+}
+
+enum PaymentType {
+  CREDIT_CARD
+  BANK_TRANSFER
+  PAYPAL
+}
+
+enum InvoiceStatus {
+  DRAFT
+  OPEN
+  PAID
+  VOID
+  UNCOLLECTIBLE
+}
+
+//........................ Referal model ..............................//
+model Referral {
+  id              String      @id @default(uuid())
+  supplierStoreId String
+  // other fields...
+
+  // supplierStore   SupplierStore @relation(fields: [supplierStoreId], references: [id])
+}
+
+// Referral Marketing System
+model ReferralStats {
+  id                String   @id @default(cuid())
+  user              BusinessProfile     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String   @unique
+  totalReferrals    Int      @default(0)
+  successfulReferrals Int    @default(0)
+  totalEarnings     Float    @default(0)
+  currentTier       ReferralTier @default(BRONZE)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([userId])
+}
+
+enum ReferralTier {
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+  DIAMOND
+}
+
+//........................ ReferralCampaign model ..............................//
+model ReferralCampaign {
+  id              String    @id @default(cuid())
+  name            String
+  description     String
+  creator         BusinessProfile      @relation("CampaignCreator", fields: [creatorId], references: [id])
+  creatorId       String
+  rewardType      RewardType
+  rewardAmount    Float
+  startDate       DateTime
+  endDate         DateTime?
+  isActive        Boolean   @default(true)
+  requirements    Json      // Stores campaign requirements as JSON
+  termsAndConditions String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  rewards         Reward[]
+
+  @@index([creatorId])
+}
+
+//........................ Reward model ..............................//
+model Reward {
+  id          String    @id @default(cuid())
+  user        BusinessProfile      @relation(fields: [userId], references: [id])
+  userId      String
+  campaign    ReferralCampaign @relation(fields: [campaignId], references: [id])
+  campaignId  String
+  type        RewardType
+  amount      Float
+  status      RewardStatus @default(PENDING)
+  claimedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([campaignId])
+}
+
+enum RewardType {
+  CASH
+  POINTS
+  DISCOUNT
+  PRODUCT
+}
+
+enum RewardStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CLAIMED
+}
+
+enum PartSupplyStatus {
+  NOTADD
+  INPROGRESS
+  SUPPLIED
+}
+enum ProjectStatus {
+  NOTADD
+  INPROGRESS
+  SUPPLIED
+}
+
+// Add ReferralMilestone to track different reward tiers
+model ReferralMilestone {
+  id              String    @id @default(cuid())
+  usersRequired   String       // Number of referrals needed
+  rewardMonths    String       // Number of free months awarded
+  description     String
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  // Track which users have achieved this milestone
+  achievements    ReferralAchievement[]
+}
+
+// Track user's milestone achievements
+model ReferralAchievement {
+  id              String    @id @default(cuid())
+  userId          String
+  user            BusinessProfile      @relation(fields: [userId], references: [id])
+  milestone       ReferralMilestone @relation(fields: [milestoneId], references: [id])
+  milestoneId     String
+  achievedAt      DateTime  @default(now())
+  rewardClaimed   Boolean   @default(false)
+  
+  // If reward has been applied to a subscription
+  appliedToSubscription     Subscription? @relation(fields: [subscriptionId], references: [id])
+  subscriptionId            String?
+  
+  @@unique([userId, milestoneId])
+  @@index([userId])
+}
+
+//........................ Comments model ..............................//
+model Comment {
+  id            String      @id @default(uuid())
+  content     String      @db.Text
+  
+  // Tree structure relationships
+  parent      Comment?    @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  parentId    String?
+  replies     Comment[]   @relation("CommentReplies")
+  
+  // Depth level in the comment tree
+  depth       Int         @default(0)
+  path        String?     // Materialized path for faster tree traversal
+  replyCount  Int         @default(0)  // Cache for reply count
+
+  // Reference to the root post
+  post        Post        @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId      String
+  
+  // Author information
+  author      SocialProfile        @relation("UserComments", fields: [authorId], references: [id])
+  authorId    String
+  
+  // Vote counts (cached for performance)
+  upvotes     Int         @default(0)
+  downvotes   Int         @default(0)
+  
+  // Reactions tracking
+  votes       CommentVote[]
+  commentReport   CommentReport[]
+  // Status flags
+  isEdited    Boolean     @default(false)
+  isDeleted   Boolean     @default(false)
+  isPinned    Boolean     @default(false)  // New: Allow pinning important comments
+  isHidden    Boolean     @default(false)  // New: Moderation purposes
+  
+  // Timestamps
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  editedAt    DateTime?   // New: Track when the comment was last edited
+
+ // Metrics 
+  metricId             String
+  metric               Metric          @relation(fields: [metricId], references: [id])
+
+// Coupons 
+  couponId             String
+  coupon               Coupons          @relation(fields: [couponId], references: [id])
+
+// Moderation
+  reportCount Int         @default(0)  // New: Track number of reports
+  moderationStatus ModStatus @default(APPROVED)  // New: Enhanced moderation
+  moderatedBy  String?       // New: Moderator ID
+  moderatedAt  DateTime?  // New: Moderation timestamp
+
+  // Metadata
+  metadata    Json?       // New: Flexible field for additional data
+
+  @@index([postId])
+  @@index([parentId])
+  @@index([authorId])
+  @@index([createdAt])
+  @@index([isPinned, createdAt]) // New: Optimize queries for pinned comments
+}
+
+model CommentVote {
+  id            String      @id @default(uuid())
+  comment     Comment     @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId   String
+  user        SocialProfile        @relation("UserCommentsVote",fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  voteType    VoteType
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt    // New: Track vote changes
+
+  @@unique([userId, commentId])
+  @@index([commentId])
+  @@index([userId])
+  @@index([voteType, commentId]) // New: Optimize vote counting queries
+}
+
+model CommentReport {  // New: Report management
+  id            String      @id @default(uuid())
+  comment     Comment   @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId   String
+  reporter    SocialProfile      @relation(fields: [reporterId], references: [id])
+  reporterId  String       
+  reason      CommentReportReason
+  description String?
+  status      CommentReportStatus @default(PENDING)
+  createdAt   DateTime  @default(now())
+  resolvedAt  DateTime?
+
+  @@index([commentId])
+  @@index([status])
+}
+
+enum VoteType {
+  UPVOTE
+  DOWNVOTE
+}
+
+enum ModStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  FLAGGED
+  UNDER_REVIEW
+}
+
+enum CommentReportReason {
+  SPAM
+  HARASSMENT
+  INAPPROPRIATE
+  MISINFORMATION
+  OTHER
+}
+
+enum CommentReportStatus {
+  PENDING
+  RESOLVED
+  DISMISSED
+}
+
+//........................ Review model ..............................//
+model Review {
+  id                   String         @id @default(cuid())
+  projectId            String
+  project              Project        @relation(fields: [projectId], references: [id])
+  garageId             String
+  garage               Garage         @relation(fields: [garageId], references: [id])
+  supplierStoreId      String
+  supplierStore        SupplierStore?  @relation(fields: [supplierStoreId], references: [id])
+  clientId             String
+  client               Client   @relation(fields: [clientId], references: [id])
+
+  // Relations
+  authorId             String
+  author               SocialProfile      @relation("ReviewAuthor", fields: [authorId], references: [id])
+  targetId             String
+  target               SocialProfile      @relation("ReviewTarget", fields: [targetId], references: [id])
+  
+  // Metrics 
+  metricId             String
+  metric               Metric       @relation(fields: [metricId], references: [id])
+
+  // Coupons 
+  couponId             String
+  coupon               Coupons          @relation(fields: [couponId], references: [id])
+
+  // Garage PartOrder Collaboration
+  garagePartOrderId    String
+  garagePartOrder     GaragePartOrder      @relation(fields: [garagePartOrderId], references: [id])
+
+  // Garage OutSourcing Collaboration
+  noticeOutSourcingId    String            @unique
+  noticeOutSourcing    NoticeOutSourcing  @relation(fields: [noticeOutSourcingId], references: [id])
+
+  // Garage ApprenticeShip Collaboration
+  noticeApprenticeId    String            @unique
+  noticeApprentice    NoticeApprenticeship  @relation(fields: [noticeApprenticeId], references: [id])
+
+  // Garage OilService Project 
+  garageOilServiceProjectId    String
+  garageOilServiceProject     GarageOilServiceProjects      @relation(fields: [garageOilServiceProjectId], references: [id])
+
+ // Garage Dastyar Collaboration
+  noticeDastyarId    String            @unique
+  noticeDastyar    NoticeDastyar  @relation(fields: [noticeDastyarId], references: [id])
+
+  rating               Float          // 1-5 rating
+  comment              String?  
+
+  response             String?        // Garage's response to review
+  isVerified           Boolean        @default(false)
+  
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+
+  @@index([garageId])
+  @@index([supplierStoreId])
+  @@index([authorId])
+  @@index([targetId])
+}
+
+//........................ Like model ..............................//
+model Like {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  // Relations
+  userId    String
+  user      SocialProfile     @relation("UserLikes", fields: [userId], references: [id], onDelete: Cascade)
+  postId    String?
+  post      Post?    @relation("PostLikes", fields: [postId], references: [id], onDelete: Cascade)
+
+ // Metrics 
+  metricId             String
+  metric               Metric       @relation("MetricLikes", fields: [metricId], references: [id])
+
+// Coupons 
+  couponId             String
+  coupon               Coupons          @relation(fields: [couponId], references: [id])
+
+  @@unique([userId, postId])
+  @@index([userId])
+  @@index([postId])
+}
+
+//........................ Dislike model ..............................//
+model Dislike {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  // Relations
+  userId    String
+  user      SocialProfile     @relation("UserDislikes", fields: [userId], references: [id], onDelete: Cascade)
+  postId    String?
+  post      Post?    @relation("PostDislikes", fields: [postId], references: [id], onDelete: Cascade)
+
+// Metrics 
+  metricId             String
+  metric               Metric       @relation("MetricDislikes", fields: [metricId], references: [id])
+
+// Coupons 
+  couponId             String
+  coupon               Coupons          @relation(fields: [couponId], references: [id])
+
+  @@unique([userId, postId])
+  @@index([userId])
+  @@index([postId])
+}
+
+//........................ Bookmark model ..............................//
+model Bookmark {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  // Relations
+  userId    String
+  user      SocialProfile     @relation("UserBookmarks", fields: [userId], references: [id], onDelete: Cascade)
+  postId    String
+  post      Post     @relation("PostBookmarks", fields: [postId], references: [id], onDelete: Cascade)
+  noticeDivarId      String   
+  noticeDivar        NoticeDivar        @relation("DivarNBookmarks", fields: [noticeDivarId], references: [id], onDelete: Cascade)
+  noticeEstId        String    
+  noticeEst          NoticeEstNiaz        @relation("EstNBookmarks", fields: [noticeEstId], references: [id], onDelete: Cascade)
+  noticePartPId      String
+  noticePartP        NoticePartProviding     @relation("PartPNBookmarks",fields: [noticePartPId], references: [id], onDelete: Cascade)
+  noticeShopSupplierId        String
+  noticeShopSupplier          NoticeShopSupplier        @relation("ShopSupplierNBookmarks", fields: [noticeShopSupplierId], references: [id], onDelete: Cascade)  
+  noticeApperenticeId        String
+  noticeApprentice          NoticeApprenticeship        @relation(fields: [noticeApperenticeId], references: [id], onDelete: Cascade)  
+  noticeDastyarId        String
+  noticeDastyar          NoticeDastyar        @relation(fields: [noticeDastyarId], references: [id], onDelete: Cascade)  
+  noticeOutSourcingId        String             @unique
+  noticeOutSourcing          NoticeOutSourcing        @relation(fields: [noticeOutSourcingId], references: [id], onDelete: Cascade)  
+  garagePartOrderId       String                @unique
+  garagePartOrder         GaragePartOrder    @relation(fields: [garagePartOrderId], references: [id], onDelete: Cascade)  
+
+  productId                 String
+  product                   Product   @relation("ProductBookmarks", fields: [productId], references: [id], onDelete: Cascade)
+ 
+  garageRequirementsRequestId        String
+  garageRequirementsRequest          GarageRequirementsRequest        @relation("GarageRequirementMediaNBookmarks", fields: [garageRequirementsRequestId], references: [id], onDelete: Cascade)  
+  autoServicesRequirementsRequestId        String
+  autoServicesRequirementsRequest          AutoServicesRequirementsRequest        @relation("AutoServicesRequirementMediaNBookmarks", fields: [autoServicesRequirementsRequestId], references: [id], onDelete: Cascade)  
+
+// Metrics 
+  metricId             String
+  metric               Metric       @relation("MetricBookmarks", fields: [metricId], references: [id])
+
+// Coupons 
+  couponId             String
+  coupon               Coupons          @relation(fields: [couponId], references: [id])
+
+  @@unique([userId, postId, noticeApperenticeId])
+  @@index([userId])
+  @@index([postId])
+}
+
+//........................ Share model ..............................//
+model Share {
+  id            String      @id @default(cuid())
+  
+  // Relations
+  user          SocialProfile        @relation("UserShares", fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  post          Post        @relation("PostShares", fields: [postId], references: [id], onDelete: Cascade)
+  postId        String
+  noticeDivarId        String
+  noticeDivar          NoticeDivar        @relation("DivarNShares", fields: [noticeDivarId], references: [id], onDelete: Cascade)
+  noticeEstId        String    
+  noticeEst          NoticeEstNiaz        @relation("EstNShares", fields: [noticeEstId], references: [id], onDelete: Cascade)
+  noticePartPId      String
+  noticePartP        NoticePartProviding     @relation("PartPNShares",fields: [noticePartPId], references: [id], onDelete: Cascade)
+  noticeShopSupplierId        String
+  noticeShopSupplier          NoticeShopSupplier        @relation("ShopSupplierNShares", fields: [noticeShopSupplierId], references: [id], onDelete: Cascade)  
+  noticeApperenticeId        String
+  noticeApprentice          NoticeApprenticeship        @relation(fields: [noticeApperenticeId], references: [id], onDelete: Cascade)  
+  noticeDastyarId        String
+  noticeDastyar          NoticeDastyar        @relation(fields: [noticeDastyarId], references: [id], onDelete: Cascade)  
+  noticeOutSourcingId        String             @unique
+  noticeOutSourcing          NoticeOutSourcing        @relation(fields: [noticeOutSourcingId], references: [id], onDelete: Cascade)  
+  garagePartOrderId       String                @unique
+  garagePartOrder         GaragePartOrder    @relation(fields: [garagePartOrderId], references: [id], onDelete: Cascade)  
+  productId                 String
+  product                   Product   @relation("ProductShares", fields: [productId], references: [id], onDelete: Cascade)
+
+  garageRequirementsRequestId        String
+  garageRequirementsRequest          GarageRequirementsRequest        @relation("GarageRequirementMediaNShares", fields: [garageRequirementsRequestId], references: [id], onDelete: Cascade)  
+  autoServicesRequirementsRequestId        String
+  autoServicesRequirementsRequest          AutoServicesRequirementsRequest        @relation("AutoServicesRequirementMediaNShares", fields: [autoServicesRequirementsRequestId], references: [id], onDelete: Cascade)  
+
+// Metrics 
+  metricId             String
+  metric               Metric       @relation("MetricShares", fields: [metricId], references: [id])
+
+// Coupons 
+  couponId             String
+  coupon               Coupons          @relation(fields: [couponId], references: [id])
+
+  // Share details
+  platform      SharePlatform
+  shareUrl      String?     // The generated share URL
+  customMessage String?     @db.Text // Custom message added by user
+  
+  // Tracking
+  clickCount    Int         @default(0)
+  createdAt     DateTime    @default(now())
+  lastClickedAt DateTime?
+
+  @@index([userId])
+  @@index([postId])
+  @@index([platform])
+}
+
+enum SharePlatform {
+  TWITTER
+  FACEBOOK
+  LINKEDIN
+  EMAIL
+  WHATSAPP
+  TELEGRAM
+  COPY_LINK
+}
+
+//........................ Notifications model ..............................//
+model Notification {
+  id            String    @id @default(cuid())
+  user          User      @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  type          NotificationType
+  title         String
+  message       String
+  link          String?   // Optional link to relevant content
+  isRead        Boolean   @default(false)
+  metadata      Json?     // Additional notification data
+  createdAt     DateTime  @default(now())
+  readAt        DateTime?
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([createdAt])
+}
+
+enum NotificationType {
+  FOLLOW
+  MENTION
+  COMMENT
+  REPLY
+  VOTE
+  MILESTONE
+  SYSTEM
+  SECURITY
+}
+
+//........................ Category model ..............................//
+model Category {
+  id          String      @id @default(cuid())
+  title       String          @unique
+  description String?         @db.Text
+  parentId    String?
+  parent      Category?       @relation("CategoryToParent", fields: [parentId], references: [id])
+  children    Category[]      @relation("CategoryToParent") 
+  posts       CategoryOnPost[]
+  products  CategoryOnProduct[]
+  NoticeAll   CategoryOnNotice[]
+
+}
+
+
+//........................ CategoryOnPost model ..............................//
+model CategoryOnPost {
+  postId      String
+  categoryId  String
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([postId, categoryId])
+  @@index([postId])
+  @@index([categoryId])
+}
+
+//........................ CategoryOnProduct model ..............................//
+model CategoryOnProduct {
+  productId      String
+  categoryId  String
+  product        Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  category       Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([productId, categoryId])
+  @@index([productId])
+  @@index([categoryId])
+}
+
+//........................ CategoryOnNotice model ..............................//
+model CategoryOnNotice {
+  noticeDivarId      String
+  noticeDivar        NoticeDivar     @relation(fields: [noticeDivarId], references: [id], onDelete: Cascade)
+  noticeEstId      String
+  noticeEst        NoticeEstNiaz     @relation(fields: [noticeEstId], references: [id], onDelete: Cascade)
+  noticePartPId      String
+  noticePartP        NoticePartProviding     @relation(fields: [noticePartPId], references: [id], onDelete: Cascade)
+  noticeShopSupplierId        String
+  noticeShopSupplier          NoticeShopSupplier        @relation(fields: [noticeShopSupplierId], references: [id], onDelete: Cascade)  
+
+garageRequirementsRequestId        String
+  garageRequirementsRequest          GarageRequirementsRequest        @relation( fields: [garageRequirementsRequestId], references: [id], onDelete: Cascade)  
+  autoServicesRequirementsRequestId        String
+  autoServicesRequirementsRequest          AutoServicesRequirementsRequest        @relation( fields: [autoServicesRequirementsRequestId], references: [id], onDelete: Cascade)  
+
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([noticeDivarId, categoryId])
+  @@index([noticeDivarId])
+  @@index([categoryId])
+}
+//........................ Tag model ..............................//
+model Tag {
+  id          String      @id @default(cuid())
+  name        String      @unique
+  posts       TagOnPost[]
+  products    TagOnProduct[]
+  NoticeAll   TagOnNotice[]
+}
+
+//........................ TagOnPost model ..............................//
+model TagOnPost {
+  postId      String
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tagId       String
+  tag         Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+  @@index([postId])
+  @@index([tagId])
+}
+
+//........................ TagOnPost model ..............................//
+model TagOnProduct {
+  productId      String
+  product        Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  tagId          String
+  tag            Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([productId, tagId])
+  @@index([productId])
+  @@index([tagId])
+}
+
+//........................ TagOnNotice model ..............................//
+model TagOnNotice {
+  noticeDivarId      String
+  noticeDivar        NoticeDivar     @relation(fields: [noticeDivarId], references: [id], onDelete: Cascade)
+  noticeEstId      String
+  noticeEst        NoticeEstNiaz     @relation(fields: [noticeEstId], references: [id], onDelete: Cascade)
+  noticePartPId      String
+  noticePartP        NoticePartProviding     @relation(fields: [noticePartPId], references: [id], onDelete: Cascade)
+  noticeShopSupplierId        String
+  noticeShopSupplier          NoticeShopSupplier        @relation(fields: [noticeShopSupplierId], references: [id], onDelete: Cascade)  
+
+garageRequirementsRequestId        String
+  garageRequirementsRequest          GarageRequirementsRequest        @relation( fields: [garageRequirementsRequestId], references: [id], onDelete: Cascade)  
+  autoServicesRequirementsRequestId        String
+  autoServicesRequirementsRequest          AutoServicesRequirementsRequest        @relation( fields: [autoServicesRequirementsRequestId], references: [id], onDelete: Cascade)  
+
+  tagId       String
+  tag         Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([noticeDivarId, tagId])
+  @@index([noticeDivarId])
+  @@index([tagId])
+}
+
+//........................ Garage model ..............................//
+model Garage {
+  id                   String      @id @default(uuid())
+  ownerId              String      @unique
+  garageOwner          BusinessProfile     @relation("garageOwner", fields: [ownerId], references: [id])
+  garage_name          String
+  garageSerialNumber   String?
+  sign                 String?
+  city                 String
+  telephone            String?
+  address              Address?
+  lat_lng              String?
+  businessLicense      String?
+  profit               String?
+  garageMainField      GarageMainField?
+  garageField          GarageField?
+  mechanics            BusinessProfile[]    @relation("mechanics")
+  apprentices          BusinessProfile[]    @relation("apprentices")  
+
+  // Metrics
+  metrics              Metric[]
+
+ // روابط جدید
+  acceptedCoupons      CouponGarageAcceptor[]
+  successCoupons       CouponGarageSuccess[]
+
+  Mechanic_GarageReqsForCouponAssignment Mechanic_GarageReqsForCouponAssignment?
+  successfulSellCouponByGarage_Mechanic  SuccessfulSellCouponByGarage_Mechanic?
+  wasSupplierStoreMetricAssignmentSuccessful  WasSupplierStoreMetricAssignmentSuccessful?
+
+  // Project Related 
+  projects            Project[]
+  acceptanceProjectCount  String?
+  // Oil Service Project Related 
+  GarageOilServiceProjects    GarageOilServiceProjects[]
+
+  sellFromSupplier   SellFromSupplier[]
+
+  // Business metrics
+  rating               Float?
+  totalReviews         Int           @default(0)
+  totalProjects        Int           @default(0)
+  completedProjects    Int           @default(0)
+  cancelledProjects    Int           @default(0)
+  activeComplaints     Int            @default(0)
+  successRate          Float?        // Percentage of successful projects
+  averageResponseTime  Float?        // Average time to respond to requests
+  
+  customer             Customer?
+
+  // Garage Await List
+  garageAwaitList      GarageAwaitList[]
+
+  // Garage PartOrder Collaboration
+  garagePartOrder   GaragePartOrder[] 
+  garageOutsourceReq GarageReqsForOutSourcingCoWork[]
+  garageReqsForApprentice GarageReqsForApprenticeCoWork?
+  shagerdReqsForApprentice  ShagerdReqsForApprenticeCoWork?
+  garageReqsForDastyar GarageReqsForDastyarCoWork?
+  mechanicReqsForDastyar  MechanicReqsForDastyarCoWork?
+
+  // Relations for outSourcing notices
+  requestedOutSourcingNotices NoticeOutSourcing[] @relation("requesterGarage")
+  acceptedOutSourcingNotices  NoticeOutSourcing[] @relation("acceptorGarage")
+  
+  // Relations for outSourcing CoWork
+  hostGarage                  OutSourcingCollaborationHistory[] @relation("hostGarage")
+  acceptorGarage              OutSourcingCollaborationHistory[] @relation("acceptorGarage")
+  
+  // Relations for GaragePartOrder CoWork
+  requestedGarage             PartOrderSupplyCollaborationHistory[] 
+  
+  // Relations for ApprenticeShip notices
+  requestedApprenticeNotices NoticeApprenticeship[] @relation("requesterGarage")
+  acceptedApprenticeNotices  NoticeApprenticeship[] @relation("acceptorGarage")
+  
+   // Relations for Dastyar notices
+  requestedDastyarNotices NoticeDastyar[] @relation("requesterGarage")
+  acceptedDastyarNotices  NoticeDastyar[] @relation("acceptorGarage")
+  
+  // Financial information
+  bankAccount         BankAccount?
+
+  // Verification status
+  isVerified          Boolean        @default(false)
+  verificationDate    DateTime?
+
+  // Acceptance offers made by this garage
+  reviews             Review[]
+
+   // ... existing fields ...
+  media           GarageMedia[]
+  profileImageUrl String?       // Quick access to main profile image
+  coverImageUrl   String?       // Quick access to cover image
+
+  // partOrderSuppliers   SupplierStore[] /// ایدی یدکی هایی که تابحال تامین قطعه درصدی کردن برای تععین رسیدن به 5 همکاری
+  // referals             Garage[] @relation("GarageReferals")
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@index([garage_name, telephone], name: "garage_search_index")
+}
+
+model GarageWeeklyTimeline {
+  id                   String      @id @default(uuid())
+
+}
+
+model GarageMechanicsMothlyPaying {
+  id                   String      @id @default(uuid())
+  month                         String
+  year                          String
+  garageId                      String
+  garage                        String
+  mechanicId                    String
+  mechanic                      String
+  apprenticeId                  String
+  apprentice                    String
+  projectSharePercentage        Float    // درصد سهم از پروژه‌های داخلی
+  outsourceSharePercentage      Float  // درصد سهم از پروژه‌های برون‌سپاری
+  totalInhouseProjectsCount     String
+  totalOutsourceProjectsCount   String // ProjectsMechanicWorkAt این اطلاعات و درامد ها همه با مدل
+                                       // میاند
+  totalInhouseProjectsIncome    Float
+  totalOutsourceProjectsIncome  Float
+  totalEarning                  Float
+  projectsMechanicWorkAtThisMonth ProjectsMechanicWorkAt?
+  projectsApprenticeWorkAtThisMonth ProjectsApprenticeWorkAt?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  //در پایان هر ماه یکبار این مدل برای هر مکانیک یا شاگرد جنریت میشه
+}
+
+enum GarageMainField {
+  MECHANICY          @map("مکانیکی")
+  AUTOSERVICE        @map("اتوسرویس")
+  BODYSHOPS          @map("صافکاری_و_نقاشی")
+}
+enum GarageField {
+  JOLOBANDI          @map("جلوبندی_سازی")
+  BATTERY            @map("باطری_سازی_و_برقی_خودرو")
+  ENGINE             @map("موتور")
+  BODY_WORK          @map("صافکاری_نقاشی_و_بدنه")
+}
+
+//........................ Project model ..............................//
+model Project {
+  id                   String      @id @default(uuid())
+  requesterId          String      @unique
+  requester            ProjectProfile        @relation("requesterUser", fields: [requesterId], references: [id])
+  providerId           String      @unique
+  provider             ProjectProfile        @relation("providerUser", fields: [providerId], references: [id])   
+  clientId             String      @unique
+  client               Client      @relation(fields: [clientId], references: [id])
+  garageId             String      @unique
+  garage               Garage      @relation(fields: [garageId], references: [id])
+  suplierStoreId       String      @unique
+  acceptedSuppleirStore SupplierStore   @relation(fields: [suplierStoreId], references: [id])
+  partSupplyStatus     PartSupplyStatus   @default(NOTADD)
+  mechanicsTeam        ProjectsMechanicWorkAt[]             
+  apprenticesTeam      ProjectsApprenticeWorkAt[]           
+  invoiceFactorUrl     String?
+  title                String
+  car                  String
+  plateNumber          String   
+  chassisNumber        String
+  carMillage           String    
+  buildYear            String    
+  brokeReportDetails   String        
+  fixReportDetails     String      
+  clientRate           String  
+  suppliedParts        String     
+  invoiceFactor        String   
+  partSupplyFactor     String
+  description          String
+  status               CollaborationStatus  @default(PENDING)
+  budget               Float
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  startedAt            DateTime?
+  completedAt          DateTime?
+  priority             Priority       @default(NORMAL)
+  deadline             DateTime?
+  requirements         Json?          // Detailed project requirements
+  attachments          Attachment[]      // Array of attachment URLs
+   
+  // SocialMedia Sharing Project-Resume Timeline FollowUp
+  projectSMAttachments  ProjectSMAttachments[]   // Array of SMattachment URLs
+
+  // Conversation
+  conversation         Conversation[]
+
+  // Garage Part Order
+  garagePartOrder    GaragePartOrder?
+
+  // OutSourcing Notice 
+  noticeOutSourcing  NoticeOutSourcing?
+
+  // ApprenticeShip Notice 
+  NoticeApprenticeship  NoticeApprenticeship?
+
+ // Dastyar Notice 
+  NoticeDastyar       NoticeDastyar?
+
+  // Related records
+  transaction          Transaction?
+  milestones           Milestone[]
+  reviews              Review[]
+  transactionsActivityLogs         TransactionsActivityLog[]
+}
+
+model ProjectsMechanicWorkAt {
+  id               String        @id @default(uuid())
+  acceptedAt        DateTime
+  status            CollaborationStatus
+  mechanicId        String
+  projectId         String
+  mechanic          ProjectProfile  @relation(fields: [mechanicId], references: [id], onDelete: Cascade)
+  project           Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  noticeDastyarId   String?   @unique
+  noticeDastyar     NoticeDastyar?  @relation(fields: [noticeDastyarId], references: [id], onDelete: Cascade)
+  garageMechanicsMothlyPayingId    String   @unique
+  garageMechanicsMothlyPaying   GarageMechanicsMothlyPaying  @relation(fields: [garageMechanicsMothlyPayingId], references: [id], onDelete: Cascade)
+  totlalIncomeOfProject  Float
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  
+}
+
+model ProjectsApprenticeWorkAt {
+  id               String        @id @default(uuid())
+  acceptedAt        DateTime
+  status            CollaborationStatus
+  apprenticeId      String
+  projectId         String
+  apprentice        ProjectProfile   @relation(fields: [apprenticeId], references: [id], onDelete: Cascade)
+  project           Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  noticeDastyarId   String?      @unique
+  noticeDastyar     NoticeDastyar?  @relation(fields: [noticeDastyarId], references: [id], onDelete: Cascade)
+  garageApprenticeMothlyPayingId    String  @unique
+  garageApprenticeMothlyPaying   GarageMechanicsMothlyPaying @relation(fields: [garageApprenticeMothlyPayingId], references: [id], onDelete: Cascade)
+  totlalIncomeOfProject  Float
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  
+}
+
+//........................ Transaction model ..............................//
+model Transaction {
+  id                   String         @id @default(cuid())
+  projectId            String         @unique
+  project              Project        @relation(fields: [projectId], references: [id])
+  amount               Float
+  status               TransactionStatus @default(PENDING)
+  transactionsActivityLog  TransactionsActivityLog?
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  
+  // Completion confirmations
+  requesterConfirmedCompletion  Boolean    @default(false)
+  providerConfirmedCompletion   Boolean    @default(false)
+  completionConfirmedAt         DateTime?
+  
+  // Garage PartOrder Collaboration
+  garagePartOrderId    String            @unique
+  garagePartOrder    GaragePartOrder  @relation(fields: [garagePartOrderId], references: [id])
+
+// Garage OutSourcing Collaboration
+  noticeOutSourcingId    String            @unique
+  noticeOutSourcing    NoticeOutSourcing  @relation(fields: [noticeOutSourcingId], references: [id])
+
+// Garage ApprenticeShip Collaboration
+  noticeApprenticeId    String            @unique
+  noticeApprentice    NoticeApprenticeship  @relation(fields: [noticeApprenticeId], references: [id])
+
+// Metrics 
+  metricId             String   @unique
+  metric               Metric       @relation(fields: [metricId], references: [id])
+
+// Coupons 
+  couponId             String  @unique
+  coupon               Coupons          @relation(fields: [couponId], references: [id])
+
+ // Garage Dastyar Collaboration
+  noticeDastyarId    String            @unique
+  noticeDastyar    NoticeDastyar  @relation(fields: [noticeDastyarId], references: [id])
+
+ // Garage OilService Project 
+  garageOilServiceProjectId    String    @unique
+  garageOilServiceProject     GarageOilServiceProjects      @relation(fields: [garageOilServiceProjectId], references: [id])
+
+  // Transaction Conversation 
+  conversationId       String?        @unique  // Making it unique ensures one conversation per transaction
+  conversation         Conversation?  @relation("TransactionConversation", fields: [conversationId], references: [id])
+
+  // Payment confirmations
+  requesterConfirmedPayment     Boolean    @default(false)
+  providerConfirmedPayment      Boolean    @default(false)
+  paymentConfirmedAt            DateTime?
+
+   // Dispute handling    ...اختلاف-نزاع...
+  complaint            Complaint?   
+  hasDispute           Boolean        @default(false)
+  disputeReason        String?
+  disputeResolution    String?
+
+   // Payment schedule    ...بیعانه...
+  depositAmount        Float?
+  depositPaid          Boolean        @default(false)
+  remainingAmount      Float?
+
+  milestonePayments    MilestonePayment[]
+
+}
+
+//........................ Complaint model ..............................//
+model Complaint {
+  id                   String         @id @default(cuid())
+  
+  // transaction releative relation
+  transactionId        String         @unique
+  transaction          Transaction    @relation(fields: [transactionId], references: [id])
+
+  // Complaint details
+  authorId              String
+  author                ProjectProfile           @relation("ComplaintFiler", fields: [authorId], references: [id])
+  targetId              String
+  target                ProjectProfile           @relation("ComplaintReceiver", fields: [targetId], references: [id])
+  
+  description          String
+  evidence             Attachment[]    // URLs to evidence files مدرک شواهد
+  response             String
+  status               ComplaintStatus @default(PENDING)
+  resolution           String?
+  resolutionDate       DateTime?
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+ 
+  // Admin handling
+  assignedAdminId      String?
+  adminNotes           String?
+
+  // Related records
+  messages             Message[]
+  transactionsActivityLogs         TransactionsActivityLog[]
+}
+
+//........................ Conversation model ..............................//
+model Conversation {
+  id                   String         @id @default(cuid())
+  type                 ConversationType @default(DIRECT)
+  name                 String?        // For group conversations
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  lastMessageAt        DateTime       @default(now())
+  
+  // Participants
+  participants         ConversationParticipant[]
+  messages             Message[]
+  
+  // Transaction relation - Updated
+  transaction          Transaction?   @relation("TransactionConversation")
+  
+  // Project relation (for project-specific conversations)
+  projectId            String?
+  project              Project?       @relation(fields: [projectId], references: [id])
+  
+  // Garage OilService Project 
+  garageOilServiceProjectId    String    @unique
+  garageOilServiceProject     GarageOilServiceProjects      @relation(fields: [garageOilServiceProjectId], references: [id])
+
+  // Garage PartOrder Collaboration
+  garagePartOrderId    String
+  garagePartOrder     GaragePartOrder      @relation(fields: [garagePartOrderId], references: [id])
+  
+  // Garage OutSourcing Collaboration
+  noticeOutSourcingId    String            @unique
+  noticeOutSourcing    NoticeOutSourcing  @relation(fields: [noticeOutSourcingId], references: [id])
+
+// Garage ApprenticeShip Collaboration
+  noticeApprenticeId    String            @unique
+  noticeApprentice    NoticeApprenticeship  @relation(fields: [noticeApprenticeId], references: [id])
+
+ // Garage Dastyar Collaboration
+  noticeDastyarId    String            @unique
+  noticeDastyar    NoticeDastyar  @relation(fields: [noticeDastyarId], references: [id])
+
+ // Metrics 
+  metricId             String
+  metric               Metric          @relation(fields: [metricId], references: [id])
+
+ // Coupons 
+  couponId             String
+  coupon               Coupons          @relation(fields: [couponId], references: [id])
+
+  // Metadata
+  isActive             Boolean        @default(true)
+  metadata             Json?          // For additional flexible data storage
+}
+
+//........................ ConversationParticipant model ..............................//
+model ConversationParticipant {
+  id                   String         @id @default(cuid())
+  conversationId       String
+  conversation         Conversation   @relation(fields: [conversationId], references: [id])
+  userId               String
+  user                 SocialProfile           @relation(fields: [userId], references: [id])
+  
+  // Participant status
+  role                 ParticipantRole @default(MEMBER)
+  joinedAt             DateTime       @default(now())
+  leftAt               DateTime?
+  isActive             Boolean        @default(true)
+  
+  // Read status tracking
+  lastReadMessageId    String?
+  lastReadAt           DateTime?
+  
+  // Notification preferences
+  isMuted              Boolean        @default(false)
+  mutedUntil           DateTime?
+  
+  // User-specific conversation settings
+  nickName             String?
+  settings             Json?          // Custom settings per participant
+  
+  // Messages in this conversation
+  messages             Message[]      // Messages sent by this participant
+  
+  @@unique([conversationId, userId])
+}
+
+//........................ Message model ..............................//
+model Message {
+  id                    String         @id @default(cuid())
+  conversationId       String
+  conversation         Conversation   @relation(fields: [conversationId], references: [id])
+  senderId             String // فرستنده
+  sender               ConversationParticipant @relation(fields: [senderId], references: [id])
+  
+  // Message content
+  type                 MessageType    @default(TEXT)
+  content              String
+  attachments          Attachment[]
+  metadata             Json?          // For additional message data
+  
+   // Message status
+  status               MessageStatus  @default(SENT)
+  isEdited             Boolean        @default(false)
+  editedAt             DateTime?
+  deletedAt            DateTime?      // Soft delete
+  
+  // Reply threading
+  replyToId            String?
+  replyTo              Message?       @relation("MessageReplies", fields: [replyToId], references: [id])
+  replies              Message[]      @relation("MessageReplies")
+  
+  // Reactions
+  reactions            MessageReaction[]
+
+  // Read receipts
+  readReceipts         MessageReadReceipt[]
+  
+  complaintId          String?
+  complaint            Complaint?     @relation(fields: [complaintId], references: [id])
+    
+  createdAt            DateTime       @default(now())
+}
+
+//........................ MessageReaction model ..............................//
+model MessageReaction {
+  id                   String         @id @default(cuid())
+  messageId            String
+  message              Message        @relation(fields: [messageId], references: [id])
+  userId               String
+  user                 SocialProfile           @relation(fields: [userId], references: [id])
+  
+  emoji                String
+  createdAt            DateTime       @default(now())
+  
+  @@unique([messageId, userId, emoji])
+}
+
+//........................ MessageReadReceipt model ..............................//
+model MessageReadReceipt {
+  id                   String         @id @default(cuid())
+  messageId            String
+  message              Message        @relation(fields: [messageId], references: [id])
+  userId               String   // گیرنده
+  user                 SocialProfile           @relation(fields: [userId], references: [id])
+  
+  readAt               DateTime       @default(now())
+  
+  @@unique([messageId, userId])
+}
+
+//........................ Attachment model ................هر فایل میشه یک اتچمنت..............//
+model Attachment {
+  id                   String         @id @default(cuid())
+  url                  String
+  filename             String
+  fileType             String
+  fileSize             String
+  mimeType             String
+
+  // Metadata
+  duration             String?           // For audio/video files
+  dimensions           Json?          // For images
+  thumbnailUrl         String?
+  
+  // Processing status
+  status               AttachmentStatus @default(PENDING)
+  processingError      String?
+
+  // Metrics 
+  metricId             String
+  metric               Metric          @relation(fields: [metricId], references: [id])
+
+ // Coupons 
+  couponId             String
+  coupon               Coupons          @relation(fields: [couponId], references: [id])
+
+// SuccessfulSellCouponByGarage_Mechanic 
+  successfulSellCouponByGarage_MechanicId            String
+  successfulSellCouponByGarage_Mechanic               SuccessfulSellCouponByGarage_Mechanic          @relation(fields: [successfulSellCouponByGarage_MechanicId], references: [id])
+
+  // Message relation
+  messageId            String?
+  message              Message?       @relation(fields: [messageId], references: [id])
+  
+  // Project relation (if attachment belongs to project)
+  projectId            String?
+  project              Project?       @relation(fields: [projectId], references: [id])
+  
+  // Garage OilService Project 
+  garageOilServiceProjectId    String    @unique
+  garageOilServiceProject     GarageOilServiceProjects      @relation(fields: [garageOilServiceProjectId], references: [id])
+
+  // Garage PartOrder Collaboration
+  garagePartOrderId    String            @unique
+  garagePartOrder    GaragePartOrder  @relation(fields: [garagePartOrderId], references: [id])
+  
+  // Supplier Store Reuest For Supply
+  supplierReqForSupplyId  String
+  supplierReqForSupply  RequestedForSupply @relation(fields: [supplierReqForSupplyId], references: [id])
+  
+  // Supplier Store Reuest For Metric
+  supplierReqForMetricId  String
+  supplierReqForMetric  SupplierStoreReqsForMetricAssignment @relation(fields: [supplierReqForMetricId], references: [id])
+  
+  // Garage OutSourcing Collaboration
+  noticeOutSourcingId    String            @unique
+  noticeOutSourcing    NoticeOutSourcing  @relation(fields: [noticeOutSourcingId], references: [id])
+
+  // Garage ApprenticeShip Collaboration
+  noticeApprenticeId    String            @unique
+  noticeApprentice    NoticeApprenticeship  @relation(fields: [noticeApprenticeId], references: [id])
+
+
+  // Garage Dastyar Collaboration
+  noticeDastyarId    String            @unique
+  noticeDastyar    NoticeDastyar  @relation(fields: [noticeDastyarId], references: [id])
+
+  // Garage Await List
+  garageAwaitList      GarageAwaitList[]
+
+  // Complaint relation (if attachment belongs to complaint)
+  complaintId          String?        @unique
+  complaint            Complaint?     @relation(fields: [complaintId], references: [id])
+  correlationType      CorrelationType
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+}
+
+enum CorrelationType {
+  AUTHOR
+  TARGET
+}
+
+//........................ ProjectSMAttachments model ..............زیلینک سوشال................//
+model ProjectSMAttachments {
+  id                   String         @id @default(cuid())
+  title                String
+  description          String
+  url                  String
+  filename             String
+  fileType             String
+  fileSize             String
+  mimeType             String
+
+  // Metadata
+  duration             String?           // For audio/video files
+  dimensions           Json?          // For images
+  thumbnailUrl         String?
+  
+  // Processing status
+  status               AttachmentStatus @default(PENDING)
+  processingError      String?
+  
+  // Project relation (if attachment belongs to project)
+  projectId            String?
+  project              Project?       @relation(fields: [projectId], references: [id])
+  
+  // Garage OilService Project 
+  garageOilServiceProjectId    String    @unique
+  garageOilServiceProject     GarageOilServiceProjects      @relation(fields: [garageOilServiceProjectId], references: [id])
+
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+}
+
+enum ConversationType {
+  DIRECT               // One-to-one conversation
+  GROUP                // Group conversation
+  PROJECT              // Project-related conversation
+  SUPPORT              // Support conversation
+  TRANSACTION          // New type for transaction-specific conversations
+}
+
+enum ParticipantRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  FILE
+  AUDIO
+  VIDEO
+  SYSTEM              // System notifications/messages
+}
+
+enum MessageStatus {
+  SENDING
+  SENT
+  DELIVERED
+  READ
+  FAILED
+}
+
+enum AttachmentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+//........................ Milestone model ..............................//
+model Milestone {
+  id                    String         @id @default(cuid())
+  projectId            String
+  project              Project        @relation(fields: [projectId], references: [id])
+  
+  title                String
+  description          String
+  dueDate              DateTime
+  completedAt          DateTime?
+  status               MilestoneStatus @default(PENDING)
+  
+  // Garage PartOrder Collaboration
+  garagePartOrderId    String
+  garagePartOrder     GaragePartOrder      @relation(fields: [garagePartOrderId], references: [id])
+  
+  // Garage OutSourcing Collaboration
+  noticeOutSourcingId    String            @unique
+  noticeOutSourcing    NoticeOutSourcing  @relation(fields: [noticeOutSourcingId], references: [id])
+
+// Garage ApprenticeShip Collaboration
+  noticeApprenticeId    String            @unique
+  noticeApprentice    NoticeApprenticeship  @relation(fields: [noticeApprenticeId], references: [id])
+
+ // Garage Dastyar Collaboration
+  noticeDastyarId    String            @unique
+  noticeDastyar    NoticeDastyar  @relation(fields: [noticeDastyarId], references: [id])
+
+// Metrics 
+  metricId             String
+  metric               Metric       @relation(fields: [metricId], references: [id])
+
+// Coupons 
+  couponId             String
+  coupon               Coupons          @relation(fields: [couponId], references: [id])
+
+  // Garage OilService Project 
+  garageOilServiceProjectId    String    @unique
+  garageOilServiceProject     GarageOilServiceProjects      @relation(fields: [garageOilServiceProjectId], references: [id])
+
+  // Payment information
+  payment              MilestonePayment?
+  
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+}
+
+//........................ MilestonePayment model ..............................//
+model MilestonePayment {
+  id                    String         @id @default(cuid())
+  milestoneId          String         @unique
+  milestone            Milestone      @relation(fields: [milestoneId], references: [id])
+  transactionId        String
+  transaction          Transaction    @relation(fields: [transactionId], references: [id])
+  
+  amount               Float
+  status               PaymentStatus  @default(PENDING)
+  paidAt               DateTime?
+  
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+}
+
+//........................ TransactionsActivityLog model ..............................//
+model TransactionsActivityLog {
+  id                   String         @id @default(cuid())
+  transactionId        String         @unique
+  transaction          Transaction    @relation(fields: [transactionId], references: [id])
+  projectId            String?
+  project              Project?       @relation(fields: [projectId], references: [id])
+  complaintId          String?
+  complaint            Complaint?     @relation(fields: [complaintId], references: [id])
+  
+  action               String
+  details              Json?
+  ipAddress            String?
+  userAgent            String?
+  
+  // Garage PartOrder Collaboration
+  garagePartOrderId    String
+  garagePartOrder     GaragePartOrder      @relation(fields: [garagePartOrderId], references: [id])
+  
+  // Metrics 
+  metricId             String
+  metric               Metric       @relation(fields: [metricId], references: [id])
+
+// Coupons 
+  couponId             String
+  coupon               Coupons          @relation(fields: [couponId], references: [id])
+
+  // Garage OutSourcing Collaboration
+  noticeOutSourcingId    String            @unique
+  noticeOutSourcing    NoticeOutSourcing  @relation(fields: [noticeOutSourcingId], references: [id])
+
+// Garage ApprenticeShip Collaboration
+  noticeApprenticeId    String            @unique
+  noticeApprentice    NoticeApprenticeship  @relation(fields: [noticeApprenticeId], references: [id])
+
+ // Garage Dastyar Collaboration
+  noticeDastyarId    String            @unique
+  noticeDastyar    NoticeDastyar  @relation(fields: [noticeDastyarId], references: [id])
+
+  // Garage OilService Project 
+  garageOilServiceProjectId    String    @unique
+  garageOilServiceProject     GarageOilServiceProjects      @relation(fields: [garageOilServiceProjectId], references: [id])
+
+  createdAt            DateTime       @default(now())
+}
+
+//........................ BankAccount model ..............................//
+model BankAccount {
+  id                    String         @id @default(cuid())
+  garageId             String         @unique
+  garage               Garage         @relation(fields: [garageId], references: [id])
+  
+  bankName             String
+  accountNumber        String
+  routingNumber        String
+  isVerified           Boolean        @default(false)
+  
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+}
+
+enum Priority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum CollaborationStatus {
+  PENDING
+  ACCEPTED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  DISPUTED
+}
+
+
+enum MilestoneStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  DELAYED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum TransactionStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  DISPUTED
+  CANCELLED
+  REFUNDED
+}
+
+enum ComplaintStatus {
+  PENDING
+  UNDER_REVIEW
+  RESOLVED
+  DISMISSED
+}
+
+enum ComplaintCategory {
+  PAYMENT_ISSUE
+  QUALITY_ISSUE
+  COMMUNICATION_ISSUE
+  DEADLINE_ISSUE
+  BEHAVIORAL_ISSUE
+  OTHER
+}
+
+//........................ Address model ..............................//
+model Address {
+  id                    String            @id @default(cuid())
+  province              String
+  city                  String
+  avenue                String
+  address               String
+  postalCode            String?
+  supplierStoreId       String               @unique
+  supplierStore         SupplierStore     @relation(fields: [supplierStoreId], references: [id]) 
+  garageId              String               @unique
+  garage                Garage            @relation(fields: [garageId], references: [id])
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+}
+
+//........................ SupplierStore model ..............................//
+model SupplierStore {
+  id               String      @id @default(uuid())
+  name             String?
+  ownerId          String      @unique
+  supplierStoreOwner BusinessProfile     @relation("supplierStoreOwner", fields: [ownerId], references: [id])
+  telephone        String?
+  city             String
+  address          Address?
+  serialNumber     String?
+  profit           String?
+  field            String
+  images           String
+
+  // Garage PartOrder Collaboration
+  garagePartOrder   GaragePartOrder[] 
+
+  // Accepted Projects For Supplying Part
+  projects         Project[]
+
+  // Product-Ralated For Supplying Part
+  products         Product[]
+  // Metrics 
+  metrics          Metric[]
+
+  // Coupons 
+  coupons          Coupons[]
+
+  // Part Order Requests For Supplying
+  reqForSupply        RequestedForSupply[]
+
+  // Relations for GaragePartOrder CoWork
+  requestedGarage             PartOrderSupplyCollaborationHistory[] 
+  
+  // referrals     Referral[]
+
+  InventoryItem     InventoryItem[]
+
+  supplierStoreReqsForMetricAssignment   SupplierStoreReqsForMetricAssignment?
+  wasSupplierStoreMetricAssignmentSuccessful  WasSupplierStoreMetricAssignmentSuccessful?
+
+  sellFromSupplier   SellFromSupplier[]
+
+  media           SupplierStoreMedia[]
+  profileImageUrl String?             // Quick access to main profile image
+  coverImageUrl   String?             // Quick access to cover image
+  review          Review[]
+  customer        Customer[]
+
+  referrals        SupplierStore[] @relation("SupplierStoreReferrals")
+  referredBy       SupplierStore?  @relation("SupplierStoreReferrals", fields: [referredById], references: [id])
+  referredById     String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+ //................. SupplierStore model ......مدل موجودی انبار........................//
+model InventoryItem {
+  id            String    @id @default(uuid())
+  name          String
+  partNumber    String?
+  description   String?
+  price         Float
+  quantity      String
+  
+  // ارتباطات
+  supplierStoreId    String
+  supplierStore      SupplierStore  @relation(fields: [supplierStoreId], references: [id])
+}
+
+model DailyPartPriceList {
+  id            String    @id @default(uuid())
+
+
+}
+
+model SupplierStoreWeeklyTimeline {
+  id            String    @id @default(uuid())
+
+
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+//........................ GaragePartOrder model ..............................//
+model GaragePartOrder {
+  id                   String      @id @default(uuid())
+  publisherId          String
+  publisher            ProjectProfile     @relation(fields: [publisherId], references: [id])
+  clientId             String
+  client               Client   @relation(fields: [clientId], references: [id])
+  garageId             String
+  requesterGarage      Garage   @relation(fields: [garageId], references: [id])
+  suplierStoreId       String
+  acceptorSuppleirStore SupplierStore   @relation(fields: [suplierStoreId], references: [id])
+  title                String
+  isAvailable          Boolean        @default(true)
+  city                 String
+  parts                PartOrder?
+  status               CollaborationStatus  @default(PENDING)
+  budget               Float
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  startedAt            DateTime?
+  completedAt          DateTime?
+  requirements         Json?          // Detailed project requirements
+  attachments          Attachment[] 
+
+  // Project relation (if attachment belongs to project)
+  projectId            String        @unique
+  project              Project       @relation(fields: [projectId], references: [id])
+  
+  // Garage OilService Project 
+  garageOilServiceProjectId    String    @unique
+  garageOilServiceProject     GarageOilServiceProjects      @relation(fields: [garageOilServiceProjectId], references: [id])
+
+  // Conversation
+  conversation         Conversation[]
+
+  // Related records
+  transaction          Transaction?
+  reqForSupply         RequestedForSupply[]
+  milestones           Milestone[]
+  reviews              Review[]
+  transactionsActivityLogs         TransactionsActivityLog[]
+  bookmarks            Bookmark[]
+  share                Share[]
+
+  // other fields...
+
+}
+
+//........................ RequestedForSupply model ..............................//
+model RequestedForSupply {
+  id                  String      @id @default(uuid())
+  supplyParts         SupplyParts?
+  supplierStoreId     String        
+  supplierStore       SupplierStore  @relation(fields: [supplierStoreId], references: [id])
+  attachment          Attachment[]
+
+  // Garage PartOrder Collaboration
+  garagePartOrderId   String
+  garagePartOrder     GaragePartOrder      @relation(fields: [garagePartOrderId], references: [id])
+
+  // Timestamps
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
+
+//........... PartOrderSupplyCollaborationHistory model .........برای محاسبه درصدی یدکی به گاراژ.........//
+model PartOrderSupplyCollaborationHistory{
+  id                  String      @id @default(uuid())
+  requestedGarageId   String
+  requestedGarage     Garage  @relation(fields: [requestedGarageId], references: [id])
+  supplierStoreId     String
+  supplierStore       SupplierStore @relation(fields: [supplierStoreId], references: [id])
+  coWorkingCount      Int         @default(0) // Cache CoWorking History count
+
+  // Timestamps
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
+
+//.............PartOrder model..........قطعات یدکی درخواست شده گاراژ............//
+model PartOrder {
+  id                   String      @id @default(uuid())
+  garagePartOrderId    String      @unique
+  garagePartOrder      GaragePartOrder      @relation(fields: [garagePartOrderId], references: [id])
+  
+  // Part details
+  partSpecifications   PartSpecification[]
+  quantity          String
+  condition         PartCondition     @default(NEW)
+  urgencyLevel      Int               @default(1) // 1-5 scale
+  notes             String?
+  
+  // Optional specific requirements
+  preferredBrands   String?
+  maxPrice          Float?
+  
+  // Timestamps
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+}
+
+//................... SupplyParts model .........طعات یدکی درخواست شده برای تامین توسط یدکی.............//
+model SupplyParts {
+  id                   String      @id @default(uuid())
+  RequestedForSupplyId String      @unique
+  RequestedForSupply   RequestedForSupply @relation(fields: [RequestedForSupplyId], references: [id])
+
+// Part details
+  partSpecifications   PartSpecification[]
+  quantity             String
+  condition            PartCondition
+  brand               String?
+  
+  // Pricing
+  unitPrice           Float
+  totalPrice          Float
+  
+  // Availability
+  inStock             Boolean           @default(true)
+  estimatedDeliveryDays String?
+  
+  // Quality and warranty
+  warrantyMonths      String?
+  qualityCertification String?
+  
+  // Additional information
+  description         String?
+  manufacturingYear   String?
+  
+  // Timestamps
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+// Dakhele hamoon attachmenti ke toye model request for supply hast, yadaki har aks ya voicei ke
+// lazeme ersal kone baraye garage handle mishe, dige niaz nist inja attach beshe chizi.
+// Hamintor baraye part order ham hamine.
+}
+
+// Part specification model to store different types of parts
+model PartSpecification {
+  id             String           @id @default(uuid())
+  name           String        // e.g., "Brake Caliper", "Brake Pad"
+  category       PartCategory
+  brand          String?       // Brand name if specified
+  model          String?       // Model compatibility
+  year           String?         // Year of compatibility
+  details        Json?        // Additional specifications as JSON
+  supplyPartId   String?
+  supplyPart     SupplyParts?   @relation(fields: [supplyPartId], references: [id])
+  partOrderId    String?
+  partOrder      PartOrder?     @relation(fields: [partOrderId], references: [id])
+
+// Supplier Store Reuest For Metric
+  supplierReqForMetricId  String
+  supplierReqForMetric  SupplierStoreReqsForMetricAssignment @relation(fields: [supplierReqForMetricId], references: [id])
+  
+  // Coupons 
+  couponId             String
+  coupon               Coupons          @relation(fields: [couponId], references: [id])
+
+// successfulSellCouponByGarage_Mechanic 
+  successfulSellCouponByGarage_MechanicId             String
+  successfulSellCouponByGarage_Mechanic    SuccessfulSellCouponByGarage_Mechanic  @relation(fields: [successfulSellCouponByGarage_MechanicId], references: [id])
+
+// WasSupplierStoreMetricAssignmentSuccessful 
+  wasSupplierStoreMetricAssignmentSuccessfulId             String
+  wasSupplierStoreMetricAssignmentSuccessful   WasSupplierStoreMetricAssignmentSuccessful  @relation(fields: [wasSupplierStoreMetricAssignmentSuccessfulId], references: [id])
+
+}
+
+// Enum for different part categories
+enum PartCategory {
+  BRAKE_SYSTEM
+  ENGINE
+  TRANSMISSION
+  SUSPENSION
+  ELECTRICAL
+  FLUID
+  BODY
+  OTHER
+}
+
+// Enum for part condition
+enum PartCondition {
+  NEW
+  USED
+  REFURBISHED
+}
+//........................ GarageAwaitList model ..............................//
+model GarageAwaitList {
+  id                   String      @id @default(uuid())
+  garageId             String
+  hostGarage           Garage   @relation(fields: [garageId], references: [id])
+  clientId             String
+  client               Client   @relation(fields: [clientId], references: [id])
+  acceptancestatus     AcceptanceStatus
+  acceptanceReportSheetUrl   String?
+  carPlateNumber       String
+  carMillage           String
+  carModel             String
+  carChassisNumber     String?
+  requirements         Json?          // Detailed project requirements
+  attachment           Attachment[]
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+}
+
+//........................ GarageOilServiceProjects model ..............................//
+model GarageOilServiceProjects {
+  id                   String      @id @default(uuid())
+  clientId             String      @unique
+  client               Client   @relation(fields: [clientId], references: [id])
+  garageId             String      @unique
+  garage               Garage   @relation(fields: [garageId], references: [id])
+  invoiceFactorUrl     String?
+  title                String
+  lastServiceMilage    String?
+  lastServiceOil       String?
+  thisServiceMilage    String?
+  thisServiceOil       String?
+  car                  String
+  plateNumber          String   
+  chassisNumber        String
+  carMillage           String    
+  buildYear            String    
+  brokeReportDetails   String        
+  fixReportDetails     String      
+  clientRate           String  
+  suppliedParts        String     
+  invoiceFactor        String   
+  partSupplyFactor     String
+  description          String
+  status               CollaborationStatus  @default(PENDING)
+  budget               Float
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  startedAt            DateTime?
+  completedAt          DateTime?
+  priority             Priority       @default(NORMAL)
+  deadline             DateTime?
+  requirements         Json?          // Detailed project requirements
+  attachments          Attachment[]      // Array of attachment URLs
+  
+  // Conversation
+  conversation         Conversation[]
+
+  // Garage Part Order
+  garagePartOrder      GaragePartOrder?
+
+  // SocialMedia Sharing Project-Resume Timeline FollowUp
+  projectSMAttachments ProjectSMAttachments[]   // Array of SMattachment URLs
+
+  // Related records
+  transaction          Transaction?
+  milestones           Milestone[]
+  reviews              Review[]
+  transactionsActivityLogs         TransactionsActivityLog[]
+}
+
+//........................ GarageRequirementsRequest model ..............................//                                        
+model GarageRequirementsRequest {
+  id          String      @id @default(uuid())
+  title       String
+  description String
+  city        String
+  content     String    @db.Text
+  published   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+ // Media - Changed to one-to-many relation
+  featuredImage String?
+  contentMedia    ContentMedia[]      @relation("GarageRequirementMedia")
+
+  // Author
+  authorId    String       
+  author      SocialProfile      @relation("UserGarageRequirementMediaN", fields: [authorId], references: [id], onDelete: Cascade)
+
+  // Categories and tags
+  categories  CategoryOnNotice[]
+  tags        TagOnNotice[]
+
+  // Stringeractions
+  bookmarks   Bookmark[] @relation("GarageRequirementMediaNBookmarks")
+  shares      Share[]   @relation("GarageRequirementMediaNShares")
+
+  // Meta
+  viewCount   Int       @default(0)
+  shareCount  Int       @default(0)
+  slug        String    @unique
+  metadata    Json?     // For SEO and other metadata
+
+  @@index([authorId])
+  @@index([slug])
+  @@index([createdAt])
+}
+
+//........................ AutoServicesRequirementsRequest model ..............................//  
+model AutoServicesRequirementsRequest {
+  id          String      @id @default(uuid())
+  title       String
+  description String
+  content     String    @db.Text
+  city        String
+  published   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+ // Media - Changed to one-to-many relation
+  featuredImage String?
+  contentMedia    ContentMedia[]      @relation("AutoServicesRequirementMedia")
+
+  // Author
+  authorId    String
+  author      SocialProfile      @relation("UserAutoServicesRequirementMediaN", fields: [authorId], references: [id], onDelete: Cascade)
+
+  // Categories and tags
+  categories  CategoryOnNotice[]
+  tags        TagOnNotice[]
+
+  // Stringeractions
+  bookmarks   Bookmark[] @relation("AutoServicesRequirementMediaNBookmarks")
+  shares      Share[]   @relation("AutoServicesRequirementMediaNShares")
+
+  // Meta
+  viewCount   Int       @default(0)
+  shareCount  Int       @default(0)
+  slug        String    @unique
+  metadata    Json?     // For SEO and other metadata
+
+  @@index([authorId])
+  @@index([slug])
+  @@index([createdAt])
+}
+
+enum AcceptanceStatus {
+PENDING
+ACCEPTED  //اکسپت شد وضعیت باید خود به خود حذف شه
+REJECTED
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+//........................ NoticeDivar model ..............................//
+model NoticeDivar {
+  id          String      @id @default(uuid())
+  title       String
+  description String
+  content     String    @db.Text
+  city        String
+  published   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+ // Media - Changed to one-to-many relation
+  featuredImage String?
+  contentMedia    ContentMedia[]      @relation("DivarNMedia")
+
+  // Author
+  authorId    String
+  author      SocialProfile      @relation("UserDivarN", fields: [authorId], references: [id], onDelete: Cascade)
+
+  // Categories and tags
+  categories  CategoryOnNotice[]
+  tags        TagOnNotice[]
+
+  // Stringeractions
+  bookmarks   Bookmark[] @relation("DivarNBookmarks")
+  shares      Share[]   @relation("DivarNShares")
+
+  // Meta
+  viewCount   Int       @default(0)
+  shareCount  Int       @default(0)
+  slug        String    @unique
+  metadata    Json?     // For SEO and other metadata
+
+  @@index([authorId])
+  @@index([slug])
+  @@index([createdAt])
+}
+
+//........................ NoticeEstNiaz model ..............................//
+model NoticeEstNiaz {
+  id          String      @id @default(uuid())
+  title       String
+  description String
+  city        String
+  content     String    @db.Text
+  published   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Media - Changed to one-to-many relation
+  featuredImage String?
+  contentMedia    ContentMedia[]      @relation("EstNMedia")
+
+  // Author
+  authorId    String
+  author      SocialProfile      @relation("UserEstN", fields: [authorId], references: [id], onDelete: Cascade)
+
+  // Categories and tags
+  categories  CategoryOnNotice[]
+  tags        TagOnNotice[]
+
+  // Stringeractions
+  bookmarks   Bookmark[] @relation("EstNBookmarks")
+  shares      Share[]   @relation("EstNShares")
+
+  // Meta
+  viewCount   Int       @default(0)
+  shareCount  Int       @default(0)
+  slug        String    @unique
+  metadata    Json?     // For SEO and other metadata
+
+  @@index([authorId])
+  @@index([slug])
+  @@index([createdAt])
+}
+
+//........................ **NoticeOutSourcing model ..............................//
+model NoticeOutSourcing {
+  id              String      @id @default(uuid())
+  publisherId     String
+  publisher       SocialProfile     @relation(fields: [publisherId], references: [id])
+  title           String
+  city            String
+  status          CollaborationStatus  @default(PENDING)
+  isAvailable     Boolean        @default(true)
+  budget          Float
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  startedAt       DateTime?
+  completedAt     DateTime?
+  requirements    Json?          // Detailed project requirements
+  attachments     Attachment[] 
+  // Toye in agahi ha attachment chizi hast ke garage 
+  // darkhast dahande be agahi ezafe mikone hala chizayi ke badan garage pazirande 
+  // ham bekhad be proje attach kone toye conversation va message handle mishe
+
+  // Project relation (if attachment belongs to project)
+  projectId            String        @unique
+  project              Project       @relation(fields: [projectId], references: [id])
+  
+  // OutSourcing Notice Requester garage relation
+  requesterGarageId String
+  requesterGarage  Garage   @relation("requesterGarage", fields: [requesterGarageId], references: [id])
+  // OutSourcing Notice Acceptor garage relation
+  acceptorGarageId String
+  acceptorGarage   Garage   @relation("acceptorGarage", fields: [acceptorGarageId], references: [id])
+  
+  // Conversation
+  conversation         Conversation[]
+
+  // Related records
+  transaction          Transaction?
+  garageReqForProject  GarageReqsForOutSourcingCoWork?
+  milestones           Milestone[]
+  reviews              Review[]
+  transactionsActivityLogs         TransactionsActivityLog[]
+  bookmarks            Bookmark[]
+  share                Share[]
+
+  // other fields...
+
+}
+
+//........................ GarageReqsForOutSourcingCoWork model ..............................//
+model GarageReqsForOutSourcingCoWork {
+  id              String      @id @default(uuid())
+  publisherId     String      @unique
+  publisher       SocialProfile     @relation(fields: [publisherId], references: [id])
+  garageId        String      @unique
+  garage          Garage   @relation(fields: [garageId], references: [id])
+  noticeOutSourcingId  String @unique
+  noticeOutSourcing    NoticeOutSourcing   @relation(fields: [noticeOutSourcingId], references: [id])
+
+  // Timestamps
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
+
+//........................ OutSourcingCollaborationHistory model ..............................//
+model OutSourcingCollaborationHistory {
+id                String      @id @default(uuid())
+hostGarageId       String
+hostGarage         Garage      @relation("hostGarage", fields: [hostGarageId], references: [id])
+acceptorGarageId   String
+acceptorGarage     Garage      @relation("acceptorGarage", fields: [acceptorGarageId], references: [id])
+coWorkingCount     Int         @default(0) // Cache CoWorking History count
+
+  // Timestamps
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
+
+//........................ NoticePartProviding model .........تامین قطعهTamin ghete .....................//
+model NoticePartProviding {
+  id          String      @id @default(uuid())
+  title       String
+  description String
+  city        String
+  content     String    @db.Text
+  published   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Media - Changed to one-to-many relation
+  featuredImage String?
+  contentMedia    ContentMedia[]      @relation("PartPNMedia")
+
+  // Author
+  authorId    String
+  author      SocialProfile      @relation("UserPartPN", fields: [authorId], references: [id], onDelete: Cascade)
+
+  // Categories and tags
+  categories  CategoryOnNotice[]
+  tags        TagOnNotice[]
+
+  // Stringeractions
+  bookmarks   Bookmark[] @relation("PartPNBookmarks")
+  shares      Share[]   @relation("PartPNShares")
+
+  // Meta
+  viewCount   Int       @default(0)
+  shareCount  Int       @default(0)
+  slug        String    @unique
+  metadata    Json?     // For SEO and other metadata
+
+  @@index([authorId])
+  @@index([slug])
+  @@index([createdAt])
+}
+
+//........................ **NoticeApprenticeship model ..........تامین شاگرد..................//
+model NoticeApprenticeship {
+  id              String      @id @default(uuid())
+  publisherId     String
+  publisher       ProjectProfile     @relation("noticeApprenticePublisher", fields: [publisherId], references: [id])
+  apprenticeId    String?
+  apprentice      ProjectProfile?     @relation("noticeApprenticeApprentice", fields: [apprenticeId], references: [id])
+  title           String
+  city            String
+  status          CollaborationStatus  @default(PENDING)
+  isAvailable          Boolean        @default(true)
+  budget          Float
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  startedAt       DateTime?
+  completedAt     DateTime?
+  requirements    Json?          // Detailed project requirements
+  attachments     Attachment[] // Toye in agahi ha attachment chizi hast ke garage 
+  // darkhast dahande be agahi ezafe mikone hala chizayi ke badan garage pazirande 
+  // ham bekhad be proje attach kone toye conversation va message handle mishe
+
+  // Project relation (if attachment belongs to project)
+  projectId            String        @unique
+  project              Project       @relation(fields: [projectId], references: [id])
+  
+  // Apprentice Notice Requester garage relation
+  requesterGarageId String
+  requesterGarage  Garage   @relation("requesterGarage", fields: [requesterGarageId], references: [id])
+  // Apprentice Notice Acceptor garage relation
+  acceptorGarageId String?
+  acceptorGarage   Garage?   @relation("acceptorGarage", fields: [acceptorGarageId], references: [id])
+  
+  shagerdReqsForApprenticeCoWork  ShagerdReqsForApprenticeCoWork?
+  garageReqsForApprenticeCoWork  GarageReqsForApprenticeCoWork?
+
+  // Conversation
+  conversation         Conversation[]
+
+  // Related records
+  transaction          Transaction?
+  milestones           Milestone[]
+  reviews              Review[]
+  transactionsActivityLogs         TransactionsActivityLog[]
+  bookmarks            Bookmark[]
+  share                Share[]
+}
+
+//........................ ShagerdReqsForApprenticeCoWork model ..........تامین شاگرد..................//
+model ShagerdReqsForApprenticeCoWork {
+  id                  String      @id @default(uuid())
+  apprenticeId        String      @unique
+  apprentice          ProjectProfile     @relation(fields: [apprenticeId], references: [id])
+  garageId            String?      @unique
+  garage              Garage?   @relation(fields: [garageId], references: [id])
+  status              CollaborationStatus
+
+  noticeApprenticeId  String @unique
+  noticeApprentice    NoticeApprenticeship   @relation(fields: [noticeApprenticeId], references: [id])
+
+  // Timestamps
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+}
+
+//........................ GarageReqsForApprenticeCoWork model ..........تامین شاگرد..................//
+model GarageReqsForApprenticeCoWork {
+   id              String      @id @default(uuid())
+   garageOwnerId   String      @unique
+   garageOwner     ProjectProfile     @relation("garageOwner", fields: [garageOwnerId], references: [id])
+   garageId        String      @unique
+   garage          Garage   @relation(fields: [garageId], references: [id])
+   apprenticeId    String      @unique
+   apprentice      ProjectProfile     @relation("apprentice", fields: [apprenticeId], references: [id])
+ 
+   noticeApprenticeId  String @unique
+   noticeApprentice    NoticeApprenticeship   @relation(fields: [noticeApprenticeId], references: [id])
+  
+  // Timestamps
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
+
+//........................ **NoticeDastyar model ..............................//
+model NoticeDastyar {
+  id              String      @id @default(uuid())
+  publisherId     String
+  publisher       ProjectProfile     @relation("noticeDastyarPublisher", fields: [publisherId], references: [id])
+  acceptorMechanicId      String
+  acceptorMechanic        ProjectProfile     @relation("noticeDastyarMechanic", fields: [acceptorMechanicId], references: [id])
+  title           String
+  city            String
+  status          CollaborationStatus  @default(PENDING)
+  isAvailable          Boolean        @default(true)
+  budget          Float
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  startedAt       DateTime?
+  completedAt     DateTime?
+  requirements    Json?          // Detailed project requirements
+  attachments     Attachment[] 
+
+  // Project relation (if attachment belongs to project)
+  projectId            String        @unique
+  project              Project       @relation(fields: [projectId], references: [id])
+  
+  // Dastyar Notice Requester garage relation
+  requesterGarageId String
+  requesterGarage  Garage   @relation("requesterGarage", fields: [requesterGarageId], references: [id])
+  // Dastyar Notice Acceptor garage relation
+  acceptorGarageId String
+  acceptorGarage   Garage   @relation("acceptorGarage", fields: [acceptorGarageId], references: [id])
+  
+  mechanicReqsForDastyarCoWork  MechanicReqsForDastyarCoWork?
+  garageReqsForDastyarCoWork  GarageReqsForDastyarCoWork?
+
+  projectsMechanicWorkAt      ProjectsMechanicWorkAt?
+  projectsApprenticeWorkAt    ProjectsApprenticeWorkAt?
+
+  // Conversation
+  conversation         Conversation[]
+
+  // Related records
+  transaction          Transaction?
+  milestones           Milestone[]
+  reviews              Review[]
+  transactionsActivityLogs         TransactionsActivityLog[]
+  bookmarks            Bookmark[]
+  share                Share[]
+}
+
+//........................ MechanicReqsForDastyarCoWork model ..............................//
+model MechanicReqsForDastyarCoWork {
+  id              String      @id @default(uuid())
+  mechanicId     String      @unique
+  mechanic       ProjectProfile     @relation(fields: [mechanicId], references: [id])
+  garageId        String?      @unique
+  garage          Garage?   @relation(fields: [garageId], references: [id])
+  
+  noticeDastyarId  String @unique
+  noticeDastyar    NoticeDastyar   @relation(fields: [noticeDastyarId], references: [id])
+
+  // Timestamps
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
+
+//........................ GarageReqsForDastyarCoWork model ..............................//
+model GarageReqsForDastyarCoWork {
+   id              String      @id @default(uuid())
+   garageOwnerId   String      @unique
+   garageOwner     ProjectProfile     @relation("garageOwner", fields: [garageOwnerId], references: [id])
+   garageId        String      @unique
+   garage          Garage   @relation(fields: [garageId], references: [id])
+   mechanicId    String      @unique
+   mechanic      ProjectProfile     @relation("mechanic", fields: [mechanicId], references: [id])
+ 
+   noticeDastyarId  String @unique
+   noticeDastyar    NoticeDastyar   @relation(fields: [noticeDastyarId], references: [id])
+
+  // Timestamps
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
+//........................ MechanicReadyToWork model ..............................//
+model MechanicReadyToWork {
+  id              String      @id @default(uuid())
+  city            String
+  mechanicId      String      @unique
+  mechanic        ProjectProfile     @relation(fields: [mechanicId], references: [id])
+  
+  // Timestamps
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
+
+//............................. **Metric model ..............................//
+model Metric {
+  id              String      @id @default(uuid())
+  publisherId     String
+  publisher       ProjectProfile     @relation(fields: [publisherId], references: [id])
+  garageId        String
+  garage          Garage   @relation(fields: [garageId], references: [id])
+  clientId        String  
+  client          Client   @relation(fields: [clientId], references: [id])
+  supplierStoreId String
+  supplierStore   SupplierStore  @relation(fields: [supplierStoreId], references: [id])
+  city            String
+  isAvailable          Boolean        @default(true)
+  title           String
+  description     String
+  attanchment     Attachment[]
+  status          CollaborationStatus  @default(PENDING)
+  requirements    Json?          // Detailed project requirements
+  carModel          String?
+  carBuildYear      String?
+
+ // Conversation
+  conversation    Conversation[]
+
+  viewCount       Int       @default(0)
+  shareCount      Int       @default(0)
+
+  // Stringeractions
+  comments        Comment[] 
+  likes           Like[]     @relation("MetricLikes")
+  dislikes        Dislike[]  @relation("MetricDislikes")
+  bookmarks       Bookmark[] @relation("MetricBookmarks")
+  shares          Share[]   @relation("MetricShares")
+  
+  supplierStoreReqsForMetricAssignment   SupplierStoreReqsForMetricAssignment? 
+  wasSupplierStoreMetricAssignmentSuccessful  WasSupplierStoreMetricAssignmentSuccessful?
+  // Related records
+  transaction     Transaction?
+  milestones      Milestone[]
+  reviews         Review[]
+  transactionsActivityLogs    TransactionsActivityLog[]
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+}
+
+// ........................ SupplierStoreReqsForMetricAssignment model ..............................//
+model SupplierStoreReqsForMetricAssignment {
+  id              String      @id @default(uuid())
+  publisherId     String      @unique
+  publisher       ProjectProfile     @relation("metricReqPublisher", fields: [publisherId], references: [id])
+  supplierStoreId String      @unique
+  supplierStore   SupplierStore @relation(fields: [supplierStoreId], references: [id])
+  metricId        String      @unique
+  metric          Metric        @relation(fields: [metricId], references: [id])   
+  attachment      Attachment[]
+
+ // Part details
+  partSpecifications   PartSpecification[]
+  quantity          String
+  condition         PartCondition     @default(NEW)
+  urgencyLevel      Int               @default(1) // 1-5 scale
+  notes             String?
+  
+  // Timestamps
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+}
+
+//........................ WasSupplierStoreMetricAssignmentSuccessful model ..............................//
+model WasSupplierStoreMetricAssignmentSuccessful {
+  id              String      @id @default(uuid())
+  supplierStoreId String      @unique
+  supplierStore   SupplierStore @relation(fields: [supplierStoreId], references: [id])
+  metricId        String      @unique
+  metric          Metric        @relation(fields: [metricId], references: [id])   
+  garageId        String      @unique
+  garage          Garage   @relation(fields: [garageId], references: [id])
+  clientId        String      @unique
+  client          Client   @relation(fields: [clientId], references: [id])
+  finalPrice      String?
+
+  // Part details
+  partSpecifications   PartSpecification[]
+  quantity          String
+  condition         PartCondition     @default(NEW)
+  urgencyLevel      Int               @default(1) // 1-5 scale
+  notes             String?
+  
+  // Timestamps
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//............................. **Coupons model ..............................//
+model Coupons {
+  id              String      @id @default(uuid())
+  publisherId     String
+  publisher       ProjectProfile     @relation("couponPublisher", fields: [publisherId], references: [id])
+  supplierStoreId String
+  supplierStore   SupplierStore @relation(fields: [supplierStoreId], references: [id])
+  acceptorMechanics    CouponMechanicAcceptor[]
+  successMechanics     CouponMechanicSuccess[]
+  acceptorGarages      CouponGarageAcceptor[]
+  successGarages       CouponGarageSuccess[]
+  Mechanic_GarageReqsForCoupon Mechanic_GarageReqsForCouponAssignment[]
+  successfulSellCouponByGarage_Mechanic  SuccessfulSellCouponByGarage_Mechanic[]
+  isAvailable          Boolean        @default(true)
+  city            String
+  title           String
+  description     String
+  attanchment     Attachment[]
+  status          CollaborationStatus  @default(PENDING)
+  requirements    Json?          // Detailed project requirements
+
+ // Part details
+  partSpecifications   PartSpecification[]
+  quantity          String
+  condition         PartCondition     @default(NEW)
+  urgencyLevel      Int               @default(1) // 1-5 scale
+  notes             String?
+  
+ // Conversation
+  conversation    Conversation[]
+
+  viewCount       Int       @default(0)
+  shareCount      Int       @default(0)
+
+  // Stringeractions
+  comments        Comment[] 
+  likes           Like[]    
+  dislikes        Dislike[]  
+  bookmarks       Bookmark[] 
+  shares          Share[]   
+  // Related records
+  transaction     Transaction?
+  milestones      Milestone[]
+  reviews         Review[]
+  transactionsActivityLogs    TransactionsActivityLog[]
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+}
+
+// جدول واسط برای مکانیک‌های پذیرنده کوپن
+model CouponMechanicAcceptor {
+  id          String      @id @default(uuid())
+  couponId    String
+  mechanicId  String
+  acceptedAt  DateTime @default(now())
+  status      AcceptorStatus @default(PENDING)
+  
+  coupon      Coupons  @relation(fields: [couponId], references: [id])
+  mechanic    ProjectProfile     @relation(fields: [mechanicId], references: [id])
+
+@@unique([couponId, mechanicId])
+}
+
+// جدول واسط برای مکانیک‌های موفق در استفاده از کوپن
+model CouponMechanicSuccess {
+  id          String      @id @default(uuid())
+  couponId    String
+  mechanicId  String
+  succeededAt DateTime @default(now())
+  
+  coupon      Coupons  @relation(fields: [couponId], references: [id])
+  mechanic    ProjectProfile     @relation(fields: [mechanicId], references: [id])
+
+  @@unique([couponId, mechanicId])
+}
+
+// جدول واسط برای گاراژهای پذیرنده کوپن
+model CouponGarageAcceptor {
+  id          String      @id @default(uuid())
+  couponId    String
+  garageId    String
+  acceptedAt  DateTime @default(now())
+  status      AcceptorStatus @default(PENDING)
+  
+  coupon      Coupons  @relation(fields: [couponId], references: [id])
+  garage      Garage   @relation(fields: [garageId], references: [id])
+
+  @@unique([couponId, garageId])
+}
+
+// جدول واسط برای گاراژهای موفق در استفاده از کوپن
+model CouponGarageSuccess {
+  id          String      @id @default(uuid())
+  couponId    String
+  garageId    String
+  succeededAt DateTime @default(now())
+  
+  coupon      Coupons  @relation(fields: [couponId], references: [id])
+  garage      Garage   @relation(fields: [garageId], references: [id])
+
+  @@unique([couponId, garageId])
+}
+
+
+enum AcceptorStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  COMPLETED
+}
+
+//........................ Mechanic_GarageReqsForCouponAssignment model ..............................//
+model Mechanic_GarageReqsForCouponAssignment {
+  id              String      @id @default(uuid())
+  publisherId     String      @unique
+  publisher       ProjectProfile     @relation(fields: [publisherId], references: [id])
+  garageId        String?     @unique
+  garage          Garage?   @relation(fields: [garageId], references: [id])
+  couponId        String       @unique
+  coupon          Coupons        @relation(fields: [couponId], references: [id])   
+
+  // Timestamps
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+
+}
+
+//........................ SuccessfulSellCouponByGarage model ..............................//
+model SuccessfulSellCouponByGarage_Mechanic {
+  id              String      @id @default(uuid())
+  publisherId     String      @unique
+  publisher       ProjectProfile     @relation(fields: [publisherId], references: [id])
+  garageId        String?     @unique
+  garage          Garage?   @relation(fields: [garageId], references: [id])
+  couponId        String       @unique
+  coupon          Coupons        @relation(fields: [couponId], references: [id])   
+  attachment      Attachment[]
+
+ // Part details
+  partSpecifications   PartSpecification[]
+  quantity          String
+  condition         PartCondition     @default(NEW)
+  urgencyLevel      Int               @default(1) // 1-5 scale
+  notes             String?
+  
+}
+
+//............................. NoticeShopSupplier model ..............................//
+model NoticeShopSupplier {
+  id          String      @id @default(uuid())
+  title       String
+  description String
+  city        String
+  content     String    @db.Text
+  published   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Media - Changed to one-to-many relation
+  featuredImage String?
+  contentMedia    ContentMedia[]      @relation("ShopSupplierNMedia")
+
+  // Author
+  authorId    String
+  author      SocialProfile      @relation("UserShopSupplierN", fields: [authorId], references: [id], onDelete: Cascade)
+
+  // Categories and tags
+  categories  CategoryOnNotice[]
+  tags        TagOnNotice[]
+
+  // Stringeractions
+  bookmarks   Bookmark[] @relation("ShopSupplierNBookmarks")
+  shares      Share[]   @relation("ShopSupplierNShares")
+
+  // Meta
+  viewCount   Int       @default(0)
+  shareCount  Int       @default(0)
+  slug        String    @unique
+  metadata    Json?     // For SEO and other metadata
+
+  @@index([authorId])
+  @@index([slug])
+  @@index([createdAt])
+}
+
+//........................ SellFromSupplier model ...........درصدی یدکی به گاراژ..............//
+model SellFromSupplier {
+  id              String      @id @default(uuid())
+  supplierStoreId String  
+  supplierStore   SupplierStore @relation(fields: [supplierStoreId], references: [id])
+  mechanicId      String?      @unique
+  mechanic        ProjectProfile?     @relation(fields: [mechanicId], references: [id])
+  garageId        String?     @unique
+  garage          Garage?  @relation(fields: [garageId], references: [id])
+  sellCount       Int      @default(0)
+  totalSellPrice  Int      @default(0)
+     
+  //برای اینکه راحت دسترسی داشته باشیم سوابق خرید گاراژ و مکانیک از اگهی های قطعات تامین کننده    
+
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////****END****///////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+model Sliders {
+    id              String      @id @default(uuid())
+    title    String
+    text     String
+    content  String  
+    type     String 
+}  
+
+model WelcomeAllert {
+    id              String      @id @default(uuid())
+
+}
+
+model Campaigns {
+    id              String      @id @default(uuid())
+
+}
+
+
+
+// I've reviewed your schema and added several enhancements. Here are the key improvements and additions:
+
+// Enhanced Subscription Management:
+// Added SubscriptionTier model to better organize different subscription levels
+// Stringroduced FeatureLimit to track specific feature usage limits per plan
+// Added UsageLog for detailed feature usage tracking
+// Created SubscriptionChange to maintain a history of plan changes
+
+
+// Improved Referral System:
+// Added ReferralCode model for unique referral code generation and tracking
+// Created ReferralUse to track when and how referral codes are used
+// Stringroduced ReferralRewardRule to flexibly define referral reward tiers
+// Enhanced tracking of referral relationships between users
+
+
+// Better Billing Management:
+// Added BillingRecord for comprehensive payment history
+// Enhanced relationship between subscriptions and payment methods
+// Improved invoice tracking and relationship management
+
+
+// New Features:
+// Flexible feature limits per plan
+// Detailed usage tracking
+// Comprehensive subscription change history
+// Better referral tracking and reward management
+
+
+
+// Suggestions for further improvements:
+
+// Consider adding:
+// Notification preferences for billing and subscription events
+// Proration rules for subscription changes
+// More detailed audit logging for subscription and referral activities
+// Stringegration with external payment gateway specific fields
+
+
+// You might want to add indexes for:
+// Frequently queried date fields
+// Status fields that are used in filters
+// Foreign key relationships that are frequently joined
+
+
+// Consider implementing:
+// Soft delete for important models
+// Versioning for critical data changes
+// Rate limiting fields for API calls
+// Cache invalidation triggers
+
+
+

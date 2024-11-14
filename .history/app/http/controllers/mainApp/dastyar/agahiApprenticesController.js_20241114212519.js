@@ -354,6 +354,96 @@ class ApprenticeshipNoticeController extends Controller {
     }
   }
 
+  // Query methods with proper pagination
+  async getGarageApprenticeRequests(req, res, next) {
+    try {
+      const garageId = await this.#validateGarageOwnership(req.user);
+      const { page = 1, limit = 10 } = req.query;
+      
+      const [notices, total] = await prisma.$transaction([
+        prisma.noticeApprenticeship.findMany({
+          where: { requesterGarageId: garageId },
+          skip: (page - 1) * limit,
+          take: limit,
+          include: {
+            apprentice: true,
+            attachments: true
+          }
+        }),
+        prisma.noticeApprenticeship.count({
+          where: { requesterGarageId: garageId }
+        })
+      ]);
+
+      return res.status(HttpStatus.OK).json({
+        statusCode: HttpStatus.OK,
+        data: {
+          notices,
+          pagination: {
+            total,
+            pages: Math.ceil(total / limit),
+            currentPage: page,
+            perPage: limit
+          }
+        }
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getAllOfGarageApprenticeRequests(req, res, next) {
+    try {
+      const garageId = await this.#validateGarageOwnership(req.user);
+      const { page = 1, limit = 10, status } = req.query;
+      
+      const where = { requesterGarageId: garageId };
+      if (status) where.status = status;
+
+      const [notices, total] = await prisma.$transaction([
+        prisma.noticeApprenticeship.findMany({
+          where,
+          skip: (page - 1) * limit,
+          take: limit,
+          include: {
+            apprentice: {
+              select: {
+                id: true,
+                name: true,
+                avatar: true,
+                phone: true
+              }
+            },
+            attachments: true,
+            project: {
+              select: {
+                title: true,
+                status: true
+              }
+            }
+          },
+          orderBy: { createdAt: 'desc' }
+        }),
+        prisma.noticeApprenticeship.count({ where })
+      ]);
+
+      return res.status(HttpStatus.OK).json({
+        statusCode: HttpStatus.OK,
+        data: {
+          notices,
+          pagination: {
+            total,
+            pages: Math.ceil(total / limit),
+            currentPage: parseInt(page),
+            perPage: parseInt(limit)
+          }
+        }
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getAllGarageNoticeApprentices(req, res, next) {
     try {
       //همه ی درخواست های شاگرد که گاراژ ثبت کرده

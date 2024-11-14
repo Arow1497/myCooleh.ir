@@ -2,9 +2,10 @@ const createError = require("http-errors");
 const { StatusCodes: HttpStatus } = require("http-status-codes");
 const Controller = require("../../controller");
 const { PrismaClient } = require('@prisma/client');
+const { getAudioDurationInSeconds } = require('get-audio-duration');
 const path = require('path');
 const prisma = new PrismaClient();
-const { ListOfImagesFromRequest, getTime, audioSeconds } = require("../../../../utils/functions");
+const { ListOfImagesFromRequest, getTime } = require("../../../../utils/functions");
 const { garagesSchema } = require("../../../validators/MainApp/garages.schema");
 const { serialNumGenerator, ListOfImagesFromRequest, deleteFileInPublic } = require("../../../../utils/functions");
 const { ObjectIdValidator } = require("../../../validators/public.validator");
@@ -70,7 +71,7 @@ async #processAttachments(files, fileUploadPath, correlationType) {
           const voiceURL = `${process.env.BASE_URL}:${process.env.APPLICATION_PORT}/${voiceAddress}`;
           
           try {
-              const seconds = await audioSeconds(voiceURL);
+              const seconds = await getAudioDurationInSeconds(voiceURL);
               attachments.push({
                   url: voiceAddress,
                   filename,

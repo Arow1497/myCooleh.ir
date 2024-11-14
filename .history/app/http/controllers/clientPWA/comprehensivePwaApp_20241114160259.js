@@ -6,9 +6,10 @@ const createError = require("http-errors");
 const { StatusCodes: HttpStatus } = require("http-status-codes");
 const Controller = require("../../controller");
 const { PrismaClient } = require('@prisma/client');
+const { getAudioDurationInSeconds } = require('get-audio-duration');
 const path = require('path');
 const prisma = new PrismaClient();
-const { ListOfImagesFromRequest, getTime, audioSeconds } = require("../../../../utils/functions");
+const { ListOfImagesFromRequest, getTime } = require("../../../../utils/functions");
 
 class ComprehensivePwaAppController extends Controller {
     // Private helper methods
@@ -39,7 +40,7 @@ class ComprehensivePwaAppController extends Controller {
                 const voiceURL = `${process.env.BASE_URL}:${process.env.APPLICATION_PORT}/${voiceAddress}`;
                 
                 try {
-                    const seconds = await audioSeconds(voiceURL);
+                    const seconds = await getAudioDurationInSeconds(voiceURL);
                     attachments.push({
                         url: voiceAddress,
                         filename,
