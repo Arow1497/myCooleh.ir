@@ -187,19 +187,19 @@ function RandomNumberGenerator(){
           throw error;
           }
        }
-       
-       async function audioSeconds(filePath){
+       async function audioSeconds(filePath) {
         return new Promise((resolve, reject) => {
-          ffmpeg.ffprobe(filePath, (err, metedata) => {
-            if(err) {
-              return reject(err);
-            }
-            const duration = metadata.format.duration;
-            resolve(duration);
-          });
+            ffmpeg.ffprobe(filePath, (err, metadata) => {
+                if (err) {
+                    console.error("Error in ffprobe:", err);
+                    return reject(err);
+                }
+                const duration = parseFloat(metadata.format.duration);
+                resolve(duration);
+            });
         });
-       }
-
+    }
+    
 
     module.exports = {
         RandomNumberGenerator,

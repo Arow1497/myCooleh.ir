@@ -10,6 +10,8 @@ const cors = require("cors");
 const {initialSocket} = require("./utils/initSocket");
 const ffmpeg = require("fluent-ffmpeg");
 const ffmpegStatic = require("ffmpeg-static");
+const { PrismaClient } = require('@prisma/client');
+
 
 require("dotenv").config()
 
@@ -17,15 +19,24 @@ module.exports = class Application {
     #app = express();
     #DB_URI;
     #PORT;
+    #prisma;
     constructor(PORT, DB_URI){
         this.#PORT = PORT;
         this.#DB_URI = DB_URI;
+        this.#prisma = new PrismaClient();
         this.configApplication();
         this.initRedis();
         this.connectToMongoDB();
+        this.connectToMariaDB();
         this.createServer();
         this.createRoutes();
         this.errorHandling();
+        process.on("SIGINT", async() => {
+          await this.closeConnections();
+          console.log("All connections closed");
+          process.exit(0);
+      });
+  
     }
 
     configApplication(){
@@ -102,6 +113,33 @@ module.exports = class Application {
      })
     }
 
+    async connectToMariaDB() {
+      try {
+          await this.#prisma.$connect();
+          console.log("PrismaORM connected to MariaDB and Database is Ready to use...");
+          
+          // اضافه کردن event listener برای بستن اتصال MariaDB هنگام خروج
+          process.on('beforeExit', async () => {
+              await this.#prisma.$disconnect();
+              console.log("MariaDB connection closed");
+          });
+      } catch (error) {
+          console.error("Failed to connect to MariaDB:", error?.message);
+      }
+  }
+
+  async closeConnections() {
+      try {
+          await Promise.all([
+              this.#prisma.$disconnect(),
+              mongoose.connection.close()
+          ]);
+          console.log("All database connections closed");
+      } catch (error) {
+          console.error("Error closing database connections:", error?.message);
+      }
+  }
+
     initRedis(){
       require("./utils/initRedis");
     }
@@ -127,4 +165,5 @@ module.exports = class Application {
         })
     })
        }
+       
     }
