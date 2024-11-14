@@ -1,0 +1,612 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Basket {
+  id       Int       @id @default(autoincrement())
+  courses  Course[]
+  products Product[]
+}
+
+model Course {
+  id       Int       @id @default(autoincrement())
+  courseId Int
+  count    Int       @default(1)
+  basketId Int?
+  Basket   Basket?   @relation(fields: [basketId], references: [id])
+}
+
+model Product {
+  id        Int      @id @default(autoincrement())
+  productId Int
+  count     Int      @default(1)
+  basketId  Int?
+  Basket    Basket?  @relation(fields: [basketId], references: [id])
+}
+
+model Client {
+  id                Int        @id @default(autoincrement())
+  first_name        String?
+  last_name         String?
+  mobile            String     @unique
+  otp_code          Int        @default(0)
+  otp_expires       Int        @default(0)
+  carPlateNumber    String?
+  carModel          String?
+  carChassisNumber  String?
+  carBuildYear      String?
+  province          String?
+  city              String?
+  role              String
+  basketId          Int?
+  Basket            Basket?    @relation(fields: [basketId], references: [id])
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  @@index([first_name, last_name, mobile], name: "client_search_index")
+}
+
+model Garage {
+  id                   Int      @id @default(autoincrement())
+  garageOwnerId        Int
+  garageOwner          User     @relation(fields: [garageOwnerId], references: [id])
+  garage_name          String
+  garageSerialNumber   String?
+  sign                 String?
+  telephone            String?
+  address              String?
+  lat_lng              String?
+  profit               String?
+  garageMainField      GarageMainField
+  garageField          GarageField?
+  mechanicsTeam        User[]
+  shagerds             User[]
+  images               String[]
+  partOrderGarages     SupplierStore[]
+  referals             Garage[] @relation("GarageReferals")
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@index([garage_name, telephone], name: "garage_search_index")
+}
+
+model GaragePartsOrder {
+  id                     Int                @id @default(autoincrement())
+  publisher              User               @relation(fields: [publisherId], references: [id])
+  client                 Client               @relation(fields: [clientID], references: [id])
+  garage                 Garage                @relation(fields: [garageId], references: [id])
+  acceptedSupplierStoreId Int                @relation(fields: [acceptedSupplierStoreId], references: [id])
+  title                  String?
+  parts                  String?
+  message                String?
+  time                   DateTime           @default(now())
+  voiceAddress           String
+  images                 String[]
+  projectId              Int                @relation(fields: [projectId], references: [id])
+  coWorkingRate          String?
+  coWorkingComments      Comment[]
+  invoice_factor         String?
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+}
+
+model SupplyParts {
+  id                 Int      @id @default(autoincrement())
+  garagePartsOrderID Int
+  title              String?
+  description        String?
+  images             String[]
+  time               String
+  voiceAddress       String
+  price              String?
+  categoryId         Int
+  Category           Category @relation(fields: [categoryId], references: [id])
+}
+
+model SellFromSupplier {
+  id               Int      @id @default(autoincrement())
+  supplierstoreId  Int
+  agahiShopId      Int
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  supplierstore    SupplierStore @relation(fields: [supplierstoreId], references: [id])
+  agahiShop        ProductSupplier      @relation(fields: [agahiShopId], references: [id])
+}
+
+model SupplierStore {
+  id               Int      @id @default(autoincrement())
+  name             String?
+  ownerId          Int
+  telephone        String?
+  address          String?
+  serialNumber     String?
+  profit           String?
+  field            String
+  images           String[]
+  partOrderGarages PartOrderGarage[]
+  referrals        Referral[]
+
+  owner            User     @relation(fields: [ownerId], references: [id])
+}
+
+model PartOrderGarage {
+  id              Int      @id @default(autoincrement())
+  supplierStoreId Int
+  // other fields...
+
+  supplierStore   SupplierStore @relation(fields: [supplierStoreId], references: [id])
+}
+
+model Referral {
+  id              Int      @id @default(autoincrement())
+  supplierStoreId Int
+  // other fields...
+
+  supplierStore   SupplierStore @relation(fields: [supplierStoreId], references: [id])
+}
+
+model RequestedForSupply {
+  id                   Int         @id @default(autoincrement())
+  publisherId          Int
+  supplierstoreID      Int
+  garagePartsOrderID   Int
+  supplyHistoryWithThisGarage String?
+  parts                SupplyParts[]
+  title                String?
+  message              String?
+  images               String[]
+  time                 String
+  voiceAddress         String
+  price                String?
+  coWorkingRate        String?
+  coWorkingComments    Comment[]
+}
+
+model Category {
+  id       Int       @id @default(autoincrement())
+  title    String
+  parentId Int?
+  parent   Category? @relation("CategoryChildren", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryChildren")
+}
+
+model mechanicsCalculatedSalaries {
+  mechanicID    Int
+  isCalculated  Boolean    @default(false)
+}
+
+model shagerdsCalculatedSalaries {
+  mechanicID    Int
+  isCalculated  Boolean    @default(false)
+}
+
+model Project {
+  id                     Int       @id @default(autoincrement())
+  clientID               Int
+  garageID               Int
+  supplierStoreID        Int[]
+  mechanicsTeam          User[]
+  shagerdsTeam           User[]
+  mechanicsCalculatedSalaries mechanicsCalculatedSalaries[]
+  shagerdsCalculatedSalaries shagerdsCalculatedSalaries[]
+  status                 String
+  partSupplyStatus       String
+  car                    String
+  plateNumber            String
+  chassisNumber          String?
+  buildYear              String?
+  time                   String
+  voiceAddress           String
+  images                 String[]
+  brokeReportDetails     String?
+  fixReportDetails       String?
+  clientComments         Comment[]
+  clientRate             Comment[]
+  price                  String?
+  discount               String?
+  dastyarMechanicID      Int?
+  outsourcingGarageID    Int?
+  suggestionSupplyRequests RequestedForSupply[]
+  suppliedPartsId        Int?
+  invoice_factor         String?
+  appoinmentForm         String?
+  oilServiceModule       GarageOilServiceProject[]
+}
+
+model GarageOilServiceProject {
+  id                 Int      @id @default(autoincrement())
+  title              String?
+  parts              String?
+  message            String?
+  lastServiceMilage  String?
+  lastServiceOil     String?
+  thisServiceMilage  String?
+  thisServiceOil     String?
+  projectId          Int
+  Project            Project  @relation(fields: [projectId], references: [id])
+}
+
+model Comment {
+  id          Int        @id @default(autoincrement())
+  from_user   Int?
+  from_client Int?
+  to_garage   Int?
+  to_mechanic Int?
+  to_supplierStore Int?
+  comment     String
+  show        Boolean    @default(true)
+  openToComment Boolean  @default(true)
+  answers     Comment[]
+  createdAt   DateTime   @default(now())
+}
+
+model Payment {
+  id             Int       @id @default(autoincrement())
+  invoiceNumber  String?
+  authority      String?
+  paymentDate    Int?
+  amount         Int?
+  description    String     @default("بابت خرید اشتراک")
+  verify         Boolean    @default(false)
+  userId         Int?
+  user           User       @relation(fields: [userId], references: [id])
+  basketId       Int?
+  basket         Basket     @relation(fields: [basketId], references: [id])
+  refID          String?
+  cardHash       String?
+}
+
+model SubscriptionHistory {
+  id                Int      @id @default(autoincrement())
+  userId            Int
+  user              User     @relation(fields: [userId], references: [id])
+  subscriptionType  String   @default("free")
+  purchaseDate      DateTime @default(now())
+  startDate         DateTime
+  endDate           DateTime
+  amountPaid        Int
+  isActive          Boolean  @default(true)
+  paymentId         Int
+  payment           Payment  @relation(fields: [paymentId], references: [id])
+}
+
+model Subscription {
+  id                Int                 @id @default(autoincrement())
+  userId            Int
+  user              User                @relation(fields: [userId], references: [id])
+  currentSubscription SubscriptionHistory?
+  subscriptionHistory SubscriptionHistory[]
+}
+
+model SmsData {
+  id                 Int      @id @default(autoincrement())
+  time               String
+  date               String
+  miniBankAccountNum String
+  amount             String
+}
+
+model Transaction {
+  id                   Int      @id @default(autoincrement())
+  transactionAskerId    Int
+  transactionAnswererId Int
+  transactionSerialNumber String
+  askerBankAccountNum   String
+  answererBankAccountNum String
+  isTransactionDoneAsker Boolean  @default(false)
+  isTransactionDoneAnswerer Boolean  @default(false)
+  isTransactionClosed   Boolean  @default(false)
+  cheatReportAsker      Boolean  @default(false)
+  cheatReportAnswerer   Boolean  @default(false)
+  transactionMessagesId Int?
+  transactionMessages   Conversation?  @relation(fields: [transactionMessagesId], references: [id])
+}
+
+model User {
+  id                Int       @id @default(autoincrement())
+  first_name        String?
+  last_name         String?
+  mobile            String     @unique
+  otp_code          Int        @default(0)
+  otp_expires       Int        @default(0)
+  registrationDate  DateTime   @default(now())
+  profilePicture    String?
+  profit            String?
+  userReferalNumber String?
+  expertices        String?
+  bankAccountNumber String?
+  garageLat_Lng     String?
+  supplierStoreLat_Lng String?
+  readyToWork       Boolean    @default(false)
+  otherBussinesesBookmarks Int[]
+  inWorkGarage      Int[]
+  resumeGarage      Int[]
+  role              Role
+  Courses           Course[]
+  Products          Product[]
+  basketId          Int?
+  Basket            Basket?    @relation(fields: [basketId], references: [id])
+  referals          User[]     @relation("UserReferals")
+}
+
+model Conversation {
+  id            Int       @id @default(autoincrement())
+  participants  User[]
+  messages      Message[]
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  senderId  Int
+  sender    User     @relation(fields: [senderId], references: [id])
+  text      String?
+  fileURL   String?
+  foleType  String?
+  readById  Int?
+  readBy    User?    @relation(fields: [readById], references: [id])
+  deleteById Int?
+  deleteBy   User?   @relation(fields: [deleteById], references: [id])
+  deleted   Boolean  @default(false)
+  location  Location?
+}
+
+model Location {
+  id        Int      @id @default(autoincrement())
+  latitude  Float
+  longitude Float
+  address   String
+}
+
+enum Role {
+  Mechanic
+  Shagerd
+  GarageOwner
+  Client
+  Supplier
+}
+
+enum GarageMainField {
+ oilService
+  mechanic
+  bodyshop
+}
+
+enum GarageField {
+oilService
+bodyShop
+batterysaz
+joloBandi
+mechaniki
+}
+
+model AgahiDivar {
+  id            Int      @id @default(autoincrement())
+  publisherId   Int
+  publisher     User     @relation(fields: [publisherId], references: [id])
+  garageID      Int?
+  title         String
+  price         String
+  status        String
+  views         Int      @default(0)
+  description   String
+  images        String[]
+  categoryId    Int
+  bookmarks     User[]
+  shareLink     String
+}
+
+model AgahiEstNiaz {
+  id            Int      @id @default(autoincrement())
+  publisherId   Int
+  publisher     User     @relation(fields: [publisherId], references: [id])
+  requestedGarageId Int  @relation(fields: [requestedGarageId], references: [id])
+  views         Int      @default(0)
+}
+
+model AgahiBoronspari {
+  id                      Int                      @id @default(autoincrement())
+  publisherId             Int
+  garageId                Int
+  status                  String                   @default("pending")
+  title                   String
+  price                   String
+  message                 String
+  images                  String[]
+  categoryId              Int
+  acceptedGarageId        Int
+  garagesRequestsForThisReqs GarageReqsForOutSourcingCoWork[]
+  bookmarks               User[]
+
+  publisher               User                      @relation(fields: [publisherId], references: [id])
+  garage                  Garage                    @relation(fields: [garageId], references: [id])
+  category                Category                  @relation(fields: [categoryId], references: [id])
+  acceptedGarage          Garage                    @relation(fields: [acceptedGarageId], references: [id])
+}
+
+model GarageReqsForOutSourcingCoWork {
+  id                   Int      @id @default(autoincrement())
+  publisherId          Int
+  garageId             Int
+  garageOutSourcingReqsId Int
+  outSourcingReqsId    Int
+  supplyHistoryWithThisGarage Json?
+  title                Json?
+  parts                Json?
+  message              Json?
+  images               String[]
+  time                 String
+  voiceAddress         String
+  price                String?
+  coWorkingRate        String?
+  coWorkingComments    Comment[]
+
+  publisher            User      @relation(fields: [publisherId], references: [id])
+  garage               Garage    @relation(fields: [garageId], references: [id])
+  garageOutSourcingReq Garage    @relation(fields: [garageOutSourcingReqsId], references: [id])
+  outSourcingReq       AgahiBoronspari @relation(fields: [outSourcingReqsId], references: [id])
+}
+
+model ApprenticeRequest {
+  id            Int      @id @default(autoincrement())
+  publisherId   Int
+  publisher     User     @relation(fields: [publisherId], references: [id])
+  garageID      Int?
+  status        String
+  title         String
+  price         String
+  message       String
+  images        String[]
+  categoryId    Int
+  shagerdsRequestsForThisReqs ShagerdReqsForApprenticeCoWork[]
+  acceptedShagerdId Int?
+  bookmarks     User[]
+}
+
+model ShagerdReqsForApprenticeCoWork {
+  id                   Int      @id @default(autoincrement())
+  publisherId          Int
+  shagerdId            Int
+  garageId             Int
+  apprenticeReqsId     Int
+  supplyHistoryWithThisGarage Json?
+  title                Json?
+  parts                Json?
+  message              Json?
+  images               String[]
+  time                 String
+  voiceAddress         String
+  price                String?
+  coWorkingRate        String?
+  coWorkingComments    Comment[]
+
+  publisher            User      @relation(fields: [publisherId], references: [id])
+  shagerd              User      @relation(fields: [shagerdId], references: [id])
+  garage               Garage    @relation(fields: [garageId], references: [id])
+  apprenticeReq       ApprenticeRequest @relation(fields: [apprenticeReqsId], references: [id])
+}
+
+model MechanicReqsForDastyarCoWork {
+  id                   Int      @id @default(autoincrement())
+  publisherId          Int
+  mechanicId           Int
+  garageId             Int
+  dastyarReqsId        Int
+  supplyHistoryWithThisGarage Json?
+  title                Json?
+  parts                Json?
+  message              Json?
+  images               String[]
+  time                 String
+  voiceAddress         String
+  price                String?
+  coWorkingRate        String?
+  coWorkingComments    Comment[]
+
+  publisher            User      @relation(fields: [publisherId], references: [id])
+  mechanic            User      @relation(fields: [mechanicId], references: [id])
+  garage               Garage    @relation(fields: [garageId], references: [id])
+  dastyarRequest       DastyarRequest @relation(fields: [dastyarReqsId], references: [id])
+}
+
+model DastyarRequest {
+  id            Int      @id @default(autoincrement())
+  publisherId   Int
+  publisher     User     @relation(fields: [publisherId], references: [id])
+  garageID      Int?
+  status        String
+  title         String
+  price         String
+  message       String
+  images        String[]
+  categoryId    Int
+  mechanicsRequestsForThisReqs MechanicReqsForDastyarCoWork[]
+  acceptedMechanicId Int?
+  bookmarks     User[]
+}
+
+model Metric {
+  id            Int      @id @default(autoincrement())
+  publisherId   Int
+  publisher     User     @relation(fields: [publisherId], references: [id])
+  clientID      Int?
+  garageID      Int?
+  suplierStoreID Int?
+  successSellerId Int?
+  title         String
+  description   String
+  views         Int      @default(0)
+  images        String[]
+  categoryId    Int
+  bookmarks     User[]
+  comments      Comment[]
+  likes         User[]
+  dislikes      User[]
+  shareLink     String
+}
+
+model Post {
+  id            Int      @id @default(autoincrement())
+  publisherId   Int
+  publisher     User     @relation(fields: [publisherId], references: [id])
+  title         String
+  description   String
+  images        String[]
+  time          String
+  videoAddress  String
+  price         String
+  views         Int      @default(0)
+  tags          String[]
+  field         String
+  type          String
+  categoryId    Int
+  comments      Comment[]
+  likes         User[]
+  dislikes      User[]
+  bookmarks     User[]
+  shareLink     String
+}
+
+model Coupon {
+  id            Int      @id @default(autoincrement())
+  publisherId   Int
+  publisher     User     @relation(fields: [publisherId], references: [id])
+  title         String
+  description   String
+  couponPrice   String
+  price         String
+  views         Int      @default(0)
+  images        String[]
+  categoryId    Int
+  supplierStoreId Int?
+  clientId      Int?
+  garageId      Int?
+  successSellerId Int?
+  bookmarks     User[]
+  comments      Comment[]
+  likes         User[]
+  dislikes      User[]
+  shareLink     String
+}
+
+model ProductSupplier {
+  id            Int      @id @default(autoincrement())
+  publisherId   Int
+  publisher     User     @relation(fields: [publisherId], references: [id])
+  supplierStoreId Int?
+  price         String?
+  usersBookmarks Int[]
+  type          String
+  clientsBookmarks Int[]
+  images        String[]
+  title         String
+  views         Int      @default(0)
+  supplierStoreLat_Lng String?
+  description   String
+  categoryId    Int
+}

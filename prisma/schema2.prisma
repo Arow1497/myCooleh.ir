@@ -1,0 +1,666 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// This is created by bolt AI
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id        String   @id @default(uuid())
+  count     Int      @default(1)
+  baskets   Basket[] @relation("BasketToProduct")
+}
+
+model Course {
+  id        String   @id @default(uuid())
+  count     Int      @default(1)
+  baskets   Basket[] @relation("BasketToCourse")
+}
+
+model Basket {
+  id        String    @id @default(uuid())
+  courses   Course[]  @relation("BasketToCourse")
+  products  Product[] @relation("BasketToProduct")
+  client    Client?   @relation(fields: [clientId], references: [id])
+  clientId  String? @unique
+  user      User?     @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model Client {
+  id               String   @id @default(uuid())
+  first_name       String?
+  last_name        String?
+  mobile           String
+  otp              Json?
+  carPlateNumber   String?
+  carModel         Json?
+  carChassisNumber Json?
+  carBuildYear     Json?
+  province         String?
+  city             String?
+  Role             String
+  basket           Basket?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Garage {
+  id                   String          @id @default(uuid())
+  garageOwner          User            @relation("GarageOwner", fields: [garageOwnerId], references: [id])
+  garageOwnerId        String
+  garage_name          String
+  garageSerialNumber   String?
+  sign                 String?
+  telephone            String?
+  addres               String?
+  images               Image[]
+  lat_lng              String?
+  profit               String?
+  garageMainField      String
+  garageField          String?
+  mechanicsTeam        User[]          @relation("MechanicsTeam")
+  shagerds             User[]          @relation("Shagerds")
+  partOrderGarages     SupplierStore[] @relation("PartOrderGarages")
+  referals             Garage[]        @relation("GarageReferals")
+  referredBy           Garage?         @relation("GarageReferals", fields: [referredById], references: [id])
+  referredById         String?
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+}
+
+model User {
+  id                     String          @id @default(uuid())
+  first_name             String?
+  last_name              String?
+  mobile                 String          @unique
+  otp                    Json?
+  registrationDate       DateTime        @default(now())
+  profilePicture         String?
+  profit                 String?
+  userReferalNumber      String?
+  expertices             String?
+  supplierStores         SupplierStore[]
+  garage                 Garage?         @relation("GarageOwner")
+  bankAccountNumber      String?
+  garageLat_Lng          Json?
+  supplierStoreLat_Lng   Json?
+  readyToWork            Boolean         @default(false)
+  otherBussinesesBookmarks User[]        @relation("Bookmarks")
+  inWorkGarage           Garage[]        @relation("MechanicsTeam")
+  resumeGarage           Garage[]        @relation("Shagerds")
+  bookmarkedBy           User[]          @relation("Bookmarks")
+  Role                   String          @default("shagerd")
+  courses                Course[]
+  products               Product[]
+  basket                 Basket?
+  likes                  Metric[]   @relation("MetricLikes")
+  dislikes               Metric[]   @relation("MetricDislikes")
+  referals               User[]          @relation("Referals")
+  referredBy             User?           @relation("Referals", fields: [referredById], references: [id])
+  referredById           String?
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+}
+
+model SupplierStore {
+  id                        String          @id @default(uuid())
+  supplierstore_name        String?
+  supplierstoreOwner        User            @relation(fields: [supplierstoreOwnerId], references: [id])
+  supplierstoreOwnerId      String
+  telephone                 String?
+  addres                    String?
+  supplierStoreSerialNumber String?
+  profit                    String?
+  supplierstoreField        String
+  images                    Image[]
+  partOrderGarages          Garage[]        @relation("PartOrderGarages")
+  referals                  SupplierStore[] @relation("SupplierStoreReferals")
+  referredBy                SupplierStore?  @relation("SupplierStoreReferals", fields: [referredById], references: [id])
+  referredById              String?
+  createdAt                 DateTime        @default(now())
+  updatedAt                 DateTime        @updatedAt
+}
+
+model Conversation {
+  id           String    @id @default(uuid())
+  participants User[]
+  messages     Message[]
+}
+
+model Message {
+  id           String       @id @default(uuid())
+  sender       User         @relation(fields: [senderId], references: [id])
+  senderId     String
+  text         String?
+  fileURL      String?
+  fileType     String?
+  readBy       User?        @relation("ReadMessages", fields: [readById], references: [id])
+  readById     String?
+  deleteBy     User?        @relation("DeletedMessages", fields: [deleteById], references: [id])
+  deleteById   String?
+  deleted      Boolean      @default(false)
+  location     Json?
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+  conversationId String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Payment {
+  id            String   @id @default(uuid())
+  invoiceNumber String?
+  authority     String?
+  paymentDate   Int?
+  amount        Int?
+  description   String?  @default("بابت خرید اشتراک")
+  verify        Boolean  @default(false)
+  user          User     @relation(fields: [userId], references: [id])
+  userId        String
+  basket        Json?
+  refID         String?
+  cardHash      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Subscription {
+  id                 String                 @id @default(uuid())
+  user               User                   @relation(fields: [userId], references: [id])
+  userId             String
+  //currentSubscription SubscriptionHistory?
+  subscriptionHistory SubscriptionHistory[]
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+}
+
+model SubscriptionHistory {
+  id               String       @id @default(uuid())
+  user             User         @relation(fields: [userId], references: [id])
+  userId           String
+  subscriptionType String       @default("free")
+  purchaseDate     DateTime     @default(now())
+  startDate        DateTime
+  endDate          DateTime
+  amountPaid       Int
+  isActive         Boolean      @default(true)
+  payment          Payment      @relation(fields: [paymentId], references: [id])
+  paymentId        String
+  subscription     Subscription @relation(fields: [subscriptionId], references: [id])
+  subscriptionId   String
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+}
+
+model Transaction {
+  id                     String   @id @default(uuid())
+  transactionAsker       User     @relation("TransactionAsker", fields: [transactionAskerId], references: [id])
+  transactionAskerId     String
+  transactionAnswerer    User     @relation("TransactionAnswerer", fields: [transactionAnswererId], references: [id])
+  transactionAnswererId  String
+  transactionSerialNumber String
+  outSourcingReq         AgahiBoronsepari? @relation(fields: [outSourcingReqId], references: [id])
+  outSourcingReqId       String?
+  dastyarReq             DastyarRequest? @relation(fields: [dastyarReqId], references: [id])
+  dastyarReqId           String?
+  apprenticeRequest      ApprenticeRequest? @relation(fields: [apprenticeRequestId], references: [id])
+  apprenticeRequestId    String?
+  partOrderRequest       GaragePartsOrder? @relation(fields: [partOrderRequestId], references: [id])
+  partOrderRequestId     String?
+  coupon                 Coupon? @relation(fields: [couponId], references: [id])
+  couponId               String?
+  metric                 Metric? @relation(fields: [metricId], references: [id])
+  metricId               String?
+  askerBankAccountNum    String
+  answererBankAccountNum String
+  //askerVarizSmsData      SmsData[]
+  answererBardashtSmsData SmsData[]
+  isTransactionDoneAsker Boolean @default(false)
+  isTransactionDoneAnswerer Boolean @default(false)
+  cheatReportAsker       Boolean @default(false)
+  cheatReportAnswerer    Boolean @default(false)
+  isTransactionClosed    Boolean @default(false)
+  transactionMessages    Conversation? @relation(fields: [transactionMessagesId], references: [id])
+  transactionMessagesId  String?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+}
+
+model SmsData {
+  id                 String      @id @default(uuid())
+  time               String
+  date               String
+  miniBankAccountNum String
+  amount             String
+  transaction        Transaction @relation(fields: [transactionId], references: [id])
+  transactionId      String
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+}
+
+model AgahiDivar {
+  id          String   @id @default(uuid())
+  publisher   User     @relation(fields: [publisherId], references: [id])
+  publisherId String
+  garage      Garage?  @relation(fields: [garageId], references: [id])
+  garageId    String?
+  title       String
+  price       String
+  status      String?
+  views       Int      @default(0)
+  description String
+  images      Image[]
+  category    Category @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  bookmarks   Bookmark[]
+  shareLink   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AgahiBoronsepari {
+  id                      String                          @id @default(uuid())
+  //publisher               User                            @relation(fields: [publisherId], references: [id])
+  publisherId             String
+  garage                  Garage                          @relation(fields: [garageId], references: [id])
+  garageId                String
+  status                  String?
+  title                   String
+  price                   String
+  message                 String
+  images                  Image[]
+  category                Category                        @relation(fields: [categoryId], references: [id])
+  categoryId              String
+  garagesRequestsForThisReqs GarageReqsForOutSourcingCoWork[]
+  acceptedGarage          Garage                          @relation("AcceptedGarage", fields: [acceptedGarageId], references: [id])
+  acceptedGarageId        String
+  bookmarks               User[]
+  createdAt               DateTime                        @default(now())
+  updatedAt               DateTime                        @updatedAt
+}
+
+model GarageReqsForOutSourcingCoWork {
+  id                      String            @id @default(uuid())
+  publisher               User              @relation(fields: [publisherId], references: [id])
+  publisherId             String
+  garage                  Garage            @relation(fields: [garageId], references: [id])
+  garageId                String
+  garageOutSourcingReq    Garage            @relation("OutSourcingReq", fields: [garageOutSourcingReqId], references: [id])
+  garageOutSourcingReqId  String
+  outSourcingReq          AgahiBoronsepari  @relation(fields: [outSourcingReqId], references: [id])
+  outSourcingReqId        String
+  supplyHistoryWithThisGarage Json?
+  title                   Json?
+  parts                   Json?
+  message                 Json?
+  images                  Image[]
+  time                    String
+  voiceAddress            String
+  price                   String?
+  coWorkingRate           String?
+  coWorkingComments       Comment[]
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @updatedAt
+}
+
+model ApprenticeRequest {
+  id                      String                          @id @default(uuid())
+  //publisher               User                            @relation(fields: [publisherId], references: [id])
+  publisherId             String
+  garage                  Garage                          @relation(fields: [garageId], references: [id])
+  garageId                String
+  status                  String?
+  title                   String
+  price                   String
+  message                 String
+  images                  Image[]
+  category                Category                        @relation(fields: [categoryId], references: [id])
+  categoryId              String
+  shagerdsRequestsForThisReqs ShagerdReqsForApprenticeCoWork[]
+  acceptedShagerd         User                            @relation("AcceptedShagerd", fields: [acceptedShagerdId], references: [id])
+  acceptedShagerdId       String
+  bookmarks               User[]
+  createdAt               DateTime                        @default(now())
+  updatedAt               DateTime                        @updatedAt
+}
+
+model ShagerdReqsForApprenticeCoWork {
+  id                      String            @id @default(uuid())
+  publisher               User              @relation(fields: [publisherId], references: [id])
+  publisherId             String
+  shagerd                 User              @relation("Shagerd", fields: [shagerdId], references: [id])
+  shagerdId               String
+  garage                  Garage            @relation(fields: [garageId], references: [id])
+  garageId                String
+  apprenticeReq           ApprenticeRequest @relation(fields: [apprenticeReqId], references: [id])
+  apprenticeReqId         String
+  supplyHistoryWithThisGarage Json?
+  title                   Json?
+  parts                   Json?
+  message                 Json?
+  images                  Image[]
+  time                    String
+  voiceAddress            String
+  price                   String?
+  coWorkingRate           String?
+  coWorkingComments       Comment[]
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @updatedAt
+}
+
+model DastyarRequest {
+  id                      String                       @id @default(uuid())
+  //publisher               User                         @relation(fields: [publisherId], references: [id])
+  publisherId             String
+  garage                  Garage                       @relation(fields: [garageId], references: [id])
+  garageId                String
+  status                  String?
+  title                   String
+  price                   String
+  message                 String
+  images                  Image[]
+  category                Category                     @relation(fields: [categoryId], references: [id])
+  categoryId              String
+  mechanicsRequestsForThisReqs MechanicReqsForDastyarCoWork[]
+  acceptedMechanic        User                         @relation("AcceptedMechanic", fields: [acceptedMechanicId], references: [id])
+  acceptedMechanicId      String
+  bookmarks               User[]
+  createdAt               DateTime                     @default(now())
+  updatedAt               DateTime                     @updatedAt
+}
+
+model MechanicReqsForDastyarCoWork {
+  id                      String         @id @default(uuid())
+  publisher               User           @relation(fields: [publisherId], references: [id])
+  publisherId             String
+  mechanic                User           @relation("Mechanic", fields: [mechanicId], references: [id])
+  mechanicId              String
+  garage                  Garage         @relation(fields: [garageId], references: [id])
+  garageId                String
+  dastyarReq              DastyarRequest @relation(fields: [dastyarReqId], references: [id])
+  dastyarReqId            String
+  supplyHistoryWithThisGarage Json?
+  title                   Json?
+  parts                   Json?
+  message                 Json?
+  images                  Image[]
+  time                    String
+  voiceAddress            String
+  price                   String?
+  coWorkingRate           String?
+  coWorkingComments       Comment[]
+  createdAt               DateTime       @default(now())
+  updatedAt               DateTime       @updatedAt
+}
+
+model Metric {
+  id              String   @id @default(uuid())
+  publisher       User     @relation(fields: [publisherId], references: [id])
+  publisherId     String
+  client          Client   @relation(fields: [clientId], references: [id])
+  clientId        String
+  garage          Garage   @relation(fields: [garageId], references: [id])
+  garageId        String
+  suplierStore    SupplierStore @relation("MetricSupplierStore", fields: [suplierStoreId], references: [id])
+  suplierStoreId  String
+  successSeller   SupplierStore @relation("SuccessSellerStore", fields: [successSellerId], references: [id])
+  successSellerId String
+  title           String
+  description     String
+  views           Int      @default(0)
+  images          Image[]
+  category        Category @relation(fields: [categoryId], references: [id])
+  categoryId      String
+  bookmarks       User[]   @relation("MetricBookmarks")
+  comments        Comment[]
+  likes           User[]   @relation("MetricLikes")
+  dislikes        User[]   @relation("MetricDislikes")
+  shareLink       String
+  nearBy          Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Dislike {
+  id          String    @id @default(uuid())
+
+}
+
+model Like {
+  id          String    @id @default(uuid())
+
+}
+
+model Bookmark {
+  id          String    @id @default(uuid())
+
+}
+
+model Image {
+  id          String    @id @default(uuid())
+
+}
+
+model Post {
+  id          String    @id @default(uuid())
+  publisher   User      @relation(fields: [publisherId], references: [id])
+  publisherId String
+  title       String
+  description String
+  images      Image[]
+  time        String
+  videoAddress String
+  price       String
+  views       Int       @default(0)
+  //tags        String[]
+  field       String
+  type        String?
+  category    Category  @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  comments    Comment[]
+  likes       User[]    @relation("PostLikes")
+  dislikes    User[]    @relation("PostDislikes")
+  bookmarks   User[]    @relation("PostBookmarks")
+  showOnField Boolean   @default(true)
+  shareLink   String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Coupon {
+  id              String   @id @default(uuid())
+  publisher       User     @relation(fields: [publisherId], references: [id])
+  publisherId     String
+  title           String
+  description     String
+  couponPrice     String
+  price           String
+  views           Int      @default(0)
+  images          Image[]
+  category        Category @relation(fields: [categoryId], references: [id])
+  categoryId      String
+  supplierStore   SupplierStore @relation(fields: [supplierStoreId], references: [id])
+  supplierStoreId String
+  client          Client   @relation(fields: [clientId], references: [id])
+  clientId        String
+  garages         Garage[]
+  successSellers  Garage[] @relation("SuccessSellerGarages")
+  bookmarks       Bookmark[]
+  likes           Like[]   @relation("CouponLikes")
+  dislikes        Dislike[]   @relation("CouponDislikes")
+  comments        Comment[]
+  shareLink       String
+  nearBy          Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Category {
+  id       String     @id @default(uuid())
+  title    String
+  parent   Category?  @relation("SubCategories", fields: [parentId], references: [id])
+  parentId String?
+  children Category[] @relation("SubCategories")
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  fromUser  User?    @relation("CommentFromUser", fields: [fromUserId], references: [id])
+  fromUserId String?
+  fromClient Client? @relation("CommentFromClient", fields: [fromClientId], references: [id])
+  fromClientId String?
+  toGarage  Garage?  @relation("CommentToGarage", fields: [toGarageId], references: [id])
+  toGarageId String?
+  toMechanic User?   @relation("CommentToMechanic", fields: [toMechanicId], references: [id])
+  toMechanicId String?
+  toSupplierStore SupplierStore? @relation("CommentToSupplierStore", fields: [toSupplierStoreId], references: [id])
+  toSupplierStoreId String?
+  comment   String
+  show      Boolean  @default(true)
+  openToComment Boolean @default(true)
+  answers   Answer[]
+  createdAt DateTime @default(now())
+}
+
+model Answer {
+  id         String   @id @default(uuid())
+  fromUser   User?    @relation("AnswerFromUser", fields: [fromUserId], references: [id])
+  fromUserId String?
+  fromClient Client?  @relation("AnswerFromClient", fields: [fromClientId], references: [id])
+  fromClientId String?
+  comment    String
+  show       Boolean  @default(true)
+  openToComment Boolean @default(false)
+  answers    Answer[] @relation("AnswerToAnswer")
+  parentAnswer Answer? @relation("AnswerToAnswer", fields: [parentAnswerId], references: [id])
+  parentAnswerId String?
+  parentComment Comment? @relation(fields: [parentCommentId], references: [id])
+  parentCommentId String?
+  createdAt  DateTime @default(now())
+}
+
+model GaragePartsOrder {
+  id                    String   @id @default(uuid())
+  publisher             User     @relation(fields: [publisherId], references: [id])
+  publisherId           String
+  client                Client?  @relation(fields: [clientId], references: [id])
+  clientId              String?
+  garage                Garage   @relation(fields: [garageId], references: [id])
+  garageId              String
+  acceptedSuplierStore  SupplierStore @relation(fields: [acceptedSuplierStoreId], references: [id])
+  acceptedSuplierStoreId String
+  title                 Json?
+  parts                 Json?
+  message               Json?
+  time                  String
+  voiceAddress          String
+  images                Image?
+  project               Project  @relation(fields: [projectId], references: [id])
+  projectId             String
+  SupplyRequestsForThisOrder RequestedForSupply[]
+  coWorkingRate         String?
+  coWorkingComments     Comment[]
+  invoice_factor        String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model RequestedForSupply {
+  id                     String   @id @default(uuid())
+  publisher              User     @relation(fields: [publisherId], references: [id])
+  publisherId            String
+  supplierstore          SupplierStore @relation(fields: [supplierstoreId], references: [id])
+  supplierstoreId        String
+  garagePartsOrder       GaragePartsOrder @relation(fields: [garagePartsOrderId], references: [id])
+  garagePartsOrderId     String
+  supplyHistoryWithThisGarage Json?
+  parts                  SupplyParts[]
+  title                  Json?
+  message                Json?
+  images                 Image[]
+  time                   String
+  voiceAddress           String
+  price                  String?
+  coWorkingRate          String?
+  coWorkingComments      Comment[]
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+}
+
+model SupplyParts {
+  id                 String   @id @default(uuid())
+  garagePartsOrder   GaragePartsOrder @relation(fields: [garagePartsOrderId], references: [id])
+  garagePartsOrderId String
+  title              Json?
+  description        Json?
+  images             Image[]
+  time               String
+  voiceAddress       String
+  price              String?
+  category           Category @relation(fields: [categoryId], references: [id])
+  categoryId         String
+  requestedForSupply RequestedForSupply @relation(fields: [requestedForSupplyId], references: [id])
+  requestedForSupplyId String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model Project {
+  id                      String   @id @default(uuid())
+  client                  Client   @relation(fields: [clientId], references: [id])
+  clientId                String
+  garage                  Garage   @relation(fields: [garageId], references: [id])
+  garageId                String
+  supplierStores          SupplierStore[]
+  mechanicsTeam           User[]   @relation("ProjectMechanicsTeam")
+  shagerdsTeam            User[]   @relation("ProjectShagerdsTeam")
+  mechanicsCalculatedSalaries Json
+  shagerdsCalculatedSalaries Json
+  status                  String
+  partSupplyStatus        String
+  car                     String
+  plateNumber             String
+  chassisNumber           String?
+  buildYear               String?
+  time                    String
+  voiceAddress            String
+  images                  Image[]
+  brokeReportDetails      String?
+  fixReportDetails        String?
+  clientComments          Comment[]   
+  clientRate              Comment[]
+  price                   String?
+  discount                Json?
+  dastyarMechanic         User?    @relation("DastyarMechanic", fields: [dastyarMechanicId], references: [id])
+  dastyarMechanicId       String?
+  outsourcingGarage       Garage?  @relation("OutsourcingGarage", fields: [outsourcingGarageId], references: [id])
+  outsourcingGarageId     String?
+  suggestionSupplyRequests RequestedForSupply[]
+  suppliedParts           GaragePartsOrder @relation(fields: [suppliedPartsId], references: [id])
+  suppliedPartsId         String
+  invoice_factor          String?
+  appoinmentForm          String?
+  oilServiceModule        GarageOilServiceProjects[]
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+}
+
+model GarageOilServiceProjects {
+  id               String  @id @default(uuid())
+  title            Json?
+  parts            Json?
+  message          Json?
+  lastServiceMilage Json?
+  lastServiceOil   Json?
+  thisServiceMilage Json?
+  thisServiceOil   Json?
+  project          Project @relation(fields: [projectId], references: [id])
+  projectId        String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
