@@ -933,7 +933,7 @@ class ProductShop extends Controller{
             next(error);
         }
     }
-    // Bookmark Management
+             // Bookmark Management
     async toggleBookmark(req, res, next) {
         try {
             const { productId } = req.params;
@@ -1021,6 +1021,39 @@ class ProductShop extends Controller{
                         totalPages: Math.ceil(total / limit)
                     }
                 }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    // Product Sharing
+    async shareProduct(req, res, next) {
+        try {
+            const { productId } = req.params;
+            const userId = req.user.id;
+
+            // Record share
+            await prisma.share.create({
+                data: {
+                    userId,
+                    productId
+                }
+            });
+
+            // Increment share count
+            await prisma.product.update({
+                where: { id: productId },
+                data: {
+                    shareCount: {
+                        increment: 1
+                    }
+                }
+            });
+
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                message: "Product shared successfully"
             });
         } catch (error) {
             next(error);

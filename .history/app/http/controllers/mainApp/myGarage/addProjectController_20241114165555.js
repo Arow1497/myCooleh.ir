@@ -385,68 +385,75 @@ class GarageAddProjectController extends Controller{
     }
    }
 
-
-    async addClientCommentAndRateForProject(req, res, next){
-        try {
-            
-        } catch (error) {
-            
-        }
-    }
-
-    async addGarageCommentAndRateForProject(req, res, next){
-        try {
-            
-        } catch (error) {
-            
-        }
-    }
-
-
-    async createInvoice_FactorForProject(req, res, next){
-        try {
-            
-        } catch (error) {
-            
-        }
-    }
-
-
-    async createOilAutoServiceProject(req, res, next){
-        try {
-            
-        } catch (error) {
-            
-        }
-    }
-
-    async shareProject(req, res, next){
-        try {
-            const {postID} = req.params;
-            await this.findPostById(postID);
-            const post = await PostsModel.findOne({_id: postID},{})
-            .populate([
-                {path: "shareLink",} 
-            ])
-            .select("shareLink")
-            .exec();
-            
+async addSupplierToProject(req, res, next){
+    try {
         
-            return res.status(HttpStatus.OK).json({
-                statusCode: HttpStatus.OK,
-                data : {
-                    post
-                }
-            })
-        } catch (error) {
-            next(error)
-        }
+    } catch (error) {
+        
     }
+}
+  
+async addClientCommentAndRateForProject(req, res, next){
+    try {
+        
+    } catch (error) {
+        
+    }
+}
+
+async addGarageCommentAndRateForProject(req, res, next){
+    try {
+        
+    } catch (error) {
+        
+    }
+}
+
+
+async createInvoice_FactorForProject(req, res, next){
+    try {
+        
+    } catch (error) {
+        
+    }
+}
+
+
+async createOilAutoServiceProject(req, res, next){
+    try {
+        
+    } catch (error) {
+        
+    }
+}
+
+async shareProject(req, res, next){
+    try {
+        const {postID} = req.params;
+        await this.findPostById(postID);
+        const post = await PostsModel.findOne({_id: postID},{})
+        .populate([
+            {path: "shareLink",} 
+        ])
+        .select("shareLink")
+        .exec();
+        
+      
+        return res.status(HttpStatus.OK).json({
+            statusCode: HttpStatus.OK,
+            data : {
+                post
+            }
+        })
+    } catch (error) {
+        next(error)
+    }
+   }
 
    ///////////////////////////////////////////////////////////////////
    async findProjectById(projectID) {
     const { id } = await ObjectIdValidator.validateAsync({ id: projectID });
-    const project = await prisma.project.findUnique({where: {id}});
+    const project = await ProjectsModel.findById(id);
     if (!project) throw new createError.NotFound("گفتمانی یافت نشد")
     return project
   }
