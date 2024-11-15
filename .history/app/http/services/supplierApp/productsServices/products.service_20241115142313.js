@@ -25,28 +25,7 @@ class CreateProductDTO {
       this.fileUploadPath = data.fileUploadPath;
     }
   }
-  class UpdateProductDTO {
-    constructor(data) {
-      // فقط فیلدهایی که در بادی ریکوئست وجود دارند را می‌گیریم
-      if (data.title) this.title = data.title;
-      if (data.description) this.description = data.description;
-      if (data.price) this.price = data.price;
-      if (data.discount !== undefined) this.discount = data.discount;
-      if (data.inventoryCount) this.inventoryCount = data.inventoryCount;
-      if (data.minOrderQuantity) this.minOrderQuantity = data.minOrderQuantity;
-      if (data.maxOrderQuantity !== undefined) this.maxOrderQuantity = data.maxOrderQuantity;
-      if (data.warranty) this.warranty = data.warranty;
-      if (data.warrantyPeriod !== undefined) this.warrantyPeriod = data.warrantyPeriod;
-      if (data.status) this.status = data.status;
-      if (data.sellsStatus) this.sellsStatus = data.sellsStatus;
-      if (data.city) this.city = data.city;
-      if (data.regionLatLng) this.regionLatLng = data.regionLatLng;
-      if (data.categories) this.categories = data.categories;
-      if (data.tags) this.tags = data.tags;
-      if (data.files) this.files = data.files;
-      if (data.fileUploadPath) this.fileUploadPath = data.fileUploadPath;
-    }
-  }
+
 class ProductService {
     constructor(prisma) {
         this.prisma = prisma;
@@ -82,21 +61,6 @@ class ProductService {
             where: { slug }
         });
         return !!existingProduct;
-    }
-    // متد جدید برای چک کردن مالکیت محصول
-    async #checkProductOwnership(productId, providerId) {
-        const product = await this.prisma.product.findFirst({
-        where: { 
-            id: productId,
-            providerId
-        }
-        });
-
-        if (!product) {
-        throw new Error("Product not found or unauthorized");
-        }
-
-        return product;
     }
     // Private helper method for processing media files
     async #processContentMedia(files, fileUploadPath, productId) {
@@ -168,43 +132,43 @@ class ProductService {
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Core Product Operations
-    async createProduct(dto, providerId) {
+    async createProduct(productData, files, userId) {
         const mediaEntries = await this.#processContentMedia(
-            dto.files,
-            dto.fileUploadPath,
+            files,
+            productData.fileUploadPath,
             'PROVIDER'
         );
 
         return prisma.product.create({
             data: {
-                title: dto.title,
-                description: dto.description,
-                price: parseFloat(dto.price),
-                discount: dto.discount ? parseFloat(dto.discount) : null,
-                inventoryCount: parseInt(dto.inventoryCount),
-                minOrderQuantity: dto.minOrderQuantity ? parseInt(dto.minOrderQuantity) : 1,
-                maxOrderQuantity: dto.maxOrderQuantity ? parseInt(dto.maxOrderQuantity) : null,
-                warranty: dto.warranty,
-                warrantyPeriod: dto.warrantyPeriod ? parseInt(dto.warrantyPeriod) : null,
-                status: dto.status,
-                sellsStatus: dto.sellsStatus,
-                city: dto.city,
-                regionLatLng: dto.regionLatLng,
+                title: productData.title,
+                description: productData.description,
+                price: parseFloat(productData.price),
+                discount: productData.discount ? parseFloat(productData.discount) : null,
+                inventoryCount: parseInt(productData.inventoryCount),
+                minOrderQuantity: productData.minOrderQuantity ? parseInt(productData.minOrderQuantity) : 1,
+                maxOrderQuantity: productData.maxOrderQuantity ? parseInt(productData.maxOrderQuantity) : null,
+                warranty: productData.warranty,
+                warrantyPeriod: productData.warrantyPeriod ? parseInt(productData.warrantyPeriod) : null,
+                status: productData.status,
+                sellsStatus: productData.sellsStatus,
+                city: productData.city,
+                regionLatLng: productData.regionLatLng,
                 providerId: userId,
-                slug: await this.#generateUniqueSlug(dto.title),
+                slug: await this.#generateUniqueSlug(productData.title),
                 featuredImage: mediaEntries[0]?.url,
                 contentMedia: {
                     create: mediaEntries
                 },
                 categories: {
-                    create: dto.categories.map(categoryId => ({
+                    create: productData.categories.map(categoryId => ({
                         category: {
                             connect: { id: categoryId }
                         }
                     }))
                 },
                 tags: {
-                    create: dto.tags.map(tagId => ({
+                    create: productData.tags.map(tagId => ({
                         tag: {
                             connect: { id: tagId }
                         }
@@ -228,68 +192,76 @@ class ProductService {
         });
     }
 
-    async updateProduct(productId, dto, providerId) {
-        // چک کردن مالکیت محصول
-      await this.#checkProductOwnership(productId, providerId);
+    async updateProduct(id, updateData, files, userId) {
+        const existingProduct = await prisma.product.findFirst({
+            where: { 
+                id,
+                providerId: userId
+            }
+        });
+
+        if (!existingProduct) {
+            throw createError.NotFound("Product not found or unauthorized");
+        }
 
         let newAttachments = [];
-        if (dto.files && Object.keys(dto.files).length > 0) {
+        if (files && Object.keys(files).length > 0) {
             newAttachments = await this.#processContentMedia(
-                dto.files,
-                dto.fileUploadPath,
+                files,
+                updateData.fileUploadPath,
                 'PROVIDER'
             );
         }
 
         return prisma.product.update({
-            where: { id: productId },
+            where: { id },
             data: {
-                ...(dto.title && { 
-                    title: dto.title,
-                    slug: await this.#generateUniqueSlug(dto.title)
+                ...(updateData.title && { 
+                    title: updateData.title,
+                    slug: await this.#generateUniqueSlug(updateData.title)
                 }),
-                ...(dto.description && { description: dto.description }),
-                ...(dto.price && { price: parseFloat(dto.price) }),
-                ...(dto.discount !== undefined && { 
-                    discount: dto.discount ? parseFloat(dto.discount) : null 
+                ...(updateData.description && { description: updateData.description }),
+                ...(updateData.price && { price: parseFloat(updateData.price) }),
+                ...(updateData.discount !== undefined && { 
+                    discount: updateData.discount ? parseFloat(updateData.discount) : null 
                 }),
-                ...(dto.inventoryCount && { 
-                    inventoryCount: parseInt(dto.inventoryCount) 
+                ...(updateData.inventoryCount && { 
+                    inventoryCount: parseInt(updateData.inventoryCount) 
                 }),
-                ...(dto.minOrderQuantity && { 
-                    minOrderQuantity: parseInt(dto.minOrderQuantity) 
+                ...(updateData.minOrderQuantity && { 
+                    minOrderQuantity: parseInt(updateData.minOrderQuantity) 
                 }),
-                ...(dto.maxOrderQuantity !== undefined && { 
-                    maxOrderQuantity: dto.maxOrderQuantity ? parseInt(dto.maxOrderQuantity) : null 
+                ...(updateData.maxOrderQuantity !== undefined && { 
+                    maxOrderQuantity: updateData.maxOrderQuantity ? parseInt(updateData.maxOrderQuantity) : null 
                 }),
-                ...(dto.warranty && { warranty: dto.warranty }),
-                ...(dto.warrantyPeriod !== undefined && { 
-                    warrantyPeriod: dto.warrantyPeriod ? parseInt(dto.warrantyPeriod) : null 
+                ...(updateData.warranty && { warranty: updateData.warranty }),
+                ...(updateData.warrantyPeriod !== undefined && { 
+                    warrantyPeriod: updateData.warrantyPeriod ? parseInt(updateData.warrantyPeriod) : null 
                 }),
-                ...(dto.status && { status: dto.status }),
-                ...(dto.sellsStatus && { sellsStatus: dto.sellsStatus }),
-                ...(dto.city && { city: dto.city }),
-                ...(dto.regionLatLng && { regionLatLng: dto.regionLatLng }),
+                ...(updateData.status && { status: updateData.status }),
+                ...(updateData.sellsStatus && { sellsStatus: updateData.sellsStatus }),
+                ...(updateData.city && { city: updateData.city }),
+                ...(updateData.regionLatLng && { regionLatLng: updateData.regionLatLng }),
                 ...(newAttachments.length > 0 && {
                     featuredImage: newAttachments[0].url,
                     contentMedia: {
                         create: newAttachments
                     }
                 }),
-                ...(dto.categories && {
+                ...(updateData.categories && {
                     categories: {
                         deleteMany: {},
-                        create: dto.categories.map(categoryId => ({
+                        create: updateData.categories.map(categoryId => ({
                             category: {
                                 connect: { id: categoryId }
                             }
                         }))
                     }
                 }),
-                ...(dto.tags && {
+                ...(updateData.tags && {
                     tags: {
                         deleteMany: {},
-                        create: dto.tags.map(tagId => ({
+                        create: updateData.tags.map(tagId => ({
                             tag: {
                                 connect: { id: tagId }
                             }
@@ -648,7 +620,6 @@ class ProductService {
 }
 
 module.exports = {
-    productService: new ProductService(),
+    ProductService,
     CreateProductDTO,
-    UpdateProductDTO
-};
+  };

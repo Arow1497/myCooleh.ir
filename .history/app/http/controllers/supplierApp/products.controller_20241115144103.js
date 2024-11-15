@@ -4,7 +4,7 @@ const {ProductService} = require("../../services/supplierApp/productsServices/pr
 const {BasketService} = require("../../services/supplierApp/productsServices/basket.service");
 const {SearchService} = require("../../services/supplierApp/productsServices/search.service");
 const {StatisticsService} = require("../../services/supplierApp/productsServices/statistic.service");
-const {CreateProductDTO, UpdateProductDTO} = require("../../services/supplierApp/productsServices/products.service");
+const {CreateProductDTO} = require("../../services/supplierApp/productsServices/products.service");
 
 class ProductController extends Controller {
     constructor(){
@@ -37,16 +37,7 @@ class ProductController extends Controller {
 
     async updateProduct(req, res, next) {
         try {
-            const { id } = req.params;
-            const providerId = req.user.id;
-            // ساخت DTO از داده‌های درخواست
-            const updateData = {
-                ...req.body,
-                files: req.files
-            };
-            const updateProductDTO = new UpdateProductDTO(updateData);
-
-            const product = await this.productService.updateProduct( id, providerId, updateProductDTO);
+            const product = await this.productService.updateProduct(req.params.id, req.body, req.files, req.user.id);
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: { product }
