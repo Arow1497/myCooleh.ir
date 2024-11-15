@@ -315,8 +315,16 @@ class ProductService {
     }
 
     async deleteProduct(id, userId) {
-        // چک کردن مالکیت محصول
-        await this.#checkProductOwnership(productId, providerId);
+        const existingProduct = await prisma.product.findFirst({
+            where: { 
+                id,
+                providerId: userId
+            }
+        });
+
+        if (!existingProduct) {
+            throw createError.NotFound("Product not found or unauthorized");
+        }
 
         await prisma.product.delete({
             where: { id }

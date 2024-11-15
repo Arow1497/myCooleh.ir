@@ -333,7 +333,7 @@ module.exports = {
 //         super('product');
 //     }
 
-    // اضافه کردن متدهای خاص محصولات
+//     // اضافه کردن متدهای خاص محصولات
 //     async searchByCategory(categoryId) {
 //         return this.search({
 //             filters: {
@@ -342,28 +342,7 @@ module.exports = {
 //         });
 //     }
 // }
-// جستجوی محصولات
-// const products = await productSearch.searchByCategory({
-//     categoryId: 1,
-//     page: 1,
-//     limit: 20
-// });
 
-// // جستجوی پست‌ها با تگ
-// const posts = await postSearch.searchByTags({
-//     tags: [1, 2],
-//     matchAll: true
-// });
-
-// // جستجوی پیشرفته آگهی‌ها
-// const ads = await adSearch.advancedSearch({
-//     search: "خودرو",
-//     categories: [5],
-//     customFilters: {
-//         location: "تهران",
-//         price: { min: 1000000, max: 5000000 }
-//     }
-// });
 
 
 
