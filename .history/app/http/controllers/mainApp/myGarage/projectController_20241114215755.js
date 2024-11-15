@@ -12,130 +12,130 @@ const { getLink } = require("../../../../utils/functions");
 const { ObjectIdValidator } = require("../../../validators/public.validator");
 
 class GarageAddProjectController extends Controller{
-    // Private helper methods
-    async #validateTransactionOwnership(transactionId, userId, role) {
-        const transaction = await prisma.transaction.findUnique({
-            where: { id: transactionId },
-            include: {
-                noticeApprentice: {
-                    select: {
-                        apprenticeId: true,
-                        publisherId: true
-                    }
+ // Private helper methods
+ async #validateTransactionOwnership(transactionId, userId, role) {
+    const transaction = await prisma.transaction.findUnique({
+        where: { id: transactionId },
+        include: {
+            noticeApprentice: {
+                select: {
+                    apprenticeId: true,
+                    publisherId: true
                 }
             }
-        });
-    
-        if (!transaction) throw createError.NotFound("Transaction not found");
-    
-        const isOwner = role === 'apprentice' 
-            ? transaction.noticeApprentice.apprenticeId === userId
-            : transaction.noticeApprentice.publisherId === userId;
-    
-        if (!isOwner) throw createError.Unauthorized("Not authorized to perform this action");
-    
-        return transaction;
-    }
+        }
+    });
   
-    async #validateGarageOwnership(user) {
-        const garageId = user?.ownedGarage?.id;
-        if (!garageId) {
-        throw createError(HttpStatus.UNAUTHORIZED, "این عملیات فقط برای صاحبین گاراژ مجاز است");
-        }
-        return garageId;
+    if (!transaction) throw createError.NotFound("Transaction not found");
+  
+    const isOwner = role === 'apprentice' 
+        ? transaction.noticeApprentice.apprenticeId === userId
+        : transaction.noticeApprentice.publisherId === userId;
+  
+    if (!isOwner) throw createError.Unauthorized("Not authorized to perform this action");
+  
+    return transaction;
+  }
+  
+  async #validateGarageOwnership(user) {
+    const garageId = user?.ownedGarage?.id;
+    if (!garageId) {
+      throw createError(HttpStatus.UNAUTHORIZED, "این عملیات فقط برای صاحبین گاراژ مجاز است");
     }
+    return garageId;
+  }
+  
+  async #processAttachments(files, fileUploadPath, correlationType) {
+    const attachments = [];
     
-    async #processAttachments(files, fileUploadPath, correlationType) {
-        const attachments = [];
-        
-        // Process images
-        const images = ListOfImagesFromRequest(files || [], fileUploadPath);
-        for (const image of images) {
-            const fileInfo = files.find(f => path.basename(image) === f.filename);
-            attachments.push({
-                url: image,
-                filename: path.basename(image),
-                fileType: 'image',
-                fileSize: fileInfo?.size?.toString() || '0',
-                mimeType: fileInfo?.mimetype || 'image/jpeg',
-                dimensions: { width: 0, height: 0 },
-                status: 'COMPLETED',
-                CorrelationType: correlationType
-            });
-        }
-        // Process voice files
-        const voiceFiles = files?.voice || [];
-        if (Array.isArray(voiceFiles) && voiceFiles.length > 0) {
-            const filename = voiceFiles[0].filename;
-            if (filename && fileUploadPath) {
-                const voiceAddress = path.join(fileUploadPath, filename).replace(/\\/g, "/");
-                const voiceURL = `${process.env.BASE_URL}:${process.env.APPLICATION_PORT}/${voiceAddress}`;
-                
-                try {
-                    const seconds = await getAudioDurationInSeconds(voiceURL);
-                    attachments.push({
-                        url: voiceAddress,
-                        filename,
-                        fileType: 'audio',
-                        fileSize: voiceFiles[0].size.toString(),
-                        mimeType: voiceFiles[0].mimetype,
-                        duration: getTime(seconds),
-                        status: 'COMPLETED',
-                        CorrelationType: correlationType
-                    });
-                } catch (error) {
-                    console.error("Error processing audio file:", error);
-                }
-            }
-        }
-        // Process video files
-        const videoFiles = files?.video || [];
-        if (Array.isArray(videoFiles) && videoFiles.length > 0) {
-        const { fileUploadPath } = body;
-        const filename = videoFiles[0].filename;
-        
+    // Process images
+    const images = ListOfImagesFromRequest(files || [], fileUploadPath);
+    for (const image of images) {
+        const fileInfo = files.find(f => path.basename(image) === f.filename);
+        attachments.push({
+            url: image,
+            filename: path.basename(image),
+            fileType: 'image',
+            fileSize: fileInfo?.size?.toString() || '0',
+            mimeType: fileInfo?.mimetype || 'image/jpeg',
+            dimensions: { width: 0, height: 0 },
+            status: 'COMPLETED',
+            CorrelationType: correlationType
+        });
+    }
+    // Process voice files
+    const voiceFiles = files?.voice || [];
+    if (Array.isArray(voiceFiles) && voiceFiles.length > 0) {
+        const filename = voiceFiles[0].filename;
         if (filename && fileUploadPath) {
-            const videoAddress = path.join(fileUploadPath, filename).replace(/\\/g, "/");
-            const videoURL = `${process.env.BASE_URL}:${process.env.APPLICATION_PORT}/${videoAddress}`;
+            const voiceAddress = path.join(fileUploadPath, filename).replace(/\\/g, "/");
+            const voiceURL = `${process.env.BASE_URL}:${process.env.APPLICATION_PORT}/${voiceAddress}`;
             
             try {
-            const seconds = await getVideoDurationInSeconds(videoURL);
-            const duration = getTime(seconds);
-            
-            attachments.push({
-                url: videoAddress,
-                filename: filename,
-                fileType: 'video',
-                fileSize: videoFiles[0].size.toString(),
-                mimeType: videoFiles[0].mimetype,
-                duration: duration,
-                status: 'COMPLETED',
-                // Add required relations with appropriate IDs
-                noticeApprenticeId: process.env.DEFAULT_NOTICEAPPRENTICESHIP_ID,
-            });
+                const seconds = await getAudioDurationInSeconds(voiceURL);
+                attachments.push({
+                    url: voiceAddress,
+                    filename,
+                    fileType: 'audio',
+                    fileSize: voiceFiles[0].size.toString(),
+                    mimeType: voiceFiles[0].mimetype,
+                    duration: getTime(seconds),
+                    status: 'COMPLETED',
+                    CorrelationType: correlationType
+                });
             } catch (error) {
-            console.error("Error calculating video duration:", error);
+                console.error("Error processing audio file:", error);
             }
         }
-        }
-    
-        return attachments;
     }
+    // Process video files
+    const videoFiles = files?.video || [];
+     if (Array.isArray(videoFiles) && videoFiles.length > 0) {
+       const { fileUploadPath } = body;
+       const filename = videoFiles[0].filename;
+       
+       if (filename && fileUploadPath) {
+         const videoAddress = path.join(fileUploadPath, filename).replace(/\\/g, "/");
+         const videoURL = `${process.env.BASE_URL}:${process.env.APPLICATION_PORT}/${videoAddress}`;
+         
+         try {
+           const seconds = await getVideoDurationInSeconds(videoURL);
+           const duration = getTime(seconds);
+           
+           attachments.push({
+             url: videoAddress,
+             filename: filename,
+             fileType: 'video',
+             fileSize: videoFiles[0].size.toString(),
+             mimeType: videoFiles[0].mimetype,
+             duration: duration,
+             status: 'COMPLETED',
+             // Add required relations with appropriate IDs
+             noticeApprenticeId: process.env.DEFAULT_NOTICEAPPRENTICESHIP_ID,
+           });
+         } catch (error) {
+           console.error("Error calculating video duration:", error);
+         }
+       }
+     }
+  
+    return attachments;
+  }
   
   // Controller methods
 
-    async createNewProject(req, res, next){
+   async createNewProject(req, res, next){
     try {
         const garageID = req.user.garageID;
         // const clientID = req.body; // از لیست مشتری های در انتظار انتخاب میکنه مکانیک یک کلاینت رو
         const registrationDataBody = await projectSchema.validateAsync(req.body);
-            const {clientID,
+          const {clientID,
             addres,
             lat_lng,
             garageField,
             firs_name,
-                last_name,} = registrationDataBody;
-            const createProject = await ProjectsModel.create({
+             last_name,} = registrationDataBody;
+          const createProject = await ProjectsModel.create({
             garageID,
             clientID,
             status: "accepted",
@@ -151,9 +151,9 @@ class GarageAddProjectController extends Controller{
     } catch (error) {
         next(error)
     }
-    }
+   }
 
-    async removeProjectById(req, res, next){
+   async removeProjectById(req, res, next){
     try {
         const {postID} = req.params;
         const applicantID = req.user._id;  // ایدی درخواست دهنده
@@ -162,23 +162,23 @@ class GarageAddProjectController extends Controller{
     // بررسی مالکیت پست توسط کاربر درخواست‌دهنده
     if (!post.publisher.equals(applicantID)) {
         throw createError.NotAcceptable("ویرایش گفتمان فقط برای ناشر آن مجاز است");
-        }
-            const removeProductResult = await PostsModel.deleteOne({ _id: post._id });
-            if (!removeProductResult.deletedCount) throw createError.InternalServerError("حذف گفتمان انجام نشد");
-        
-        return res.status(HttpStatus.OK).json({
+      }
+           const removeProductResult = await PostsModel.deleteOne({ _id: post._id });
+           if (!removeProductResult.deletedCount) throw createError.InternalServerError("حذف گفتمان انجام نشد");
+       
+       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
         data : {
-            message: "حذف گفتمان با موفقیت انجام شد"
+          message: "حذف گفتمان با موفقیت انجام شد"
         }
-        })
+      })
     } catch (error) {
         console.log(error);
         next(error)
     }
-    }
+   }
 
-    async editProjectById(req, res, next) {
+   async editProjectById(req, res, next) {
     try {
         await UpdatePostSchema.validateAsync(req.body);
         const { postID } = req.params;
@@ -213,13 +213,13 @@ class GarageAddProjectController extends Controller{
         let videoAddress = null;
 
         if (Array.isArray(videoFiles) && videoFiles.length > 0){     
-                const { fileUploadPath } = req.body;
+               const { fileUploadPath } = req.body;
             const filename = videoFiles[0].filename;
             if (filename && fileUploadPath) {
                 try {
                     videoAddress = path.join(fileUploadPath, filename).replace(/\\/g, "/");
                     const videoURL = `${process.env.BASE_URL}:${process.env.APPLICATION_PORT}/${videoAddress}`;
-                    // بررسی وجود فایل ویدیو و محاسبه مدت زمان آن
+                  // بررسی وجود فایل ویدیو و محاسبه مدت زمان آن
                     const seconds = await getVideoDurationInSeconds(videoURL);
                     // اگر محاسبه موفقیت‌آمیز بود، زمان را تنظیم می‌کنیم
                     time = getTime(seconds);
@@ -259,9 +259,10 @@ class GarageAddProjectController extends Controller{
         deleteFilesInPublicForPosts(req.files);
         next(error);
     }
-    }
+}
 
-    async getAllOfGarageProjects(req, res, next){
+
+   async getAllOfGarageProjects(req, res, next){
     try {
         const {search} = req.query;
         let post;
@@ -283,7 +284,7 @@ class GarageAddProjectController extends Controller{
             {path: "dislikes"},
             {path: "bookmarks"},
         ]);
-
+    
         return res.status(HttpStatus.OK).json({
             statusCode : HttpStatus.OK,
             data : {
@@ -293,9 +294,10 @@ class GarageAddProjectController extends Controller{
     } catch (error) {
         next(error)
     }
-    }
+   }
 
-    async LikeProject(req, res, next){
+
+   async LikeProject(req, res, next){
     try {
         const user = req.user._id;
         const {postID} = req.params;
@@ -324,9 +326,9 @@ class GarageAddProjectController extends Controller{
     } catch (error) {
         next(error)
     }
-    }
+   }
 
-    async dislikeProject(req, res, next){
+   async dislikeProject(req, res, next){
     try {
         const user = req.user._id;
         const {postID} = req.params;
@@ -356,9 +358,10 @@ class GarageAddProjectController extends Controller{
     } catch (error) {
         next(error)
     }
-    }
+   }
 
-    async getCommentsOfProject(req, res, next){
+
+   async getCommentsOfProject(req, res, next){
     try {
         const {postID} = req.params;
         await this.findPostById(postID);
@@ -370,7 +373,7 @@ class GarageAddProjectController extends Controller{
         .select("comments")
         .exec();
         
-        
+      
         return res.status(HttpStatus.OK).json({
             statusCode: HttpStatus.OK,
             data : {
@@ -380,7 +383,8 @@ class GarageAddProjectController extends Controller{
     } catch (error) {
         next(error)
     }
-    }
+   }
+
 
     async addClientCommentAndRateForProject(req, res, next){
         try {
@@ -398,6 +402,7 @@ class GarageAddProjectController extends Controller{
         }
     }
 
+
     async createInvoice_FactorForProject(req, res, next){
         try {
             
@@ -405,6 +410,7 @@ class GarageAddProjectController extends Controller{
             
         }
     }
+
 
     async createOilAutoServiceProject(req, res, next){
         try {

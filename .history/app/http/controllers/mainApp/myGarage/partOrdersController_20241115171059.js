@@ -153,7 +153,7 @@ class GaragePartOrdersController extends Controller {
 
     async getGarageAllActivePartOrdersRequests(req, res, next) {
         try {
-            const result = await GaragePartOrdersService.getGarageAllActivePartOrdersRequests(req.user, req.query);
+            // const result = await GaragePartOrdersService.get GarageAllActivePartOrdersRequests(req.user, req.query);
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: result

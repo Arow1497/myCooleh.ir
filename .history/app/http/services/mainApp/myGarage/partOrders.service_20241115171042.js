@@ -164,7 +164,7 @@ class GaragePartOrdersService {
         );
 
         return await prisma.$transaction(async (prisma) => {
-            const orders = await this.prisma.garagePartOrder.create({
+            const orders = await prisma.garagePartOrder.create({
                 data: {
                     ...data,
                     publisher: { connect: { id: user.id } },
@@ -189,21 +189,21 @@ class GaragePartOrdersService {
 
     async sendSelectedRequestsToClient(data) {
         // Implementation for sending selected requests to client
-        return await this.prisma.garagePartOrder.update({
+        return await prisma.garagePartOrder.update({
             where: { id: data.orderId },
             data: { status: 'SENT_TO_CLIENT' }
         });
     }
 
     async notifyClientChoice(data) {
-        return await this.prisma.garagePartOrder.update({
+        return await prisma.garagePartOrder.update({
             where: { id: data.orderId },
             data: { status: 'CLIENT_SELECTED' }
         });
     }
 
     async getAllPartOrderReqs(query) {
-        return await this.prisma.garagePartOrder.findMany({
+        return await prisma.garagePartOrder.findMany({
             where: { city: query.city },
             include: {
                 publisher: {
@@ -217,7 +217,7 @@ class GaragePartOrdersService {
     }
 
     async getOnePartOrderReqById(partOrderId) {
-        const order = await this.prisma.garagePartOrder.findUnique({
+        const order = await prisma.garagePartOrder.findUnique({
             where: { id: partOrderId },
             include: {
                 publisher: true,
@@ -235,7 +235,7 @@ class GaragePartOrdersService {
     }
 
     async removePartOrderReqById(partOrderId, userId) {
-        const order = await this.prisma.garagePartOrder.findUnique({
+        const order = await prisma.garagePartOrder.findUnique({
             where: { id: partOrderId },
             select: { publisherId: true }
         });
@@ -248,13 +248,13 @@ class GaragePartOrdersService {
             throw createError.Forbidden("شما مجاز به حذف این سفارش قطعه نیستید");
         }
 
-        return await this.prisma.garagePartOrder.delete({
+        return await prisma.garagePartOrder.delete({
             where: { id: partOrderId }
         });
     }
 
     async editPartOrderReqById(partOrderId, userId, data, files) {
-        const order = await this.prisma.garagePartOrder.findUnique({
+        const order = await prisma.garagePartOrder.findUnique({
             where: { id: partOrderId },
             include: { attachments: true }
         });
@@ -280,7 +280,7 @@ class GaragePartOrdersService {
             "milestones", "reviews", "transactionsActivityLogs", "share"
         ]);
 
-        return await this.prisma.garagePartOrder.update({
+        return await prisma.garagePartOrder.update({
             where: { id: partOrderId },
             data: {
                 ...updateData,
@@ -328,7 +328,7 @@ class GaragePartOrdersService {
         };
 
         const [orders, total] = await prisma.$transaction([
-            this.prisma.garagePartOrder.findMany({
+            prisma.garagePartOrder.findMany({
                 where,
                 skip: (page - 1) * limit,
                 take: limit,
@@ -349,7 +349,7 @@ class GaragePartOrdersService {
                 },
                 orderBy: { createdAt: 'desc' }
             }),
-            this.prisma.garagePartOrder.count({ where })
+            prisma.garagePartOrder.count({ where })
         ]);
 
         return {
@@ -421,7 +421,7 @@ class GaragePartOrdersService {
         };
 
         const [activeNotices, total] = await prisma.$transaction([
-            this.prisma.garagePartOrder.findMany({
+            prisma.garagePartOrder.findMany({
                 where,
                 skip: (page - 1) * limit,
                 take: limit,
@@ -453,7 +453,7 @@ class GaragePartOrdersService {
                 },
                 orderBy: { startedAt: 'desc' }
             }),
-            this.prisma.garagePartOrder.count({ where })
+            prisma.garagePartOrder.count({ where })
         ]);
 
         return {
@@ -477,7 +477,7 @@ class GaragePartOrdersService {
         };
 
         const [activeNotices, total] = await prisma.$transaction([
-            this.prisma.garagePartOrder.findMany({
+            prisma.garagePartOrder.findMany({
                 where,
                 skip: (page - 1) * limit,
                 take: limit,
@@ -500,7 +500,7 @@ class GaragePartOrdersService {
                 },
                 orderBy: { startedAt: 'desc' }
             }),
-            this.prisma.garagePartOrder.count({ where })
+            prisma.garagePartOrder.count({ where })
         ]);
 
         return {
@@ -515,7 +515,7 @@ class GaragePartOrdersService {
     }
 
     async sharePartOrderRequest(partOrderId, user) {
-        const orders = await this.prisma.garagePartOrder.findUnique({
+        const orders = await prisma.garagePartOrder.findUnique({
             where: { id: partOrderId },
             select: {
                 share: {
@@ -575,7 +575,7 @@ class GaragePartOrdersService {
     async showSuplierStorePartOrderRequestsForRequesterGarage(garageId) {
         if (!garageId) throw createError.Unauthorized("Only garage owners can view requests");
 
-        return await this.prisma.garagePartOrder.findMany({
+        return await prisma.garagePartOrder.findMany({
             where: { requesterGarageId: garageId },
             select: {
                 shagerdReqsForApprenticeCoWork: true,
@@ -592,7 +592,7 @@ class GaragePartOrdersService {
         if (!garageId) throw createError.Unauthorized("Only garage owners can add apprentices");
 
         return await prisma.$transaction(async (prisma) => {
-            const orders = await this.prisma.garagePartOrder.update({
+            const orders = await prisma.garagePartOrder.update({
                 where: { id: partOrderId },
                 data: {
                     apprenticeId,
@@ -628,7 +628,7 @@ class GaragePartOrdersService {
     async deleteSupplierStoreFromPartOrderRequest(garageId, partOrderId, apprenticeId) {
         if (!garageId) throw createError.Unauthorized("Only garage owners can remove apprentices");
 
-        return await this.prisma.garagePartOrder.update({
+        return await prisma.garagePartOrder.update({
             where: { id: partOrderId },
             data: {
                 apprentice: {
@@ -645,7 +645,7 @@ class GaragePartOrdersService {
             throw createError.NotAcceptable("ویرایش ترنزاکشن فقط برای طرفین آن مجاز است");
         }
 
-        return await this.prisma.garagePartOrder.update({
+        return await prisma.garagePartOrder.update({
             where: { id: partOrderId },
             data: {
                 apprentice: {
@@ -804,7 +804,7 @@ class GaragePartOrdersService {
 
     async findPartOrderById(partOrderId) {
         const { id } = await ObjectIdValidator.validateAsync({ id: partOrderId });
-        const partOrder = await this.prisma.garagePartOrder.findUnique({
+        const partOrder = await prisma.garagePartOrder.findUnique({
             where: { id }
         });
         
