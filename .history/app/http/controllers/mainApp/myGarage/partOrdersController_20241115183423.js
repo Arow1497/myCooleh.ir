@@ -5,8 +5,6 @@ const GaragePartOrdersService = require("../services/GaragePartOrders.service");
 
 class GaragePartOrdersController extends Controller {
      // Controller methods
-     //اگهی هایی که ثبت میشن باید لوکیشن داشته باشن و یدکی های محدوده ۱۰ ۲۰ کیلومتری 
-     //بتونن ببینن اگر قطعات نایاب بود گزینه پیشنهاد به کل یدکی ها وجود داشته باشه
      async addEstimatedBrokenSectionsWithRequiredPartsForClientApprovalByGarage(req, res, next){
         try {
             
@@ -292,14 +290,6 @@ class GaragePartOrdersController extends Controller {
             });
         } catch (error) {
             next(error);
-        }
-    }
-
-    async deleteThisSupplierStoreFromPartOrderRequestByClient(req, res, next){
-        try {
-            
-        } catch (error) {
-            
         }
     }
 
