@@ -26,7 +26,6 @@ class ClientsCommunicationsController extends Controller{
         next(error)
     }
    }
-   
    async createCommentForCoupon(req, res, next){
     try {
         

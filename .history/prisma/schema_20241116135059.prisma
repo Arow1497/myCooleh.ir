@@ -14,7 +14,6 @@ model User {
   otp_code        Int           @default(0)
   otp_expires     Int           @default(0)
   password        Int?
-  passwordResetAt  DateTime      @default(now())
   registrationDate DateTime      @default(now())
   isSystemAdmin   Boolean       @default(false)
   isActive        Boolean       @default(true)
