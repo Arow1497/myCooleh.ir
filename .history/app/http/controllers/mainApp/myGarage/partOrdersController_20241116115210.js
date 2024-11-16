@@ -412,8 +412,6 @@ class GaragePartOrdersController extends Controller {
             next(error);
         }
     }
-
-    // add General conversation service 
 }
 
 module.exports = {
