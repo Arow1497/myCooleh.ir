@@ -1,5 +1,5 @@
-const AppError = require('../../errors/AppError');
-const logger = require('../../utils/logger/winston');
+const AppError = require('../errors/AppError');
+const logger = require('../config/logger');
 
 // پیام‌های خطای سفارشی
 const errorMessages = {
@@ -83,18 +83,4 @@ const errorHandler = (err, req, res, next) => {
 
         sendErrorProd(error, req, res);
     }
-};
-
-
-// میدلور برای خطاهای async/await
-const catchAsync = fn => {
-    return (req, res, next) => {
-        fn(req, res, next).catch(next);
-    };
-};
-
-module.exports = {
-    errorHandler,
-    catchAsync,
-    AppError
 };

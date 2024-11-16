@@ -11,7 +11,6 @@ const {initialSocket} = require("./utils/initSocket");
 const ffmpeg = require("fluent-ffmpeg");
 const ffmpegStatic = require("ffmpeg-static");
 const { PrismaClient } = require('@prisma/client');
-const { errorHandler } = require("./http/middlewares/errorHanling.middleware");
 
 
 require("dotenv").config()
@@ -31,6 +30,7 @@ module.exports = class Application {
         this.connectToMariaDB();
         this.createServer();
         this.createRoutes();
+        this.errorHandling();
         process.on("SIGINT", async() => {
           await this.closeConnections();
           console.log("All connections closed");
@@ -38,6 +38,7 @@ module.exports = class Application {
       });
   
     }
+
     configApplication(){
       ffmpeg.setFfmpegPath(ffmpegStatic.path);
       this.#app.use(cors({
@@ -46,9 +47,6 @@ module.exports = class Application {
         allowedHeaders: "Authorization,Content-Type"
       }));
       this.#app.use(morgan("dev"));
-      this.#app.use(checkBlockedUsers);
-      this.#app.use(generalRateLimiter);
-      this.#app.use(checkSuspiciousActivity);
       this.#app.use(express.json({limit: "50mb"}));
       this.#app.use(express.urlencoded({limit: "50mb", extended: true}));
       this.#app.use(express.static(path.join(__dirname, "..", "public")));
@@ -85,13 +83,6 @@ module.exports = class Application {
       {explorer: true},
     )
   );
-      // میدلور برای مسیرهای یافت نشده
-      this.#app.all('*', (req, res, next) => {
-        next(new AppError(404, `مسیر ${req.originalUrl} در این سرور یافت نشد`));
-      });
-      // میدلور مدیریت خطا باید آخرین میدلور باشد
-      this.#app.use(errorHandler);
-         
 }
 
     createServer(){
@@ -157,5 +148,22 @@ module.exports = class Application {
      
     }
 
-  
+    errorHandling(){
+       this.#app.use((req,res,next) => {
+        next(creatHttpError.NotFound("آدرس مورد نظر یافت نشد"));
+       });
+       this.#app.use((error, req, res, next) =>{
+        const serverError = creatHttpError.InternalServerError();
+        const statusCode = error.status || serverError.status;
+        const message = error.message || serverError.message;
+        return res.status(statusCode).json({
+          statusCode,
+         errors:{
+          message,
+          
+         }
+        })
+    })
+       }
+       
     }

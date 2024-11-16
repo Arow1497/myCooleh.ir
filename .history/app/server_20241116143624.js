@@ -31,6 +31,7 @@ module.exports = class Application {
         this.connectToMariaDB();
         this.createServer();
         this.createRoutes();
+        this.errorHandling();
         process.on("SIGINT", async() => {
           await this.closeConnections();
           console.log("All connections closed");
@@ -38,6 +39,7 @@ module.exports = class Application {
       });
   
     }
+
     configApplication(){
       ffmpeg.setFfmpegPath(ffmpegStatic.path);
       this.#app.use(cors({
@@ -85,6 +87,7 @@ module.exports = class Application {
       {explorer: true},
     )
   );
+
       // میدلور برای مسیرهای یافت نشده
       this.#app.all('*', (req, res, next) => {
         next(new AppError(404, `مسیر ${req.originalUrl} در این سرور یافت نشد`));

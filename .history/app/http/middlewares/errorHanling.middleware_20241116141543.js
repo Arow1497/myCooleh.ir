@@ -1,4 +1,4 @@
-const AppError = require('../../errors/AppError');
+const AppError = require('../errors/AppError');
 const logger = require('../../utils/logger/winston');
 
 // پیام‌های خطای سفارشی
