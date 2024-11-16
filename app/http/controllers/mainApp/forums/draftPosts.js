@@ -5,6 +5,8 @@ const { PrismaClient } = require('@prisma/client');
 const path = require('path');
 const prisma = new PrismaClient();
 const { ListOfImagesFromRequest, getTime, audioSeconds } = require("../../../../utils/functions");
+ const MediaProcessor = require('../../../services/generalServices/attachmentProcess');
+const processor = new MediaProcessor();
 
 class PostController extends Controller {
 
@@ -122,7 +124,7 @@ class PostController extends Controller {
             const userId = req.user.id;
 
             // Process mediaEntries if any
-            const mediaEntries = await this.#processContentMedia(
+            const mediaEntries = await processor.processContentMedia(
                 req.files,
                 req.body.fileUploadPath,
                 'AUTHOR'
@@ -320,7 +322,7 @@ class PostController extends Controller {
             if (existingPost.authorId !== userId) throw createError.Forbidden("Not authorized to edit this post");
 
             // Process new mediaEntries if any
-            const newAttachments = req.files ? await this.#processContentMedia(
+            const newAttachments = req.files ? await processor.processContentMedia(
                 req.files,
                 req.body.fileUploadPath,
                 'AUTHOR'

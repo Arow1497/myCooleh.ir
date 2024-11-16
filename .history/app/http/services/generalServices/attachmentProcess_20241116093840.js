@@ -1,6 +1,6 @@
 const path = require("path");
 const { getVideoDurationInSeconds } = require("get-video-duration");
-const { ListOfImagesFromRequest, getTime, audioSeconds } = require("../../../utils/functions");
+const { audioSeconds } = require("../../../utils/functions");
 
 class AttachmentProcessor {
     constructor(baseUrl, applicationPort) {

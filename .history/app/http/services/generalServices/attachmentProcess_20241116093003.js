@@ -1,6 +1,6 @@
 const path = require("path");
 const { getVideoDurationInSeconds } = require("get-video-duration");
-const { ListOfImagesFromRequest, getTime, audioSeconds } = require("../../../utils/functions");
+const { audioSeconds } = require("../../../utils/functions");
 
 class AttachmentProcessor {
     constructor(baseUrl, applicationPort) {
@@ -180,27 +180,3 @@ class MediaProcessor {
 module.exports = { AttachmentProcessor,
                    MediaProcessor
                 }
-
- // نحوه استفاده:
-//  const MediaProcessor = require('./MediaProcessor');
-
-// const processor = new MediaProcessor();
-// const files = req.files; // فایل‌ها از ریکوئست
-// const fileUploadPath = "path/to/uploads";
-// const productId = "some-product-id";
-// (async () => {
-//     const mediaEntries = await processor.processContentMedia(files, fileUploadPath, productId);
-//     console.log(mediaEntries);
-// })();
-
-// const AttachmentProcessor = require('./AttachmentProcessor');
-
-// const processor = new AttachmentProcessor();
-// const files = req.files; // یا هر منبع دیگر برای فایل‌ها
-// const fileUploadPath = "path/to/uploads";
-// const correlationType = "some-correlation-type";
-
-// (async () => {
-//     const attachments = await processor.processAttachments(files, fileUploadPath, correlationType);
-//     console.log(attachments);
-// })();
