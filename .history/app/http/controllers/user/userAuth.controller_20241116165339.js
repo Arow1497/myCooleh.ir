@@ -66,7 +66,6 @@ class UserAuthController extends Controller {
             next(error);
         }
     }
-    
     async completeProfile(req, res, next) {
         try {
             const result = await this.authService.completeUserProfile(req.user.id, req.body);
