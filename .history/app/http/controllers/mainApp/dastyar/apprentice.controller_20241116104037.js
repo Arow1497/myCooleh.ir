@@ -1,0 +1,523 @@
+const { StatusCodes: HttpStatus } = require("http-status-codes");
+const Controller = require("../controller");
+const apprenticeNoticeService = require("../services/apprenticenotice.services");
+const { deleteFilesInPublicForOrders } = require("../utils/functions");
+
+class ApprenticeshipNoticeController extends Controller {
+    async createNewApprenticeRequest(req, res, next) {
+        try {
+            const result = await apprenticeNoticeService.createNewApprenticeRequest(
+                req.user,
+                req.body,
+                req.params,
+                req.files
+            );
+
+            return res.status(HttpStatus.CREATED).json({
+                statusCode: HttpStatus.CREATED,
+                data: {
+                    message: "آگهی درخواست شاگرد با موفقیت ثبت شد",
+                    notice: result.notice,
+                    share: result.share
+                }
+            });
+        } catch (error) {
+            deleteFilesInPublicForOrders(req.files);
+            next(error);
+        }
+    }
+
+    async getAllNoticeApprentice(req, res, next) {
+        try {
+            const notices = await apprenticeNoticeService.getAllNoticeApprentice(req.query.city);
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: { notices }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getOneNoticeApprenticeById(req, res, next) {
+        try {
+            const notice = await apprenticeNoticeService.getOneNoticeApprenticeById(req.params.noticeApprenticeId);
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: { notice }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async removeApprenticeRequestById(req, res, next) {
+        try {
+            await apprenticeNoticeService.removeApprenticeRequestById(req.params.noticeApprenticeId, req.user.id);
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: { message: "آگهی با موفقیت حذف شد" }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async editApprenticeRequestsById(req, res, next) {
+        try {
+            const updatedNotice = await apprenticeNoticeService.editApprenticeRequestsById(
+                req.params.noticeApprenticeId,
+                req.user.id,
+                req.body,
+                req.files
+            );
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: {
+                    message: "آگهی با موفقیت بروزرسانی شد",
+                    notice: updatedNotice
+                }
+            });
+        } catch (error) {
+            deleteFilesInPublicForOrders(req.files);
+            next(error);
+        }
+    }
+
+    async toggleBookmark(req, res, next) {
+        try {
+            const isAdded = await apprenticeNoticeService.toggleBookmark(
+                req.params.noticeApprenticeId,
+                req.user.id
+            );
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: {
+                    message: isAdded 
+                        ? "آگهی به علاقه‌مندی‌های شما اضافه شد"
+                        : "آگهی از علاقه‌مندی‌های شما حذف شد"
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getAllGarageNoticeApprentices(req, res, next) {
+        try {
+            const { notices, total } = await apprenticeNoticeService.getAllGarageNoticeApprentices(
+                req.user,
+                req.query.page,
+                req.query.limit
+            );
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: {
+                    notices,
+                    pagination: {
+                        total,
+                        pages: Math.ceil(total / req.query.limit),
+                        currentPage: parseInt(req.query.page),
+                        perPage: parseInt(req.query.limit)
+                    }
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getAllApprenticeRequestsToItself(req, res, next) {
+        try {
+            const { requests, total } = await apprenticeNoticeService.getAllApprenticeRequestsToItself(
+                req.user.id,
+                req.query.page,
+                req.query.limit,
+                req.query.status
+            );
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: {
+                    requests,
+                    pagination: {
+                        total,
+                        pages: Math.ceil(total / req.query.limit),
+                        currentPage: parseInt(req.query.page),
+                        perPage: parseInt(req.query.limit)
+                    }
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getApprenticeAllActiveApprenticeNoticeApps(req, res, next) {
+        try {
+            const { activeNotices, total } = await apprenticeNoticeService.getApprenticeAllActiveNotices(
+                req.user.id,
+                req.query.page,
+                req.query.limit
+            );
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: {
+                    activeNotices,
+                    pagination: {
+                        total,
+                        pages: Math.ceil(total / req.query.limit),
+                        currentPage: parseInt(req.query.page),
+                        perPage: parseInt(req.query.limit)
+                    }
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getGarageAllActiveApprenticeNoticeApps(req, res, next) {
+        try {
+            const { activeNotices, total } = await apprenticeNoticeService.getGarageAllActiveNotices(
+                req.user,
+                req.query.page,
+                req.query.limit
+            );
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: {
+                    activeNotices,
+                    pagination: {
+                        total,
+                        pages: Math.ceil(total / req.query.limit),
+                        currentPage: parseInt(req.query.page),
+                        perPage: parseInt(req.query.limit)
+                    }
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async shareApprenticeRequest(req, res, next) {
+        try {
+            const share = await apprenticeNoticeService.shareApprenticeRequest(
+                req.params.noticeApprenticeId,
+                req.user
+            );
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: { share }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async addCoworkReqForNoticeApprentice(req, res, next) {
+        try {
+            const noticeApprenticeAppReqs = await apprenticeNoticeService.addCoworkRequest(
+                req.user,
+                req.params.noticeApprenticeId,
+                req.params.apprenticeId
+            );
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: { noticeApprenticeAppReqs }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async showCoworkRequestsForRequesterGarage(req, res, next) {
+        try {
+            const requests = await apprenticeNoticeService.showCoworkRequests(req.user.ownedGarage?.id);
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: { requests }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async addApprenticeToRequest(req, res, next) {
+        try {
+            const result = await apprenticeNoticeService.addApprenticeToRequest(
+                req.user,
+                req.params.apprenticeId,
+                req.params.noticeApprenticeId,
+                req.body
+            );
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: {
+                    message: "شاگرد موردنظر به پروژه افزوده شد",
+                    result
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async deleteThisApprenticeFromApprenticeRequest(req, res, next) {
+        try {
+            await apprenticeNoticeService.removeApprenticeFromRequest(
+                req.user.ownedGarage?.id,
+                req.params.noticeApprenticeId,
+                req.params.apprenticeId
+            );
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: {
+                    message: "شاگرد موردنظر از پروژه حذف شد"
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async apprenticeRefusingFromThisNoticeApprenticeship(req, res, next) {
+        try {
+            await apprenticeNoticeService.apprenticeRefuseRequest(
+                req.params.noticeApprenticeId,
+                req.user.id
+            );
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: {
+                    message: "شما از این همکاری با موفقیت استعفا دادید"
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async confirmTransactionCompletion(req, res, next) {
+        try {
+            const role = req.user.apprenticeAt ? 'apprentice' : 'garageOwner';
+            await apprenticeNoticeService.confirmTransactionCompletion(
+                req.params.transactionId,
+                req.user.id,
+                role
+            );
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: {
+                    message: "این همکاری از سمت شما با موفقیت پایان یافت"
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async createComplaint(req, res, next) {
+        try {
+            await apprenticeNoticeService.createComplaint(
+                req.params.transactionId,
+                req.user.id,
+                req.user.role,
+                req.body,
+                req.files
+            );
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: {
+                    message: "شکایت شما از طرف همکاری ثبت شد برای بررسی و حصول نتیجه صبور باشید"
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async removeAndRegretComplaintByrequester(req, res, next) {
+        try {
+            await apprenticeNoticeService.removeComplaint(
+                req.params.complaintId,
+                req.user.id
+            );
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: {
+                    message: "شکایت شما با موفقیت لغو شد"
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async respondToComplaint(req, res, next) {
+        try {
+            const updatedComplaint = await apprenticeNoticeService.respondToComplaint(
+                req.params.complaintId,
+                req.user.id,
+                req.body,
+                req.files
+            );
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: {
+                    message: "پاسخ شما به شکایت ثبت شد",
+                    complaint: updatedComplaint
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async addReviewForApprenticeRequest(req, res, next) {
+        try {
+            await apprenticeNoticeService.addReview(
+                req.user,
+                req.params.noticeApprenticeId,
+                req.body
+            );
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: {
+                    message: "باتشکر...نظر و امتیاز شما برای این همکاری ثبت شد"
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async createTransactionRoom(req, res, next) {
+        try {
+            const conversation = await apprenticeNoticeService.createTransactionRoom(
+                req.params.transactionId,
+                req.user.id
+            );
+            return res.status(HttpStatus.CREATED).json({
+                statusCode: HttpStatus.CREATED,
+                data: {
+                    message: "اتاق گفتگو با موفقیت ایجاد شد",
+                    conversationId: conversation.id
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async sendMessage(req, res, next) {
+        try {
+            const message = await apprenticeNoticeService.sendMessage(
+                req.params.conversationId,
+                req.user.id,
+                req.body,
+                req.files
+            );
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: {
+                    message: "پیام با موفقیت ارسال شد",
+                    messageData: message
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getMessages(req, res, next) {
+        try {
+            const { messages, totalMessages } = await apprenticeNoticeService.getMessages(
+                req.params.conversationId,
+                req.user.id,
+                req.query.page,
+                req.query.limit
+            );
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: {
+                    messages,
+                    pagination: {
+                        currentPage: Number(req.query.page),
+                        totalPages: Math.ceil(totalMessages / req.query.limit),
+                        totalMessages,
+                        limit: Number(req.query.limit)
+                    }
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getUserConversations(req, res, next) {
+        try {
+            const { conversations, totalConversations } = await apprenticeNoticeService.getUserConversations(
+                req.user.id,
+                req.query.page,
+                req.query.limit,
+                req.query.status
+            );
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: {
+                    conversations,
+                    pagination: {
+                        currentPage: Number(req.query.page),
+                        totalPages: Math.ceil(totalConversations / req.query.limit),
+                        totalConversations,
+                        limit: Number(req.query.limit)
+                    }
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async markMessagesAsRead(req, res, next) {
+        try {
+            const { count } = await apprenticeNoticeService.markMessagesAsRead(
+                req.params.conversationId,
+                req.user.id
+            );
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: {
+                    message: count > 0 
+                        ? "پیام‌ها به عنوان خوانده شده علامت‌گذاری شدند"
+                        : "پیام ناخوانده‌ای وجود ندارد",
+                    count
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getConversationDetails(req, res, next) {
+        try {
+            const conversationDetails = await apprenticeNoticeService.getConversationDetails(
+                req.params.conversationId,
+                req.user.id
+            );
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: {
+                    conversation: conversationDetails
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+}
+
+module.exports = {
+    ApprenticeshipNoticeController: new ApprenticeshipNoticeController()
+};

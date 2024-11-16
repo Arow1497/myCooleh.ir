@@ -3,7 +3,7 @@ const { PrismaClient } = require('@prisma/client');
 const { ListOfImagesFromRequest, getTime, audioSeconds } = require("../../utils/functions");
 const path = require('path');
 const prisma = new PrismaClient();
-const MediaProcessor = require('../../generalServices/attachmentProcess');
+const MediaProcessor = require('../../services/generalServices/attachmentProcess');
 const processor = new MediaProcessor();
 
 class CreatePartOrderDTO {
@@ -608,7 +608,7 @@ class GaragePartOrdersService {
         const { id: authorId, role } = user;
         const { description, fileUploadPath } = body;
         
-        const attachments = await processor.processContentMedia(files, fileUploadPath, 'AUTHOR');
+        const attachments = await this.#processAttachments(files, fileUploadPath, 'AUTHOR');
 
         const isGarage = role === 'GARAGE';
         
@@ -690,7 +690,7 @@ class GaragePartOrdersService {
         if (!complaint) throw createError.NotFound("Complaint not found");
         if (userId !== complaint.targetId) throw createError.Unauthorized("Only the complaint target can respond");
 
-        const attachments = await processor.processContentMedia(files, fileUploadPath, 'TARGET');
+        const attachments = await this.#processAttachments(files, fileUploadPath, 'TARGET');
 
         return await prisma.complaint.update({
             where: { id: complaintId },
