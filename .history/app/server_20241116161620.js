@@ -12,7 +12,7 @@ const ffmpeg = require("fluent-ffmpeg");
 const ffmpegStatic = require("ffmpeg-static");
 const { PrismaClient } = require('@prisma/client');
 const { errorHandler } = require("./http/middlewares/errorHanling.middleware");
-const { securityMiddleware, commonValidationRules, bruteforce } = require("./http/middlewares/security.middleware");
+const { securityMiddleware } = require("./http/middlewares/security.middleware");
 const { generalRateLimiter, checkSuspiciousActivity, sensitivePathLimiter, authRateLimiter } = require("./http/middlewares/rateLimiter.middleware");
 
 
@@ -56,62 +56,6 @@ module.exports = class Application {
       this.#app.use(express.json({limit: "50mb"}));
       this.#app.use(express.urlencoded({limit: "50mb", extended: true}));
       this.#app.use(express.static(path.join(__dirname, "..", "public")));
-              // Example of protected route with validation and brute force protection
-        this.#app.post('/api/auth/login',
-          [
-            commonValidationRules.email,
-            commonValidationRules.password,
-            bruteforce.prevent
-          ],
-          async (req, res) => {
-            try {
-              const { email, password } = req.body;
-              // Here you would typically:
-              // 1. Validate user credentials
-              // 2. Generate JWT token
-              // 3. Send response
-              res.json({
-                status: 'success',
-                message: 'Login successful'
-              });
-            } catch (error) {
-              res.status(400).json({
-                status: 'error',
-                message: 'Login failed'
-              });
-            }
-        });
-
-        // Example of protected route with validation
-        this.#app.get('/api/users/:id',
-          [
-            commonValidationRules.id,
-            commonValidationRules.page,
-            commonValidationRules.limit
-          ],
-          async (req, res) => {
-            try {
-              const userId = parseInt(req.params.id);
-              const user = await prisma.user.findUnique({
-                where: { id: userId }
-              });
-              
-              if (!user) {
-                return res.status(404).json({
-                  status: 'error',
-                  message: 'User not found'
-                });
-              }
-              
-              res.json({
-                status: 'success',
-                data: user
-              });
-            } catch (error) {
-              next(error);
-            }
-        });
-
       // Error handling for Prisma
       this.#app.use((err, req, res, next) => {
         if (err instanceof PrismaClient.PrismaClientKnownRequestError) {

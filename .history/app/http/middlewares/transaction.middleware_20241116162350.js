@@ -163,22 +163,22 @@ module.exports = {
 // Delete
 // انتقال پول (به عنوان مثالی از عملیات پیچیده)
 // نحوه استفاده در routes:
-// const { withTransaction, exampleOperations } = require('../middleware/transaction.middleware');
+const { withTransaction, exampleOperations } = require('../middleware/transaction.middleware');
 
 // مثال ساده
-// app.post('/users', withTransaction(exampleOperations.create('user')));
+app.post('/users', withTransaction(exampleOperations.create('user')));
 
 // مثال انتقال پول
-// app.post('/transfer', withTransaction(exampleOperations.transferMoney));
+app.post('/transfer', withTransaction(exampleOperations.transferMoney));
 
 // مثال عملیات سفارشی
-// app.post('/custom', withTransaction(async (req, res, tx) => {
+app.post('/custom', withTransaction(async (req, res, tx) => {
   // عملیات دلخواه شما
-//   const result = await tx.user.create({
-//     data: req.body
-//   });
-//   return result;
-// }));
+  const result = await tx.user.create({
+    data: req.body
+  });
+  return result;
+}));
 // این middleware:
 // از تراکنش‌های atomic اطمینان حاصل می‌کند
 // خطاها را به درستی مدیریت می‌کند
