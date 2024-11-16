@@ -77,38 +77,6 @@ module.exports = class Application {
           return data;
         }
       }));
-      // مثال: endpoint برای دریافت محصولات
-      this.#app.get('/api/products', 
-        cacheManager.middleware({
-          ttl: 1800, // 30 دقیقه
-          tags: ['products']
-        }),
-        async (req, res) => {
-          const products = await prisma.product.findMany();
-          res.json(products);
-        }
-      );
-      // مثال: بروزرسانی محصول و حذف cache
-      this.#app.put('/api/products/:id', async (req, res) => {
-        const { id } = req.params;
-        const product = await prisma.product.update({
-          where: { id: parseInt(id) },
-          data: req.body
-        });
-        // حذف cache های مرتبط با محصولات
-        await cacheManager.invalidateByTag('products');
-        
-        res.json(product);
-      });
-      // API برای مدیریت cache
-      this.#app.delete('/api/cache', async (req, res) => {
-        await cacheManager.clear();
-        res.json({ message: 'Cache cleared successfully' });
-      });
-      this.#app.get('/api/cache/status', (req, res) => {
-        res.json(cacheManager.getStatus());
-      });
-
       this.#app.use("/api-doc", swaggerUI.serve, swaggerUI.setup(swaggerJsDoc({
         swaggerDefinition: {
           openapi: "3.0.0",
