@@ -27,27 +27,6 @@ model User {
   Basket          Basket[]  
   userRole        UserRole[]
 
-  
-// Clan relations
-  ownedClan         Clan?     @relation("clanOwner")
-  memberships       ClanMembership[]
-  sentInvites       ClanInvite[]     @relation("sentInvites")
-  receivedInvites   ClanInvite[]     @relation("receivedInvites")
-  activities        ClanActivity[]
-  reactions         ClanCommunicationReaction[]
-  replies           ClanCommunicationReply[]
-  
-// Business & Reputation
-  reputation        Float     @default(0)
-  totalTransactions Int       @default(0)
-  successRate       Float     @default(0)
-  
-// Supplier-specific metrics
-  supplierRating    Float?
-  responseTime      Float?    // Average response time in hours
-  qualityScore      Float?
-  
-
   // Business Features
   subscriptions         Subscription[]
   customer              Customer[]
@@ -55,6 +34,12 @@ model User {
   status                UserStatus @default(ACTIVE)
   notifications         Notification[]  @relation("UserNotifications")
 
+ // Interaction Operations
+  clanId                String?
+  clan                  Clan?       @relation(fields: [clanId], references: [id])
+  OwnedClan             Clan?       @relation("clanOwner")
+  clanRole              ClanRoles   @default(MEMBER)
+ 
   // Related Profiles
   businessProfile            BusinessProfile?
   projectProfile             ProjectProfile?
@@ -301,242 +286,18 @@ model Client {
 
 //....... Clan model - represents Networking(Bussines-side) data & information........//
 model Clan {
-  id          String    @id @default(uuid())
-  name        String    @unique
-  description String?
-  logoUrl     String?
-  level       Int       @default(1)
-  maxMembers  Int       @default(50)
-  isPrivate   Boolean   @default(false)
-  
-// Ranking & Stats
-  rankingScore Float    @default(0)
-  weeklyScore  Float    @default(0)
-  monthlyScore Float    @default(0)
-  rank         Int?     // Global rank
-  seasonRank   Int?     // Season rank
-  
-// Business Metrics
-  totalTransactions    Int     @default(0)
-  successfulDeals      Int     @default(0)
-  reputationScore     Float    @default(0)
-  activeSuppliers     Int      @default(0)
-  activeGarages       Int      @default(0)
-  
-// Relations
-  ownerId     String    @unique
-  owner       User      @relation("clanOwner", fields: [ownerId], references: [id])
-  members     ClanMembership[]
-  invites     ClanInvite[]
-  activities  ClanActivity[]
-  rewards     ClanReward[]
-  communications ClanCommunication[]
-  rankings    ClanRanking[]
-  
-// Timestamps
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-}
-
-model ClanMembership {
-  id        String    @id @default(uuid())
-  clanId    String
-  userId    String
-  role      ClanRole
-  joinedAt  DateTime  @default(now())
-  
-// Activity Metrics
-  contributionScore   Float    @default(0)
-  transactionCount    Int      @default(0)
-  reputationPoints    Float    @default(0)
-  activityPoints      Int      @default(0)
-  lastActiveAt        DateTime @default(now())
-  
-// Supplier-specific fields
-  supplierTier        SupplierTier?
-  dealSuccessRate     Float?
-  responseRate        Float?
-  qualityRating       Float?
-  
-// Relations
-  clan               Clan      @relation(fields: [clanId], references: [id])
-  user               User      @relation(fields: [userId], references: [id])
-  earnedRewards      ClanReward[]
-  communications     ClanCommunication[]
-  
-  @@unique([clanId, userId])
-}
-
-model ClanRanking {
   id            String    @id @default(uuid())
-  clanId        String
-  season        Int
-  weekNumber    Int
-  rank          Int
-  score         Float
-  
-// Metrics that affected ranking
-  transactionVolume  Float
-  memberActivity     Float
-  supplierRating     Float
-  
-// Relations
-  clan          Clan      @relation(fields: [clanId], references: [id])
-  
-// Timestamps
-  calculatedAt  DateTime  @default(now())
-  
-  @@unique([clanId, season, weekNumber])
-}
-
-model ClanReward {
-  id            String      @id @default(uuid())
-  clanId        String
-  memberId      String
-  type          RewardType
-  amount        Float
-  description   String
-  claimed       Boolean     @default(false)
-  
-// Relations
-  clan          Clan            @relation(fields: [clanId], references: [id])
-  member        ClanMembership  @relation(fields: [memberId], references: [id])
-  
-// Timestamps
-  createdAt     DateTime    @default(now())
-  claimedAt     DateTime?
-  expiresAt     DateTime?
-}
-
-model ClanCommunication {
-  id            String    @id @default(uuid())
-  clanId        String
-  senderId      String
-  type          ClanCommunicationType
-  title         String
-  content       String
-  metadata      Json?     // For type-specific data
-  
-// For supplier updates/offers
-  dealValue     Float?
-  validUntil    DateTime?
-  
-// Relations
-  clan          Clan            @relation(fields: [clanId], references: [id])
-  sender        ClanMembership  @relation(fields: [senderId], references: [id])
-  reactions     ClanCommunicationReaction[]
-  replies       ClanCommunicationReply[]
-  
-// Timestamps
+  ownerId       String    @unique
+  owner         User      @relation("clanOwner", fields: [ownerId], references: [id])
+  users         User[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
 
-model ClanCommunicationReaction {
-  id              String    @id @default(uuid())
-  communicationId String
-  userId          String
-  reaction        String    // emoji or reaction type
-  
-// Relations
-  communication   ClanCommunication @relation(fields: [communicationId], references: [id])
-  user           User        @relation(fields: [userId], references: [id])
-  
-  @@unique([communicationId, userId])
-}
-
-model ClanCommunicationReply {
-  id              String    @id @default(uuid())
-  communicationId String
-  userId          String
-  content         String
-  
-// Relations
-  communication   ClanCommunication @relation(fields: [communicationId], references: [id])
-  user           User        @relation(fields: [userId], references: [id])
-  
-// Timestamps
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-}
-
-
-model ClanInvite {
-  id        String    @id @default(uuid())
-  clanId    String
-  fromUserId String
-  toUserId   String
-  status    ClanMembershipStatus
-  message   String?
-  
-// Relations
-  clan      Clan      @relation(fields: [clanId], references: [id])
-  fromUser  User      @relation("sentInvites", fields: [fromUserId], references: [id])
-  toUser    User      @relation("receivedInvites", fields: [toUserId], references: [id])
-  
-// Timestamps
-  createdAt DateTime  @default(now())
-  expiresAt DateTime?
-  
-  @@unique([clanId, toUserId])
-}
-
-model ClanActivity {
-  id          String    @id @default(uuid())
-  clanId      String
-  userId      String
-  activityType String
-  description String
-  metadata    Json?     // For storing activity-specific data
-  points      Int       @default(0)  // Activity points awarded
-  
-// Relations
-  clan        Clan      @relation(fields: [clanId], references: [id])
-  user        User      @relation(fields: [userId], references: [id])
-  
-// Timestamp
-  createdAt   DateTime  @default(now())
-}
-
-enum ClanRole {
+enum ClanRoles {
   OWNER
   COLEADER
-  ELDER
   MEMBER
-}
-
-enum UserType {
-  GARAGE_OWNER
-  SUPPLIER
-}
-
-enum ClanMembershipStatus {
-  PENDING
-  ACCEPTED
-  REJECTED
-}
-
-enum RewarddType {
-  TRANSACTION_MILESTONE
-  ACTIVITY_POINTS
-  REFERRAL_BONUS
-  SUPPLIER_RATING
-  LOYALTY_POINTS
-}
-
-enum ClanCommunicationType {
-  ANNOUNCEMENT
-  DISCUSSION
-  DEAL_OFFER
-  SUPPORT_REQUEST
-  SUPPLIER_UPDATE
-}
-
-enum SupplierTier {
-  BRONZE
-  SILVER
-  GOLD
-  PLATINUM
 }
 
 // Session for activity tracking
@@ -4153,3 +3914,271 @@ model Campaigns {
 
 
 
+
+// // Main models
+// model Clann {
+//   id          String    @id @default(uuid())
+//   name        String    @unique
+//   description String?
+//   logoUrl     String?
+//   level       Int       @default(1)
+//   maxMembers  Int       @default(50)
+//   isPrivate   Boolean   @default(false)
+  
+//   // Ranking & Stats
+//   rankingScore Float    @default(0)
+//   weeklyScore  Float    @default(0)
+//   monthlyScore Float    @default(0)
+//   rank         Int?     // Global rank
+//   seasonRank   Int?     // Season rank
+  
+//   // Business Metrics
+//   totalTransactions    Int     @default(0)
+//   successfulDeals      Int     @default(0)
+//   reputationScore     Float    @default(0)
+//   activeSuppliers     Int      @default(0)
+//   activeGarages       Int      @default(0)
+  
+//   // Relations
+//   ownerId     String    @unique
+//   owner       User      @relation("clanOwner", fields: [ownerId], references: [id])
+//   members     ClanMembership[]
+//   invites     ClanInvite[]
+//   activities  ClanActivity[]
+//   rewards     ClanReward[]
+//   communications ClanCommunication[]
+//   rankings    ClanRanking[]
+  
+//   // Timestamps
+//   createdAt   DateTime  @default(now())
+//   updatedAt   DateTime  @updatedAt
+// }
+
+// model ClanMembership {
+//   id        String    @id @default(uuid())
+//   clanId    String
+//   userId    String
+//   role      ClanRole
+//   joinedAt  DateTime  @default(now())
+  
+//   // Activity Metrics
+//   contributionScore   Float    @default(0)
+//   transactionCount    Int      @default(0)
+//   reputationPoints    Float    @default(0)
+//   activityPoints      Int      @default(0)
+//   lastActiveAt        DateTime @default(now())
+  
+//   // Supplier-specific fields
+//   supplierTier        SupplierTier?
+//   dealSuccessRate     Float?
+//   responseRate        Float?
+//   qualityRating       Float?
+  
+//   // Relations
+//   clan               Clan      @relation(fields: [clanId], references: [id])
+//   user               User      @relation(fields: [userId], references: [id])
+//   earnedRewards      ClanReward[]
+//   communications     ClanCommunication[]
+  
+//   @@unique([clanId, userId])
+// }
+
+// model ClanRanking {
+//   id            String    @id @default(uuid())
+//   clanId        String
+//   season        Int
+//   weekNumber    Int
+//   rank          Int
+//   score         Float
+  
+//   // Metrics that affected ranking
+//   transactionVolume  Float
+//   memberActivity     Float
+//   supplierRating     Float
+  
+//   // Relations
+//   clan          Clan      @relation(fields: [clanId], references: [id])
+  
+//   // Timestamps
+//   calculatedAt  DateTime  @default(now())
+  
+//   @@unique([clanId, season, weekNumber])
+// }
+
+// model ClanReward {
+//   id            String      @id @default(uuid())
+//   clanId        String
+//   memberId      String
+//   type          RewardType
+//   amount        Float
+//   description   String
+//   claimed       Boolean     @default(false)
+  
+//   // Relations
+//   clan          Clan            @relation(fields: [clanId], references: [id])
+//   member        ClanMembership  @relation(fields: [memberId], references: [id])
+  
+//   // Timestamps
+//   createdAt     DateTime    @default(now())
+//   claimedAt     DateTime?
+//   expiresAt     DateTime?
+// }
+
+// model ClanCommunication {
+//   id            String    @id @default(uuid())
+//   clanId        String
+//   senderId      String
+//   type          ClanCommunicationType
+//   title         String
+//   content       String
+//   metadata      Json?     // For type-specific data
+  
+//   // For supplier updates/offers
+//   dealValue     Float?
+//   validUntil    DateTime?
+  
+//   // Relations
+//   clan          Clan            @relation(fields: [clanId], references: [id])
+//   sender        ClanMembership  @relation(fields: [senderId], references: [id])
+//   reactions     ClanCommunicationReaction[]
+//   replies       ClanCommunicationReply[]
+  
+//   // Timestamps
+//   createdAt     DateTime  @default(now())
+//   updatedAt     DateTime  @updatedAt
+// }
+
+// model ClanCommunicationReaction {
+//   id              String    @id @default(uuid())
+//   communicationId String
+//   userId          String
+//   reaction        String    // emoji or reaction type
+  
+//   // Relations
+//   communication   ClanCommunication @relation(fields: [communicationId], references: [id])
+//   user           User        @relation(fields: [userId], references: [id])
+  
+//   @@unique([communicationId, userId])
+// }
+
+// model ClanCommunicationReply {
+//   id              String    @id @default(uuid())
+//   communicationId String
+//   userId          String
+//   content         String
+  
+//   // Relations
+//   communication   ClanCommunication @relation(fields: [communicationId], references: [id])
+//   user           User        @relation(fields: [userId], references: [id])
+  
+//   // Timestamps
+//   createdAt       DateTime  @default(now())
+//   updatedAt       DateTime  @updatedAt
+// }
+
+// // Extended User model
+// model Uoser {
+//   id                String    @id @default(uuid())
+//   userType          UserType
+  
+//   // Clan relations
+//   ownedClan         Clan?     @relation("clanOwner")
+//   memberships       ClanMembership[]
+//   sentInvites       ClanInvite[]     @relation("sentInvites")
+//   receivedInvites   ClanInvite[]     @relation("receivedInvites")
+//   activities        ClanActivity[]
+//   reactions         ClanCommunicationReaction[]
+//   replies           ClanCommunicationReply[]
+  
+//   // Business & Reputation
+//   reputation        Float     @default(0)
+//   totalTransactions Int       @default(0)
+//   successRate       Float     @default(0)
+  
+//   // Supplier-specific metrics
+//   supplierRating    Float?
+//   responseTime      Float?    // Average response time in hours
+//   qualityScore      Float?
+  
+//   // Other existing user fields...
+// }
+
+// model ClanInvite {
+//   id        String    @id @default(uuid())
+//   clanId    String
+//   fromUserId String
+//   toUserId   String
+//   status    ClanMembershipStatus
+//   message   String?
+  
+//   // Relations
+//   clan      Clan      @relation(fields: [clanId], references: [id])
+//   fromUser  User      @relation("sentInvites", fields: [fromUserId], references: [id])
+//   toUser    User      @relation("receivedInvites", fields: [toUserId], references: [id])
+  
+//   // Timestamps
+//   createdAt DateTime  @default(now())
+//   expiresAt DateTime?
+  
+//   @@unique([clanId, toUserId])
+// }
+
+// model ClanActivity {
+//   id          String    @id @default(uuid())
+//   clanId      String
+//   userId      String
+//   activityType String
+//   description String
+//   metadata    Json?     // For storing activity-specific data
+//   points      Int       @default(0)  // Activity points awarded
+  
+//   // Relations
+//   clan        Clan      @relation(fields: [clanId], references: [id])
+//   user        User      @relation(fields: [userId], references: [id])
+  
+//   // Timestamp
+//   createdAt   DateTime  @default(now())
+// }
+
+
+// // Enum types
+// enum ClanRole {
+//   OWNER
+//   COLEADER
+//   ELDER
+//   MEMBER
+// }
+
+// enum UserType {
+//   GARAGE_OWNER
+//   SUPPLIER
+// }
+
+// enum ClanMembershipStatus {
+//   PENDING
+//   ACCEPTED
+//   REJECTED
+// }
+
+// enum RewarddType {
+//   TRANSACTION_MILESTONE
+//   ACTIVITY_POINTS
+//   REFERRAL_BONUS
+//   SUPPLIER_RATING
+//   LOYALTY_POINTS
+// }
+
+// enum ClanCommunicationType {
+//   ANNOUNCEMENT
+//   DISCUSSION
+//   DEAL_OFFER
+//   SUPPORT_REQUEST
+//   SUPPLIER_UPDATE
+// }
+
+// enum SupplierTier {
+//   BRONZE
+//   SILVER
+//   GOLD
+//   PLATINUM
+// }
