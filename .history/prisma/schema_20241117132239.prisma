@@ -1697,9 +1697,9 @@ model Notification {
   status        NotificationStatus   @default(PENDING)
   expiresAt     DateTime? // مشخص کردن زمان انقضای نوتیفیکیشن (در صورتی که بعد از مدتی نمایش آن دیگر ضروری نباشد)
   deviceId      String? // اگر نوتیفیکیشن‌ها به دستگاه خاصی ارسال می‌شوند، این فیلد می‌تواند کاربردی باشد
-  category      CategoryOnNotification? 
+  category      NotificationCategory @default(GENERAL)
   deliveredAt   DateTime?
-   tags         TagOnNotification?
+  // tags          String[] @default([])
   source        String? // مشخص کردن سیستمی که نوتیفیکیشن را تولید کرده است  
   retries       Int @default(0)  // برای نگهداری تعداد دفعاتی که برای ارسال این نوتیفیکیشن تلاش شده است
 
@@ -1743,16 +1743,15 @@ enum NotificationCategory {
 
 //........................ Category model ..............................//
 model Category {
-  id                 String      @id @default(cuid())
-  title              String          @unique
-  description        String?         @db.Text
-  parentId           String?
-  parent             Category?       @relation("CategoryToParent", fields: [parentId], references: [id])
-  children           Category[]      @relation("CategoryToParent") 
-  posts              CategoryOnPost[]
-  notification       CategoryOnNotification[]
-  products           CategoryOnProduct[]
-  NoticeAll          CategoryOnNotice[]
+  id          String      @id @default(cuid())
+  title       String          @unique
+  description String?         @db.Text
+  parentId    String?
+  parent      Category?       @relation("CategoryToParent", fields: [parentId], references: [id])
+  children    Category[]      @relation("CategoryToParent") 
+  posts       CategoryOnPost[]
+  products  CategoryOnProduct[]
+  NoticeAll   CategoryOnNotice[]
 
 }
 
@@ -1766,18 +1765,6 @@ model CategoryOnPost {
 
   @@id([postId, categoryId])
   @@index([postId])
-  @@index([categoryId])
-}
-
-//........................ CategoryOnNotification model ..............................//
-model CategoryOnNotification {
-  notificationId      String @unique
-  categoryId  String
-  notification        Notification     @relation(fields: [notificationId], references: [id], onDelete: Cascade)
-  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-
-  @@id([notificationId, categoryId])
-  @@index([notificationId])
   @@index([categoryId])
 }
 
@@ -1816,16 +1803,13 @@ garageRequirementsRequestId        String
   @@index([noticeDivarId])
   @@index([categoryId])
 }
-
 //........................ Tag model ..............................//
 model Tag {
-  id                 String      @id @default(cuid())
-  name               String      @unique
-  posts              TagOnPost[]
-  products           TagOnProduct[]
-  NoticeAll          TagOnNotice[]
-  notification       TagOnNotification[]
-
+  id          String      @id @default(cuid())
+  name        String      @unique
+  posts       TagOnPost[]
+  products    TagOnProduct[]
+  NoticeAll   TagOnNotice[]
 }
 
 //........................ TagOnPost model ..............................//
@@ -1837,18 +1821,6 @@ model TagOnPost {
 
   @@id([postId, tagId])
   @@index([postId])
-  @@index([tagId])
-}
-
-//........................ TagOnNotification model ..............................//
-model TagOnNotification {
-  notificationId      String  @unique
-  notification        Notification     @relation(fields: [notificationId], references: [id], onDelete: Cascade)
-  tagId               String
-  tag                 Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
-
-  @@id([notificationId, tagId])
-  @@index([notificationId])
   @@index([tagId])
 }
 

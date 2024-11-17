@@ -2,7 +2,11 @@ const createError = require("http-errors");
 const { StatusCodes: HttpStatus } = require("http-status-codes");
 const Controller = require("../../controller");
 const { PrismaClient } = require('@prisma/client');
+const path = require('path');
 const prisma = new PrismaClient();
+const { garagesSchema } = require("../../../validators/MainApp/garages.schema");
+const { serialNumGenerator, ListOfImagesFromRequest, deleteFileInPublic } = require("../../../../utils/functions");
+const { ObjectIdValidator } = require("../../../validators/public.validator");
 
 class GarageManagementController extends Controller{
 // Private helper methods
@@ -47,14 +51,14 @@ async #validateTransactionOwnership(transactionId, userId, role) {
         }
     }
 
+
     async garageMonthlyServicesIncomeRevenue(req, res, next){
         try {
             
         } catch (error) {
             next(error);
         }
-    }
-    //مجموع درآمد ورودی از سرویس هایی مثل کوپن -متریک -تامین قطعه درصدی- برونسپاری-دیوار و غیره
+    }//مجموع درآمد ورودی از سرویس هایی مثل کوپن -متریک -تامین قطعه درصدی- برونسپاری-دیوار و غیره
     // دیتیل و جزییات هرکدوم ازین سرویسها توی بخش مربوط به خودشون در دسترسه
 
     async getGarageMechanicsList(req, res, next){
@@ -190,8 +194,7 @@ async #validateTransactionOwnership(transactionId, userId, role) {
         } catch (error) {
             next(error)
         }
-    }    
-    //نحوه استفاده
+    }    //نحوه استفاده
     // در این رویکرد، صاحب گاراژ می‌تواند با ارسال پارامترهای year و month
     //  از طریق کوئری استرینگ، ماه شمسی مورد نظر خود را برای محاسبه دستمزد مکانیک‌ها انتخاب کند
     //  به‌عنوان مثال، اگر بخواهد دستمزد مکانیک‌ها برای ماه اردیبهشت 1403 محاسبه شود، می‌تواند چنین درخواستی ارسال کند:

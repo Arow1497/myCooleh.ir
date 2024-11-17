@@ -1844,8 +1844,8 @@ model TagOnPost {
 model TagOnNotification {
   notificationId      String  @unique
   notification        Notification     @relation(fields: [notificationId], references: [id], onDelete: Cascade)
-  tagId               String
-  tag                 Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId       String
+  tag         Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@id([notificationId, tagId])
   @@index([notificationId])

@@ -7,22 +7,9 @@ class GaragePartOrdersController extends Controller {
      // Controller methods
      //اگهی هایی که ثبت میشن باید لوکیشن داشته باشن و یدکی های محدوده ۱۰ ۲۰ کیلومتری 
      //بتونن ببینن اگر قطعات نایاب بود گزینه پیشنهاد به کل یدکی ها وجود داشته باشه
-
-
-     //Controllers
      async addEstimatedBrokenSectionsWithRequiredPartsForClientApprovalByGarage(req, res, next){
         try {
-
-        } catch (error) {
             
-        }
-    }
-
-    async updateEstimatedBrokenSectionsWithRequiredPartsForClientApprovalByGarage(req, res, next){
-        try {
-            // گاهی اوقات یک لیستی از معایب و قطعاتی که نیاز هست تهیه میشه و کلاینت موادی رو تایید میده
-            // بهد توی کار میرن میبینن ایراد های جدیدی مشخص میشه اونموقع یکبار دیگه این رو یه 
-            //آپدیت میزنن و مشتری باز باید تایید کنه یا خیر
         } catch (error) {
             
         }

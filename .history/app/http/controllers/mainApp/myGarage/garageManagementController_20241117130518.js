@@ -53,8 +53,7 @@ async #validateTransactionOwnership(transactionId, userId, role) {
         } catch (error) {
             next(error);
         }
-    }
-    //مجموع درآمد ورودی از سرویس هایی مثل کوپن -متریک -تامین قطعه درصدی- برونسپاری-دیوار و غیره
+    }//مجموع درآمد ورودی از سرویس هایی مثل کوپن -متریک -تامین قطعه درصدی- برونسپاری-دیوار و غیره
     // دیتیل و جزییات هرکدوم ازین سرویسها توی بخش مربوط به خودشون در دسترسه
 
     async getGarageMechanicsList(req, res, next){
