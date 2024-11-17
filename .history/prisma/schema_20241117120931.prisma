@@ -903,7 +903,7 @@ model Customer {
   billingAddress    Json?     // Stored as JSON for flexibility
   
   // Payment methods and history
-  paymentMethods    Payment[]
+  paymentMethods    PaymentMethod[]
   invoices          Invoice[]
 }
 
@@ -1024,7 +1024,7 @@ model BillingRecord {
   billingDate     DateTime
   nextBillingDate DateTime
   status          BillingStatus
-  paymentMethod   Payment @relation(fields: [paymentMethodId], references: [id])
+  paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
   paymentMethodId String
   invoice         Invoice?      @relation(fields: [invoiceId], references: [id])
   invoiceId       String?
@@ -1135,7 +1135,7 @@ model Usage {
 }
 
 //........................ Payment method model..............................//
-model Payment {
+model PaymentMethod {
   id                String    @id @default(uuid())
   customer          Customer  @relation(fields: [customerId], references: [id])
   customerId        String
