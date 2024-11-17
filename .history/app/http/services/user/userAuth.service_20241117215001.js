@@ -94,6 +94,7 @@ class UserAuthService {
         const result = await prisma.$transaction(async (prismaTx) => {
             // ایجاد یا به‌روزرسانی کاربر
             const newUser = await this.createOrUpdateUser(mobile, prismaTx);
+            
             // ایجاد تنظیمات نوتیفیکیشن برای کاربر جدید
             await prismaTx.userNotificationSettings.create({
                 data: {
@@ -105,12 +106,14 @@ class UserAuthService {
                     deviceTokens: []
                 }
             });
+    
             // بررسی یا ایجاد دسته‌بندی نوتیفیکیشن
             const category = await prismaTx.notificationCategory.upsert({
                 where: { category: 'GENERAL' },
                 update: {},
                 create: { category: 'GENERAL' }
             });
+    
             // ایجاد نوتیفیکیشن خوشامدگویی
             await prismaTx.notification.create({
                 data: {
@@ -136,7 +139,7 @@ class UserAuthService {
         user = result;
         isNewUser = true;
     }
-
+    
         const tokenData = {
             userId: user.id,
             timestamp: Date.now()

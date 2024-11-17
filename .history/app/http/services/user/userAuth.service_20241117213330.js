@@ -77,7 +77,7 @@ class UserAuthService {
         if (isSuspicious) {
             throw createHttpError.TooManyRequests('فعالیت مشکوک شناسایی شد');
         }
-    
+
         const storedOtp = await redisClient.get(`otp:${mobile}`);
         if (!storedOtp) throw createHttpError.Unauthorized("کد منقضی شده یا یافت نشد");
         if (storedOtp !== code) {
@@ -86,56 +86,11 @@ class UserAuthService {
             });
             throw createHttpError.Unauthorized("کد ارسال شده صحیح نمی‌باشد");
         }
-    
+
         let user = await this.getUserFromCache(mobile);
-        let isNewUser = false;
         if (!user) {
-        // ایجاد کاربر جدید همراه با تنظیمات نوتیفیکیشن در یک تراکنش
-        const result = await prisma.$transaction(async (prismaTx) => {
-            // ایجاد یا به‌روزرسانی کاربر
-            const newUser = await this.createOrUpdateUser(mobile, prismaTx);
-            // ایجاد تنظیمات نوتیفیکیشن برای کاربر جدید
-            await prismaTx.userNotificationSettings.create({
-                data: {
-                    userId: newUser.id, // از newUser.id استفاده می‌کنیم
-                    emailNotifications: true,
-                    pushNotifications: true,
-                    smsNotifications: true,
-                    marketingEmails: true,
-                    deviceTokens: []
-                }
-            });
-            // بررسی یا ایجاد دسته‌بندی نوتیفیکیشن
-            const category = await prismaTx.notificationCategory.upsert({
-                where: { category: 'GENERAL' },
-                update: {},
-                create: { category: 'GENERAL' }
-            });
-            // ایجاد نوتیفیکیشن خوشامدگویی
-            await prismaTx.notification.create({
-                data: {
-                    userId: newUser.id, // از شناسه کاربر جدید استفاده می‌کنیم
-                    type: 'SYSTEM',
-                    title: 'خوش آمدید به سامانه',
-                    message: `${mobile} عزیز، به سامانه ما خوش آمدید. امیدواریم تجربه خوبی داشته باشید.`,
-                    priority: 'NORMAL',
-                    status: 'PENDING',
-                    metadata: {
-                        userMobile: mobile,
-                        registrationIP: ip,
-                        isFirstLogin: true
-                    },
-                    source: 'AUTH_SERVICE',
-                    categoryId: category.id // استفاده از دسته‌بندی موجود
-                }
-            });
-    
-            return newUser; // بازگرداندن کاربر جدید
-        });
-    
-        user = result;
-        isNewUser = true;
-    }
+            user = await this.createOrUpdateUser(mobile);
+        }
 
         const tokenData = {
             userId: user.id,
@@ -144,18 +99,17 @@ class UserAuthService {
         const hmac = this.generateHMAC(JSON.stringify(tokenData));
         const accessToken = await SignAccessToken(user.id, hmac);
         const refreshToken = await SignRefreshToken(user.id, hmac);
-    
+
         this.logger.info('Successful Login', {
             userId: user.id,
             mobile,
             ip,
-            timestamp: new Date(),
-            isNewUser
+            timestamp: new Date()
         });
-    
+
         await redisClient.del(`otp:${mobile}`);
         await redisClient.del(`otp_requests:${mobile}`);
-    
+
         return { accessToken, refreshToken };
     }
 
@@ -179,25 +133,21 @@ class UserAuthService {
                     }
                 }
             });
-    
+
             if (!user) {
-                // تراکنش فانکشنال برای ایجاد کاربر و پروفایل کاربر
-                user = await prisma.$transaction(async (prismaTx) => {
-                    const newUser = await prismaTx.user.create({
+                const result = await prisma.$transaction([
+                    prisma.user.create({
                         data: { mobile }
-                    });
-    
-                    await prismaTx.userProfile.create({
+                    }),
+                    prisma.userProfile.create({
                         data: {
-                            userId: newUser.id
+                            userId: user.id
                         }
-                    });
-    
-                    return newUser; // بازگشت کاربر جدید
-                });
+                    })
+                ]);
+                user = result[0];
             }
-    
-            // تنظیم TTL کش بر اساس نوع کاربر
+
             const cacheTime = user.isSystemAdmin ? 1800 : 3600;
             await this.cacheUserWithTTL(user, cacheTime);
         }
