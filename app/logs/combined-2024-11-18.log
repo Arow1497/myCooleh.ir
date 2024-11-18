@@ -1,0 +1,2831 @@
+2024-11-18 12:34:28 info: Server is running at http://localhost:7000
+Location: server.js:236 (Server.<anonymous>)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 12:34:44 error: Right-hand side of 'instanceof' is not an object
+Location: errorHandling.middleware.js:47 (logError)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/errorHandling.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "91c060e4-a18f-4bbe-8e19-e74d2d26016d",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "priority": "high",
+    "needsImmediate": true
+  }
+}
+2024-11-18 12:34:44 info: ::1 - - [18/Nov/2024:09:04:44 +0000] "GET / HTTP/1.1" 500 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Location: morgan.js:29 (Object.write)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/utils/logger/morgan.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  }
+}
+2024-11-18 12:34:44 error: Right-hand side of 'instanceof' is not an object
+Location: errorHandling.middleware.js:47 (logError)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/errorHandling.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "6874135a-ef22-41a0-8a1f-79941bff4082",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "path": "/favicon.ico",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "priority": "high",
+    "needsImmediate": true
+  }
+}
+2024-11-18 12:34:44 info: ::1 - - [18/Nov/2024:09:04:44 +0000] "GET /favicon.ico HTTP/1.1" 500 NaNs "http://localhost:7000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Location: morgan.js:29 (Object.write)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/utils/logger/morgan.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  }
+}
+2024-11-18 12:37:18 info: Server is running at http://localhost:7000
+Location: server.js:236 (Server.<anonymous>)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 12:37:27 error: Right-hand side of 'instanceof' is not an object
+Location: errorHandling.middleware.js:47 (logError)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/errorHandling.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "a6aa0174-239c-4c6e-b3fe-992ac94203b4",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "priority": "high",
+    "needsImmediate": true
+  }
+}
+2024-11-18 12:37:27 info: ::1 - - [18/Nov/2024:09:07:27 +0000] "GET / HTTP/1.1" 500 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Location: morgan.js:29 (Object.write)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/utils/logger/morgan.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  }
+}
+2024-11-18 12:37:27 error: Right-hand side of 'instanceof' is not an object
+Location: errorHandling.middleware.js:47 (logError)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/errorHandling.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "ceda7aa5-c4f3-42ce-aaf2-5e5a50b49e73",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "path": "/favicon.ico",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "priority": "high",
+    "needsImmediate": true
+  }
+}
+2024-11-18 12:37:27 info: ::1 - - [18/Nov/2024:09:07:27 +0000] "GET /favicon.ico HTTP/1.1" 500 NaNs "http://localhost:7000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Location: morgan.js:29 (Object.write)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/utils/logger/morgan.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  }
+}
+2024-11-18 12:39:19 info: Server is running at http://localhost:7000
+Location: server.js:236 (Server.<anonymous>)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 12:39:32 error: RateLimitError is not a constructor
+Location: errorHandling.middleware.js:47 (logError)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/errorHandling.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "4c5f7d94-8e19-444d-a23d-2378aab41d20",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "priority": "high",
+    "needsImmediate": true
+  }
+}
+2024-11-18 12:39:32 info: ::1 - - [18/Nov/2024:09:09:32 +0000] "GET / HTTP/1.1" 500 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Location: morgan.js:29 (Object.write)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/utils/logger/morgan.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  }
+}
+2024-11-18 12:39:32 error: RateLimitError is not a constructor
+Location: errorHandling.middleware.js:47 (logError)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/errorHandling.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "0838b539-fc99-46a2-a970-0875399cd53f",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "path": "/favicon.ico",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "priority": "high",
+    "needsImmediate": true
+  }
+}
+2024-11-18 12:39:32 info: ::1 - - [18/Nov/2024:09:09:32 +0000] "GET /favicon.ico HTTP/1.1" 500 NaNs "http://localhost:7000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Location: morgan.js:29 (Object.write)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/utils/logger/morgan.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  }
+}
+2024-11-18 12:43:42 info: Server is running at http://localhost:7000
+Location: server.js:236 (Server.<anonymous>)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 12:43:50 info: Server is running at http://localhost:7000
+Location: server.js:236 (Server.<anonymous>)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 12:44:06 info: Server is running at http://localhost:7000
+Location: server.js:236 (Server.<anonymous>)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 12:44:24 error: app.use is not a function
+Location: errorHandling.middleware.js:47 (logError)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/errorHandling.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "32a31a00-dca7-4fc6-8db5-d347db409912",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "priority": "high",
+    "needsImmediate": true
+  }
+}
+2024-11-18 12:44:24 info: ::1 - - [18/Nov/2024:09:14:24 +0000] "GET / HTTP/1.1" 500 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Location: morgan.js:29 (Object.write)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/utils/logger/morgan.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  }
+}
+2024-11-18 12:44:25 error: app.use is not a function
+Location: errorHandling.middleware.js:47 (logError)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/errorHandling.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "d13bd32e-dc8d-40d1-ba4c-2e2dcb321e7c",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "path": "/favicon.ico",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "priority": "high",
+    "needsImmediate": true
+  }
+}
+2024-11-18 12:44:25 info: ::1 - - [18/Nov/2024:09:14:25 +0000] "GET /favicon.ico HTTP/1.1" 500 NaNs "http://localhost:7000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Location: morgan.js:29 (Object.write)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/utils/logger/morgan.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  }
+}
+2024-11-18 12:49:49 info: Server is running at http://localhost:7000
+Location: server.js:236 (Server.<anonymous>)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 12:50:22 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 12:50:31 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18T09:20:42.994Z error: app.use is not a function
+Error Location: security.middleware.js:98 (securityMiddleware)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "f8b9dd39-6f88-43e2-901c-2e8f34bd5252",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "f8b9dd39-6f88-43e2-901c-2e8f34bd5252",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 12:50:43 info: ::1 - - [18/Nov/2024:09:20:43 +0000] "GET / HTTP/1.1" 500 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18T09:20:43.107Z error: app.use is not a function
+Error Location: security.middleware.js:98 (securityMiddleware)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "d285378a-059e-4113-be1f-752c760eefba",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "path": "/favicon.ico",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "d285378a-059e-4113-be1f-752c760eefba",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "path": "/favicon.ico",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 12:50:43 info: ::1 - - [18/Nov/2024:09:20:43 +0000] "GET /favicon.ico HTTP/1.1" 500 NaNs "http://localhost:7000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 12:53:15 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18T09:23:22.323Z error: AppError is not defined
+Error Location: server.js:219 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "2a519b7e-c017-4c4f-a0f5-ce1f0ec3df46",
+    "errorName": "ReferenceError",
+    "statusCode": 500,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "2a519b7e-c017-4c4f-a0f5-ce1f0ec3df46",
+  "errorName": "ReferenceError",
+  "statusCode": 500,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 12:53:22 info: ::1 - - [18/Nov/2024:09:23:22 +0000] "GET / HTTP/1.1" 500 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18T09:23:22.425Z error: دسترسی به این مسیر محدود شده است. لطفاً بعداً تلاش کنید.
+Error Location: rateLimiter.middleware.js:166 (Object.handler)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "2c5848de-2fa4-4275-87c9-a257cccdb5f8",
+    "errorName": "RateLimitError",
+    "statusCode": 429,
+    "path": "/favicon.ico",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "2c5848de-2fa4-4275-87c9-a257cccdb5f8",
+  "errorName": "RateLimitError",
+  "statusCode": 429,
+  "path": "/favicon.ico",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 12:53:22 info: ::1 - - [18/Nov/2024:09:23:22 +0000] "GET /favicon.ico HTTP/1.1" 429 NaNs "http://localhost:7000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 12:54:36 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18T09:24:40.757Z error: دسترسی به این مسیر محدود شده است. لطفاً بعداً تلاش کنید.
+Error Location: rateLimiter.middleware.js:166 (Object.handler)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "299c2355-01be-4131-8b52-38ab71984345",
+    "errorName": "RateLimitError",
+    "statusCode": 429,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "299c2355-01be-4131-8b52-38ab71984345",
+  "errorName": "RateLimitError",
+  "statusCode": 429,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 12:54:40 info: ::1 - - [18/Nov/2024:09:24:40 +0000] "GET / HTTP/1.1" 429 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18T09:24:40.864Z error: دسترسی به این مسیر محدود شده است. لطفاً بعداً تلاش کنید.
+Error Location: rateLimiter.middleware.js:166 (Object.handler)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "51ac4b9f-b277-4d87-b835-dd5346ab7c47",
+    "errorName": "RateLimitError",
+    "statusCode": 429,
+    "path": "/favicon.ico",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "51ac4b9f-b277-4d87-b835-dd5346ab7c47",
+  "errorName": "RateLimitError",
+  "statusCode": 429,
+  "path": "/favicon.ico",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 12:54:40 info: ::1 - - [18/Nov/2024:09:24:40 +0000] "GET /favicon.ico HTTP/1.1" 429 NaNs "http://localhost:7000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 12:55:47 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18T09:25:51.144Z error: مسیر / در این سرور یافت نشد
+Error Location: server.js:220 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "9a3410bf-6996-4b48-9cbc-0201d855825b",
+    "errorName": "Error",
+    "statusCode": 404,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "9a3410bf-6996-4b48-9cbc-0201d855825b",
+  "errorName": "Error",
+  "statusCode": 404,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 12:55:51 info: ::1 - - [18/Nov/2024:09:25:51 +0000] "GET / HTTP/1.1" 404 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18T09:25:51.276Z error: مسیر /favicon.ico در این سرور یافت نشد
+Error Location: server.js:220 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "c3942982-5af9-4a0b-9340-3462ad0aacfc",
+    "errorName": "Error",
+    "statusCode": 404,
+    "path": "/favicon.ico",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "c3942982-5af9-4a0b-9340-3462ad0aacfc",
+  "errorName": "Error",
+  "statusCode": 404,
+  "path": "/favicon.ico",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 12:55:51 info: ::1 - - [18/Nov/2024:09:25:51 +0000] "GET /favicon.ico HTTP/1.1" 404 NaNs "http://localhost:7000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 12:57:49 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18T09:27:55.985Z error: مسیر / در این سرور یافت نشد
+Error Location: server.js:220 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "77a9b774-dbb7-4042-bbf3-c252020421e2",
+    "errorName": "Error",
+    "statusCode": 404,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "77a9b774-dbb7-4042-bbf3-c252020421e2",
+  "errorName": "Error",
+  "statusCode": 404,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 12:57:56 info: ::1 - - [18/Nov/2024:09:27:56 +0000] "GET / HTTP/1.1" 404 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18T09:28:04.489Z error: مسیر / در این سرور یافت نشد
+Error Location: server.js:220 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "09ca820e-fb5f-434d-9c21-314ec1501df7",
+    "errorName": "Error",
+    "statusCode": 404,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "09ca820e-fb5f-434d-9c21-314ec1501df7",
+  "errorName": "Error",
+  "statusCode": 404,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 12:58:04 info: ::1 - - [18/Nov/2024:09:28:04 +0000] "GET / HTTP/1.1" 404 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 12:58:30 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18T09:28:38.977Z error: مسیر / در این سرور یافت نشد
+Error Location: server.js:220 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "600d2fe8-19c4-4a0b-ac00-b6f97404cad1",
+    "errorName": "Error",
+    "statusCode": 404,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "600d2fe8-19c4-4a0b-ac00-b6f97404cad1",
+  "errorName": "Error",
+  "statusCode": 404,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 12:58:38 info: ::1 - - [18/Nov/2024:09:28:38 +0000] "GET / HTTP/1.1" 404 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 12:58:47 info: ::1 - - [18/Nov/2024:09:28:47 +0000] "GET /api-doc/ HTTP/1.1" 200 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 12:58:47 info: ::1 - - [18/Nov/2024:09:28:47 +0000] "GET /api-doc/swagger-ui-init.js HTTP/1.1" 304 NaNs "http://localhost:7000/api-doc/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 12:58:47 info: ::1 - - [18/Nov/2024:09:28:47 +0000] "GET /api-doc/swagger-ui.css HTTP/1.1" 200 NaNs "http://localhost:7000/api-doc/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 12:58:47 info: ::1 - - [18/Nov/2024:09:28:47 +0000] "GET /api-doc/swagger-ui-standalone-preset.js HTTP/1.1" 200 NaNs "http://localhost:7000/api-doc/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 12:58:47 info: ::1 - - [18/Nov/2024:09:28:47 +0000] "GET /api-doc/swagger-ui-bundle.js HTTP/1.1" 200 NaNs "http://localhost:7000/api-doc/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 12:58:48 info: ::1 - - [18/Nov/2024:09:28:48 +0000] "GET /api-doc/favicon-32x32.png HTTP/1.1" 304 NaNs "http://localhost:7000/api-doc/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18T09:28:55.522Z error: مسیر / در این سرور یافت نشد
+Error Location: server.js:220 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "9ebcdb7d-906e-43e8-a18e-ed9fa04ffc15",
+    "errorName": "Error",
+    "statusCode": 404,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "9ebcdb7d-906e-43e8-a18e-ed9fa04ffc15",
+  "errorName": "Error",
+  "statusCode": 404,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 12:58:55 info: ::1 - - [18/Nov/2024:09:28:55 +0000] "GET / HTTP/1.1" 404 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18T09:28:56.216Z error: مسیر / در این سرور یافت نشد
+Error Location: server.js:220 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "548dc20d-b880-46c2-96f4-f2bab0410e92",
+    "errorName": "Error",
+    "statusCode": 404,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "548dc20d-b880-46c2-96f4-f2bab0410e92",
+  "errorName": "Error",
+  "statusCode": 404,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 12:58:56 info: ::1 - - [18/Nov/2024:09:28:56 +0000] "GET / HTTP/1.1" 404 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:02:03 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18T09:32:08.556Z error: مسیر / در این سرور یافت نشد
+Error Location: server.js:220 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "49e2a98a-a11a-4d1d-8a3f-7d741ac12698",
+    "errorName": "Error",
+    "statusCode": 404,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "49e2a98a-a11a-4d1d-8a3f-7d741ac12698",
+  "errorName": "Error",
+  "statusCode": 404,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 13:02:08 info: ::1 - - [18/Nov/2024:09:32:08 +0000] "GET / HTTP/1.1" 404 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:02:16 info: ::1 - - [18/Nov/2024:09:32:16 +0000] "GET /api-doc/ HTTP/1.1" 304 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:02:16 info: ::1 - - [18/Nov/2024:09:32:16 +0000] "GET /api-doc/swagger-ui.css HTTP/1.1" 304 NaNs "http://localhost:7000/api-doc/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:02:16 info: ::1 - - [18/Nov/2024:09:32:16 +0000] "GET /api-doc/swagger-ui-bundle.js HTTP/1.1" 304 NaNs "http://localhost:7000/api-doc/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:02:16 info: ::1 - - [18/Nov/2024:09:32:16 +0000] "GET /api-doc/swagger-ui-init.js HTTP/1.1" 304 NaNs "http://localhost:7000/api-doc/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:02:16 info: ::1 - - [18/Nov/2024:09:32:16 +0000] "GET /api-doc/swagger-ui-standalone-preset.js HTTP/1.1" 304 NaNs "http://localhost:7000/api-doc/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18T09:32:21.990Z error: مسیر / در این سرور یافت نشد
+Error Location: server.js:220 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "a86b1bdb-cdef-43c5-a1cf-aeb856998146",
+    "errorName": "Error",
+    "statusCode": 404,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "a86b1bdb-cdef-43c5-a1cf-aeb856998146",
+  "errorName": "Error",
+  "statusCode": 404,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 13:02:22 info: ::1 - - [18/Nov/2024:09:32:22 +0000] "GET / HTTP/1.1" 404 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18T09:32:22.625Z error: مسیر / در این سرور یافت نشد
+Error Location: server.js:220 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "8f9fcbf4-5c2a-406e-967c-33d6cd2f2146",
+    "errorName": "Error",
+    "statusCode": 404,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "8f9fcbf4-5c2a-406e-967c-33d6cd2f2146",
+  "errorName": "Error",
+  "statusCode": 404,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 13:02:22 info: ::1 - - [18/Nov/2024:09:32:22 +0000] "GET / HTTP/1.1" 404 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:04:33 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18T09:34:41.314Z error: مسیر / در این سرور یافت نشد
+Error Location: server.js:220 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "f3e4442e-e31f-4e71-b3cd-0f880931c3ba",
+    "errorName": "Error",
+    "statusCode": 404,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "f3e4442e-e31f-4e71-b3cd-0f880931c3ba",
+  "errorName": "Error",
+  "statusCode": 404,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 13:04:41 info: ::1 - - [18/Nov/2024:09:34:41 +0000] "GET / HTTP/1.1" 404 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:04:53 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 13:05:32 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18T09:35:36.361Z error: مسیر / در این سرور یافت نشد
+Error Location: server.js:220 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "5051f9c0-5e42-4f27-9361-f37414a533e3",
+    "errorName": "Error",
+    "statusCode": 404,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "5051f9c0-5e42-4f27-9361-f37414a533e3",
+  "errorName": "Error",
+  "statusCode": 404,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 13:05:36 info: ::1 - - [18/Nov/2024:09:35:36 +0000] "GET / HTTP/1.1" 404 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:05:55 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18T09:38:34.722Z error: مسیر /payment در این سرور یافت نشد
+Error Location: server.js:220 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "9ac6882d-5df6-4133-b607-33ee2dec6123",
+    "errorName": "Error",
+    "statusCode": 404,
+    "path": "/payment",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "9ac6882d-5df6-4133-b607-33ee2dec6123",
+  "errorName": "Error",
+  "statusCode": 404,
+  "path": "/payment",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 13:08:34 info: ::1 - - [18/Nov/2024:09:38:34 +0000] "GET /payment HTTP/1.1" 404 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18T09:38:38.203Z error: مسیر /payment در این سرور یافت نشد
+Error Location: server.js:220 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "52545c42-598a-438e-8de9-4c4f2c48a865",
+    "errorName": "Error",
+    "statusCode": 404,
+    "path": "/payment",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "52545c42-598a-438e-8de9-4c4f2c48a865",
+  "errorName": "Error",
+  "statusCode": 404,
+  "path": "/payment",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 13:08:38 info: ::1 - - [18/Nov/2024:09:38:38 +0000] "GET /payment HTTP/1.1" 404 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:11:38 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 13:11:59 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18T09:42:10.380Z error: مسیر /payment در این سرور یافت نشد
+Error Location: server.js:220 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "32ee1f2f-04a5-4408-acf9-20d06ee5115f",
+    "errorName": "Error",
+    "statusCode": 404,
+    "path": "/payment",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "32ee1f2f-04a5-4408-acf9-20d06ee5115f",
+  "errorName": "Error",
+  "statusCode": 404,
+  "path": "/payment",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 13:12:10 info: ::1 - - [18/Nov/2024:09:42:10 +0000] "GET /payment HTTP/1.1" 404 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18T09:42:12.246Z error: مسیر /payment در این سرور یافت نشد
+Error Location: server.js:220 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "05ad2e58-83c8-411f-9f45-4cb4ac6a696f",
+    "errorName": "Error",
+    "statusCode": 404,
+    "path": "/payment",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "05ad2e58-83c8-411f-9f45-4cb4ac6a696f",
+  "errorName": "Error",
+  "statusCode": 404,
+  "path": "/payment",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 13:12:12 info: ::1 - - [18/Nov/2024:09:42:12 +0000] "GET /payment HTTP/1.1" 404 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18T09:42:16.919Z error: مسیر / در این سرور یافت نشد
+Error Location: server.js:220 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "3baaf53f-0ba4-4737-9d13-0bf86bfbecfb",
+    "errorName": "Error",
+    "statusCode": 404,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "3baaf53f-0ba4-4737-9d13-0bf86bfbecfb",
+  "errorName": "Error",
+  "statusCode": 404,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 13:12:16 info: ::1 - - [18/Nov/2024:09:42:16 +0000] "GET / HTTP/1.1" 404 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:12:19 info: ::1 - - [18/Nov/2024:09:42:19 +0000] "GET /api-doc/ HTTP/1.1" 304 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:12:19 info: ::1 - - [18/Nov/2024:09:42:19 +0000] "GET /api-doc/swagger-ui.css HTTP/1.1" 304 NaNs "http://localhost:7000/api-doc/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:12:19 info: ::1 - - [18/Nov/2024:09:42:19 +0000] "GET /api-doc/swagger-ui-bundle.js HTTP/1.1" 304 NaNs "http://localhost:7000/api-doc/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:12:19 info: ::1 - - [18/Nov/2024:09:42:19 +0000] "GET /api-doc/swagger-ui-init.js HTTP/1.1" 304 NaNs "http://localhost:7000/api-doc/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:12:19 info: ::1 - - [18/Nov/2024:09:42:19 +0000] "GET /api-doc/swagger-ui-standalone-preset.js HTTP/1.1" 304 NaNs "http://localhost:7000/api-doc/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:14:24 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 13:14:24 info: Connected to MongoDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 13:14:25 info: PrismaORM connected to MariaDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18T09:44:46.953Z error: Right-hand side of 'instanceof' is not an object
+Error Location: server.js:130 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "26836869-10bd-44d6-938e-6e232ec7570c",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "26836869-10bd-44d6-938e-6e232ec7570c",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 13:14:46 info: ::1 - - [18/Nov/2024:09:44:46 +0000] "GET / HTTP/1.1" 500 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18T09:44:47.947Z error: Right-hand side of 'instanceof' is not an object
+Error Location: server.js:130 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "36bd5d8e-05f6-49f0-bc57-6c11e3760315",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "36bd5d8e-05f6-49f0-bc57-6c11e3760315",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 13:14:47 info: ::1 - - [18/Nov/2024:09:44:47 +0000] "GET / HTTP/1.1" 500 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:17:21 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 13:17:21 info: Connected to MongoDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 13:17:21 info: PrismaORM connected to MariaDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 13:17:49 info: ::1 - - [18/Nov/2024:09:47:49 +0000] "GET / HTTP/1.1" - NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:18:09 info: ::1 - - [18/Nov/2024:09:48:09 +0000] "GET / HTTP/1.1" - NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:18:09 info: ::1 - - [18/Nov/2024:09:48:09 +0000] "GET /api-doc/ HTTP/1.1" 304 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:18:09 info: ::1 - - [18/Nov/2024:09:48:09 +0000] "GET /api-doc/swagger-ui.css HTTP/1.1" 304 NaNs "http://localhost:7000/api-doc/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:18:09 info: ::1 - - [18/Nov/2024:09:48:09 +0000] "GET /api-doc/swagger-ui-bundle.js HTTP/1.1" 304 NaNs "http://localhost:7000/api-doc/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:18:09 info: ::1 - - [18/Nov/2024:09:48:09 +0000] "GET /api-doc/swagger-ui-standalone-preset.js HTTP/1.1" 304 NaNs "http://localhost:7000/api-doc/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:18:09 info: ::1 - - [18/Nov/2024:09:48:09 +0000] "GET /api-doc/swagger-ui-init.js HTTP/1.1" 304 NaNs "http://localhost:7000/api-doc/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:19:11 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 13:19:11 info: Connected to MongoDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 13:19:11 info: PrismaORM connected to MariaDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 13:19:53 info: ::1 - - [18/Nov/2024:09:49:53 +0000] "GET /payment HTTP/1.1" - NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:20:32 info: ::1 - - [18/Nov/2024:09:50:32 +0000] "GET /payment HTTP/1.1" - NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:21:12 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 13:21:12 info: Connected to MongoDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 13:21:13 info: PrismaORM connected to MariaDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18T09:51:16.563Z error: مسیر / در این سرور یافت نشد
+Error Location: server.js:125 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "ab3ca782-e87a-4613-86c2-b427bd3d69a4",
+    "errorName": "Error",
+    "statusCode": 404,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "ab3ca782-e87a-4613-86c2-b427bd3d69a4",
+  "errorName": "Error",
+  "statusCode": 404,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 13:21:16 info: ::1 - - [18/Nov/2024:09:51:16 +0000] "GET / HTTP/1.1" 404 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18T09:51:25.386Z error: مسیر / در این سرور یافت نشد
+Error Location: server.js:125 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "2960be95-ab6d-4adf-93c8-bb96bd3dec76",
+    "errorName": "Error",
+    "statusCode": 404,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "2960be95-ab6d-4adf-93c8-bb96bd3dec76",
+  "errorName": "Error",
+  "statusCode": 404,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 13:21:25 info: ::1 - - [18/Nov/2024:09:51:25 +0000] "GET / HTTP/1.1" 404 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18T09:51:26.556Z error: مسیر / در این سرور یافت نشد
+Error Location: server.js:125 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "72ab865f-ef56-488a-86ea-1a896dc02103",
+    "errorName": "Error",
+    "statusCode": 404,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "72ab865f-ef56-488a-86ea-1a896dc02103",
+  "errorName": "Error",
+  "statusCode": 404,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 13:21:26 info: ::1 - - [18/Nov/2024:09:51:26 +0000] "GET / HTTP/1.1" 404 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:21:45 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 13:21:45 info: Connected to MongoDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 13:21:46 info: PrismaORM connected to MariaDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 13:22:56 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 13:22:56 info: Connected to MongoDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 13:22:57 info: PrismaORM connected to MariaDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 13:23:01 info: ::1 - - [18/Nov/2024:09:53:01 +0000] "GET / HTTP/1.1" 200 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 13:23:22 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 13:23:22 info: Connected to MongoDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 13:23:23 info: PrismaORM connected to MariaDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 13:23:31 info: ::1 - - [18/Nov/2024:09:53:31 +0000] "GET / HTTP/1.1" 304 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 14:02:32 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 14:02:32 info: Connected to MongoDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 14:02:33 info: PrismaORM connected to MariaDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 14:23:14 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 14:23:14 info: Connected to MongoDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 14:23:14 info: PrismaORM connected to MariaDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 14:39:53 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 14:39:53 info: Connected to MongoDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 14:39:54 info: PrismaORM connected to MariaDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 14:40:03 info: ::1 - - [18/Nov/2024:11:10:03 +0000] "GET / HTTP/1.1" 304 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 14:40:05 info: ::1 - - [18/Nov/2024:11:10:05 +0000] "GET / HTTP/1.1" 304 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18T11:10:15.608Z error: مسیر /payment در این سرور یافت نشد
+Error Location: server.js:125 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "fd6bcb1f-ff85-4914-8362-2b23532a2114",
+    "errorName": "Error",
+    "statusCode": 404,
+    "path": "/payment",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "fd6bcb1f-ff85-4914-8362-2b23532a2114",
+  "errorName": "Error",
+  "statusCode": 404,
+  "path": "/payment",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 14:40:15 info: ::1 - - [18/Nov/2024:11:10:15 +0000] "GET /payment HTTP/1.1" 404 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 14:40:21 info: ::1 - - [18/Nov/2024:11:10:21 +0000] "GET / HTTP/1.1" 304 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 14:48:12 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 14:48:12 info: Connected to MongoDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 14:48:13 info: PrismaORM connected to MariaDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18T11:18:38.511Z error: Right-hand side of 'instanceof' is not an object
+Error Location: server.js:229 (anonymous)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/server.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "2c973ef6-05b6-4a69-acec-0d583db02c5a",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "2c973ef6-05b6-4a69-acec-0d583db02c5a",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 14:52:55 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 14:52:55 info: Connected to MongoDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 14:52:55 info: PrismaORM connected to MariaDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18T11:23:05.024Z error: app.use is not a function
+Error Location: security.middleware.js:98 (securityMiddleware)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "85632cad-4b26-464c-8879-cbd5785f8666",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "85632cad-4b26-464c-8879-cbd5785f8666",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 15:03:12 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 15:03:12 info: Connected to MongoDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 15:03:12 info: PrismaORM connected to MariaDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 15:14:44 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 15:14:45 info: Connected to MongoDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 15:14:45 info: PrismaORM connected to MariaDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 15:14:49 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 15:14:50 info: Connected to MongoDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 15:14:50 info: PrismaORM connected to MariaDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 15:14:57 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 15:14:57 info: Connected to MongoDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 15:14:58 info: PrismaORM connected to MariaDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 15:15:07 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 15:15:07 info: Connected to MongoDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 15:15:08 info: PrismaORM connected to MariaDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 15:15:27 info: ::1 - - [18/Nov/2024:11:45:27 +0000] "GET / HTTP/1.1" 200 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 15:16:06 info: ::1 - - [18/Nov/2024:11:46:06 +0000] "GET / HTTP/1.1" 304 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18 15:16:07 info: ::1 - - [18/Nov/2024:11:46:07 +0000] "GET / HTTP/1.1" 304 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18T11:46:08.305Z error: دسترسی به این مسیر محدود شده است. لطفاً بعداً تلاش کنید.
+Error Location: rateLimiter.middleware.js:166 (Object.handler)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "4e266369-b06c-467c-b213-1635ad97e3c0",
+    "errorName": "RateLimitError",
+    "statusCode": 429,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "4e266369-b06c-467c-b213-1635ad97e3c0",
+  "errorName": "RateLimitError",
+  "statusCode": 429,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18T11:46:40.515Z error: دسترسی به این مسیر محدود شده است. لطفاً بعداً تلاش کنید.
+Error Location: rateLimiter.middleware.js:166 (Object.handler)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "7b1b77fb-466e-4448-954a-2331f0bab2d2",
+    "errorName": "RateLimitError",
+    "statusCode": 429,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "7b1b77fb-466e-4448-954a-2331f0bab2d2",
+  "errorName": "RateLimitError",
+  "statusCode": 429,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18T11:46:47.012Z error: دسترسی به این مسیر محدود شده است. لطفاً بعداً تلاش کنید.
+Error Location: rateLimiter.middleware.js:166 (Object.handler)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "ab894305-7d69-46d8-8c3f-6015131b621c",
+    "errorName": "RateLimitError",
+    "statusCode": 429,
+    "path": "/api-doc/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "ab894305-7d69-46d8-8c3f-6015131b621c",
+  "errorName": "RateLimitError",
+  "statusCode": 429,
+  "path": "/api-doc/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 15:16:57 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 15:16:57 info: Connected to MongoDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 15:16:58 info: PrismaORM connected to MariaDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18T11:47:03.871Z error: دسترسی به این مسیر محدود شده است. لطفاً بعداً تلاش کنید.
+Error Location: rateLimiter.middleware.js:166 (Object.handler)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "b974d543-f0d4-4573-b6fa-675e996e66b1",
+    "errorName": "RateLimitError",
+    "statusCode": 429,
+    "path": "/api-doc/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "b974d543-f0d4-4573-b6fa-675e996e66b1",
+  "errorName": "RateLimitError",
+  "statusCode": 429,
+  "path": "/api-doc/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18T11:47:05.558Z error: دسترسی به این مسیر محدود شده است. لطفاً بعداً تلاش کنید.
+Error Location: rateLimiter.middleware.js:166 (Object.handler)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "26e0dc99-f349-47b0-86b1-e0abc51c6f10",
+    "errorName": "RateLimitError",
+    "statusCode": 429,
+    "path": "/api-doc/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "26e0dc99-f349-47b0-86b1-e0abc51c6f10",
+  "errorName": "RateLimitError",
+  "statusCode": 429,
+  "path": "/api-doc/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 15:17:46 info: Server is running at http://localhost:7000
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 15:17:46 info: Connected to MongoDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 15:17:47 info: PrismaORM connected to MariaDB
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}
+2024-11-18 15:17:54 info: ::1 - - [18/Nov/2024:11:47:54 +0000] "GET /api-doc/ HTTP/1.1" 200 NaNs "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18T11:47:54.719Z error: دسترسی به این مسیر محدود شده است. لطفاً بعداً تلاش کنید.
+Error Location: rateLimiter.middleware.js:166 (Object.handler)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "dd7af3cb-b977-49b2-9d59-d6974cecf932",
+    "errorName": "RateLimitError",
+    "statusCode": 429,
+    "path": "/api-doc/swagger-ui.css",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "dd7af3cb-b977-49b2-9d59-d6974cecf932",
+  "errorName": "RateLimitError",
+  "statusCode": 429,
+  "path": "/api-doc/swagger-ui.css",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18T11:47:54.740Z error: دسترسی به این مسیر محدود شده است. لطفاً بعداً تلاش کنید.
+Error Location: rateLimiter.middleware.js:166 (Object.handler)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "6d8ae9a6-482b-437c-a040-4f7ea7e4ef0c",
+    "errorName": "RateLimitError",
+    "statusCode": 429,
+    "path": "/api-doc/swagger-ui-standalone-preset.js",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "6d8ae9a6-482b-437c-a040-4f7ea7e4ef0c",
+  "errorName": "RateLimitError",
+  "statusCode": 429,
+  "path": "/api-doc/swagger-ui-standalone-preset.js",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18T11:47:54.746Z error: دسترسی به این مسیر محدود شده است. لطفاً بعداً تلاش کنید.
+Error Location: rateLimiter.middleware.js:166 (Object.handler)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "bc56b9df-de23-4591-b237-0ece2c5cef62",
+    "errorName": "RateLimitError",
+    "statusCode": 429,
+    "path": "/api-doc/swagger-ui-init.js",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "bc56b9df-de23-4591-b237-0ece2c5cef62",
+  "errorName": "RateLimitError",
+  "statusCode": 429,
+  "path": "/api-doc/swagger-ui-init.js",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 15:17:54 info: ::1 - - [18/Nov/2024:11:47:54 +0000] "GET /api-doc/swagger-ui-bundle.js HTTP/1.1" 304 NaNs "http://localhost:7000/api-doc/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "type": "access_log",
+    "component": "morgan"
+  },
+  "type": "access_log",
+  "component": "morgan"
+}
+2024-11-18T11:48:03.318Z error: دسترسی به این مسیر محدود شده است. لطفاً بعداً تلاش کنید.
+Error Location: rateLimiter.middleware.js:166 (Object.handler)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "9746c91e-72ed-4aac-ace0-a3fcba3571d0",
+    "errorName": "RateLimitError",
+    "statusCode": 429,
+    "path": "/api-doc/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "9746c91e-72ed-4aac-ace0-a3fcba3571d0",
+  "errorName": "RateLimitError",
+  "statusCode": 429,
+  "path": "/api-doc/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18T11:48:06.101Z error: دسترسی به این مسیر محدود شده است. لطفاً بعداً تلاش کنید.
+Error Location: rateLimiter.middleware.js:166 (Object.handler)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "1d98e8f2-9acd-4a4c-b11c-7912eeda63d7",
+    "errorName": "RateLimitError",
+    "statusCode": 429,
+    "path": "/api-doc/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "1d98e8f2-9acd-4a4c-b11c-7912eeda63d7",
+  "errorName": "RateLimitError",
+  "statusCode": 429,
+  "path": "/api-doc/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18T11:48:10.281Z error: دسترسی به این مسیر محدود شده است. لطفاً بعداً تلاش کنید.
+Error Location: rateLimiter.middleware.js:166 (Object.handler)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "86738a70-ed00-4441-aaf0-9a248b915df8",
+    "errorName": "RateLimitError",
+    "statusCode": 429,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "86738a70-ed00-4441-aaf0-9a248b915df8",
+  "errorName": "RateLimitError",
+  "statusCode": 429,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18T11:48:10.954Z error: دسترسی به این مسیر محدود شده است. لطفاً بعداً تلاش کنید.
+Error Location: rateLimiter.middleware.js:166 (Object.handler)
+Full Path: /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "trackingId": "a068b734-fcb2-4c21-a577-9535b03b0154",
+    "errorName": "RateLimitError",
+    "statusCode": 429,
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {}
+  },
+  "trackingId": "a068b734-fcb2-4c21-a577-9535b03b0154",
+  "errorName": "RateLimitError",
+  "statusCode": 429,
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {}
+}
+2024-11-18 15:18:43 info: All database connections closed
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info"
+  }
+}

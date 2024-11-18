@@ -1,0 +1,933 @@
+{"level":"error","message":"uncaughtException: Cannot find module 'express-brute'\nRequire stack:\n- /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js\n- /home/mhossein/Desktop/Cooleh.project/app/server.js\n- /home/mhossein/Desktop/Cooleh.project/index.js\nError: Cannot find module 'express-brute'\nRequire stack:\n- /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js\n- /home/mhossein/Desktop/Cooleh.project/app/server.js\n- /home/mhossein/Desktop/Cooleh.project/index.js\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1225:15)\n    at Module._load (node:internal/modules/cjs/loader:1051:27)\n    at Module.require (node:internal/modules/cjs/loader:1311:19)\n    at require (node:internal/modules/helpers:179:18)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js:8:22)\n    at Module._compile (node:internal/modules/cjs/loader:1469:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)\n    at Module.load (node:internal/modules/cjs/loader:1288:32)\n    at Module._load (node:internal/modules/cjs/loader:1104:12)\n    at Module.require (node:internal/modules/cjs/loader:1311:19)","metadata":{"date":"Mon Nov 18 2024 10:58:54 GMT+0330 (Iran Standard Time)","environment":"deveopment","error":{"code":"MODULE_NOT_FOUND","requireStack":["/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js","/home/mhossein/Desktop/Cooleh.project/app/server.js","/home/mhossein/Desktop/Cooleh.project/index.js"]},"exception":true,"moduleName":"unknown","os":{"loadavg":[2.01,1.78,1.71],"uptime":7281.72},"process":{"argv":["/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","/home/mhossein/Desktop/Cooleh.project/index.js"],"cwd":"/home/mhossein/Desktop/Cooleh.project","execPath":"/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","gid":1000,"memoryUsage":{"arrayBuffers":18314677,"external":21503590,"heapTotal":77688832,"heapUsed":44779560,"rss":134717440},"pid":124488,"uid":1000,"version":"v20.17.0"},"requestId":"N/A","service":"user-service","stack":"Error: Cannot find module 'express-brute'\nRequire stack:\n- /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js\n- /home/mhossein/Desktop/Cooleh.project/app/server.js\n- /home/mhossein/Desktop/Cooleh.project/index.js\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1225:15)\n    at Module._load (node:internal/modules/cjs/loader:1051:27)\n    at Module.require (node:internal/modules/cjs/loader:1311:19)\n    at require (node:internal/modules/helpers:179:18)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js:8:22)\n    at Module._compile (node:internal/modules/cjs/loader:1469:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)\n    at Module.load (node:internal/modules/cjs/loader:1288:32)\n    at Module._load (node:internal/modules/cjs/loader:1104:12)\n    at Module.require (node:internal/modules/cjs/loader:1311:19)","trace":[{"column":15,"file":"node:internal/modules/cjs/loader","function":"Module._resolveFilename","line":1225,"method":"_resolveFilename","native":false},{"column":27,"file":"node:internal/modules/cjs/loader","function":"Module._load","line":1051,"method":"_load","native":false},{"column":19,"file":"node:internal/modules/cjs/loader","function":"Module.require","line":1311,"method":"require","native":false},{"column":18,"file":"node:internal/modules/helpers","function":"require","line":179,"method":null,"native":false},{"column":22,"file":"/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js","function":null,"line":8,"method":null,"native":false},{"column":14,"file":"node:internal/modules/cjs/loader","function":"Module._compile","line":1469,"method":"_compile","native":false},{"column":10,"file":"node:internal/modules/cjs/loader","function":"Module._extensions..js","line":1548,"method":".js","native":false},{"column":32,"file":"node:internal/modules/cjs/loader","function":"Module.load","line":1288,"method":"load","native":false},{"column":12,"file":"node:internal/modules/cjs/loader","function":"Module._load","line":1104,"method":"_load","native":false},{"column":19,"file":"node:internal/modules/cjs/loader","function":"Module.require","line":1311,"method":"require","native":false}]},"timestamp":"2024-11-18 10:58:54"}
+{"level":"error","message":"uncaughtException: Cannot find module 'express-brute'\nRequire stack:\n- /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js\n- /home/mhossein/Desktop/Cooleh.project/app/server.js\n- /home/mhossein/Desktop/Cooleh.project/index.js\nError: Cannot find module 'express-brute'\nRequire stack:\n- /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js\n- /home/mhossein/Desktop/Cooleh.project/app/server.js\n- /home/mhossein/Desktop/Cooleh.project/index.js\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1225:15)\n    at Module._load (node:internal/modules/cjs/loader:1051:27)\n    at Module.require (node:internal/modules/cjs/loader:1311:19)\n    at require (node:internal/modules/helpers:179:18)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js:8:22)\n    at Module._compile (node:internal/modules/cjs/loader:1469:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)\n    at Module.load (node:internal/modules/cjs/loader:1288:32)\n    at Module._load (node:internal/modules/cjs/loader:1104:12)\n    at Module.require (node:internal/modules/cjs/loader:1311:19)","metadata":{"date":"Mon Nov 18 2024 10:59:12 GMT+0330 (Iran Standard Time)","environment":"deveopment","error":{"code":"MODULE_NOT_FOUND","requireStack":["/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js","/home/mhossein/Desktop/Cooleh.project/app/server.js","/home/mhossein/Desktop/Cooleh.project/index.js"]},"exception":true,"moduleName":"unknown","os":{"loadavg":[1.88,1.76,1.71],"uptime":7300.05},"process":{"argv":["/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","/home/mhossein/Desktop/Cooleh.project/index.js"],"cwd":"/home/mhossein/Desktop/Cooleh.project","execPath":"/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","gid":1000,"memoryUsage":{"arrayBuffers":18314677,"external":21503590,"heapTotal":76640256,"heapUsed":53695576,"rss":133689344},"pid":124883,"uid":1000,"version":"v20.17.0"},"requestId":"N/A","service":"user-service","stack":"Error: Cannot find module 'express-brute'\nRequire stack:\n- /home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js\n- /home/mhossein/Desktop/Cooleh.project/app/server.js\n- /home/mhossein/Desktop/Cooleh.project/index.js\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1225:15)\n    at Module._load (node:internal/modules/cjs/loader:1051:27)\n    at Module.require (node:internal/modules/cjs/loader:1311:19)\n    at require (node:internal/modules/helpers:179:18)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js:8:22)\n    at Module._compile (node:internal/modules/cjs/loader:1469:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)\n    at Module.load (node:internal/modules/cjs/loader:1288:32)\n    at Module._load (node:internal/modules/cjs/loader:1104:12)\n    at Module.require (node:internal/modules/cjs/loader:1311:19)","trace":[{"column":15,"file":"node:internal/modules/cjs/loader","function":"Module._resolveFilename","line":1225,"method":"_resolveFilename","native":false},{"column":27,"file":"node:internal/modules/cjs/loader","function":"Module._load","line":1051,"method":"_load","native":false},{"column":19,"file":"node:internal/modules/cjs/loader","function":"Module.require","line":1311,"method":"require","native":false},{"column":18,"file":"node:internal/modules/helpers","function":"require","line":179,"method":null,"native":false},{"column":22,"file":"/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js","function":null,"line":8,"method":null,"native":false},{"column":14,"file":"node:internal/modules/cjs/loader","function":"Module._compile","line":1469,"method":"_compile","native":false},{"column":10,"file":"node:internal/modules/cjs/loader","function":"Module._extensions..js","line":1548,"method":".js","native":false},{"column":32,"file":"node:internal/modules/cjs/loader","function":"Module.load","line":1288,"method":"load","native":false},{"column":12,"file":"node:internal/modules/cjs/loader","function":"Module._load","line":1104,"method":"_load","native":false},{"column":19,"file":"node:internal/modules/cjs/loader","function":"Module.require","line":1311,"method":"require","native":false}]},"timestamp":"2024-11-18 10:59:12"}
+{"level":"error","message":"uncaughtException: RedisStore is not a constructor\nTypeError: RedisStore is not a constructor\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js:42:12)\n    at Module._compile (node:internal/modules/cjs/loader:1469:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)\n    at Module.load (node:internal/modules/cjs/loader:1288:32)\n    at Module._load (node:internal/modules/cjs/loader:1104:12)\n    at Module.require (node:internal/modules/cjs/loader:1311:19)\n    at require (node:internal/modules/helpers:179:18)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/server.js:14:96)\n    at Module._compile (node:internal/modules/cjs/loader:1469:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)","metadata":{"date":"Mon Nov 18 2024 11:01:06 GMT+0330 (Iran Standard Time)","environment":"deveopment","error":{},"exception":true,"moduleName":"unknown","os":{"loadavg":[1.27,1.5,1.61],"uptime":7414.27},"process":{"argv":["/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","/home/mhossein/Desktop/Cooleh.project/index.js"],"cwd":"/home/mhossein/Desktop/Cooleh.project","execPath":"/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","gid":1000,"memoryUsage":{"arrayBuffers":18377900,"external":21566813,"heapTotal":83218432,"heapUsed":55925312,"rss":141967360},"pid":126984,"uid":1000,"version":"v20.17.0"},"requestId":"N/A","service":"user-service","stack":"TypeError: RedisStore is not a constructor\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js:42:12)\n    at Module._compile (node:internal/modules/cjs/loader:1469:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)\n    at Module.load (node:internal/modules/cjs/loader:1288:32)\n    at Module._load (node:internal/modules/cjs/loader:1104:12)\n    at Module.require (node:internal/modules/cjs/loader:1311:19)\n    at require (node:internal/modules/helpers:179:18)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/server.js:14:96)\n    at Module._compile (node:internal/modules/cjs/loader:1469:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)","trace":[{"column":12,"file":"/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js","function":null,"line":42,"method":null,"native":false},{"column":14,"file":"node:internal/modules/cjs/loader","function":"Module._compile","line":1469,"method":"_compile","native":false},{"column":10,"file":"node:internal/modules/cjs/loader","function":"Module._extensions..js","line":1548,"method":".js","native":false},{"column":32,"file":"node:internal/modules/cjs/loader","function":"Module.load","line":1288,"method":"load","native":false},{"column":12,"file":"node:internal/modules/cjs/loader","function":"Module._load","line":1104,"method":"_load","native":false},{"column":19,"file":"node:internal/modules/cjs/loader","function":"Module.require","line":1311,"method":"require","native":false},{"column":18,"file":"node:internal/modules/helpers","function":"require","line":179,"method":null,"native":false},{"column":96,"file":"/home/mhossein/Desktop/Cooleh.project/app/server.js","function":null,"line":14,"method":null,"native":false},{"column":14,"file":"node:internal/modules/cjs/loader","function":"Module._compile","line":1469,"method":"_compile","native":false},{"column":10,"file":"node:internal/modules/cjs/loader","function":"Module._extensions..js","line":1548,"method":".js","native":false}]},"timestamp":"2024-11-18 11:01:06"}
+{"level":"error","message":"uncaughtException: logger.info is not a function\nTypeError: logger.info is not a function\n    at EventEmitter.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js:25:12)\n    at EventEmitter.emit (node:events:519:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)","metadata":{"date":"Mon Nov 18 2024 11:01:06 GMT+0330 (Iran Standard Time)","environment":"deveopment","error":{},"exception":true,"moduleName":"unknown","os":{"loadavg":[1.27,1.5,1.61],"uptime":7414.29},"process":{"argv":["/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","/home/mhossein/Desktop/Cooleh.project/index.js"],"cwd":"/home/mhossein/Desktop/Cooleh.project","execPath":"/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","gid":1000,"memoryUsage":{"arrayBuffers":18388716,"external":21577669,"heapTotal":83218432,"heapUsed":56293352,"rss":142229504},"pid":126984,"uid":1000,"version":"v20.17.0"},"requestId":"N/A","service":"user-service","stack":"TypeError: logger.info is not a function\n    at EventEmitter.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js:25:12)\n    at EventEmitter.emit (node:events:519:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)","trace":[{"column":12,"file":"/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js","function":null,"line":25,"method":null,"native":false},{"column":28,"file":"node:events","function":"EventEmitter.emit","line":519,"method":"emit","native":false},{"column":11,"file":"node:internal/process/task_queues","function":"process.processTicksAndRejections","line":77,"method":"processTicksAndRejections","native":false}]},"timestamp":"2024-11-18 11:01:06"}
+{"level":"error","message":"uncaughtException: cacheManager is not defined\nReferenceError: cacheManager is not defined\n    at Application.configApplication (/home/mhossein/Desktop/Cooleh.project/app/server.js:126:29)\n    at new Application (/home/mhossein/Desktop/Cooleh.project/app/server.js:30:14)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/index.js:2:1)\n    at Module._compile (node:internal/modules/cjs/loader:1469:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)\n    at Module.load (node:internal/modules/cjs/loader:1288:32)\n    at Module._load (node:internal/modules/cjs/loader:1104:12)\n    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:174:12)\n    at node:internal/main/run_main_module:28:49","metadata":{"date":"Mon Nov 18 2024 11:02:06 GMT+0330 (Iran Standard Time)","environment":"deveopment","error":{},"exception":true,"moduleName":"unknown","os":{"loadavg":[1.33,1.48,1.6],"uptime":7474.31},"process":{"argv":["/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","/home/mhossein/Desktop/Cooleh.project/index.js"],"cwd":"/home/mhossein/Desktop/Cooleh.project","execPath":"/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","gid":1000,"memoryUsage":{"arrayBuffers":18378300,"external":21567213,"heapTotal":81383424,"heapUsed":52370600,"rss":139071488},"pid":128057,"uid":1000,"version":"v20.17.0"},"requestId":"N/A","service":"user-service","stack":"ReferenceError: cacheManager is not defined\n    at Application.configApplication (/home/mhossein/Desktop/Cooleh.project/app/server.js:126:29)\n    at new Application (/home/mhossein/Desktop/Cooleh.project/app/server.js:30:14)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/index.js:2:1)\n    at Module._compile (node:internal/modules/cjs/loader:1469:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)\n    at Module.load (node:internal/modules/cjs/loader:1288:32)\n    at Module._load (node:internal/modules/cjs/loader:1104:12)\n    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:174:12)\n    at node:internal/main/run_main_module:28:49","trace":[{"column":29,"file":"/home/mhossein/Desktop/Cooleh.project/app/server.js","function":"Application.configApplication","line":126,"method":"configApplication","native":false},{"column":14,"file":"/home/mhossein/Desktop/Cooleh.project/app/server.js","function":"new Application","line":30,"method":null,"native":false},{"column":1,"file":"/home/mhossein/Desktop/Cooleh.project/index.js","function":null,"line":2,"method":null,"native":false},{"column":14,"file":"node:internal/modules/cjs/loader","function":"Module._compile","line":1469,"method":"_compile","native":false},{"column":10,"file":"node:internal/modules/cjs/loader","function":"Module._extensions..js","line":1548,"method":".js","native":false},{"column":32,"file":"node:internal/modules/cjs/loader","function":"Module.load","line":1288,"method":"load","native":false},{"column":12,"file":"node:internal/modules/cjs/loader","function":"Module._load","line":1104,"method":"_load","native":false},{"column":12,"file":"node:internal/modules/run_main","function":"Function.executeUserEntryPoint [as runMain]","line":174,"method":"executeUserEntryPoint [as runMain]","native":false},{"column":49,"file":"node:internal/main/run_main_module","function":null,"line":28,"method":null,"native":false}]},"timestamp":"2024-11-18 11:02:06"}
+{"level":"error","message":"uncaughtException: logger.info is not a function\nTypeError: logger.info is not a function\n    at EventEmitter.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js:25:12)\n    at EventEmitter.emit (node:events:519:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)","metadata":{"date":"Mon Nov 18 2024 11:02:06 GMT+0330 (Iran Standard Time)","environment":"deveopment","error":{},"exception":true,"moduleName":"unknown","os":{"loadavg":[1.33,1.48,1.6],"uptime":7474.35},"process":{"argv":["/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","/home/mhossein/Desktop/Cooleh.project/index.js"],"cwd":"/home/mhossein/Desktop/Cooleh.project","execPath":"/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","gid":1000,"memoryUsage":{"arrayBuffers":18389516,"external":21578469,"heapTotal":81383424,"heapUsed":52763176,"rss":139071488},"pid":128057,"uid":1000,"version":"v20.17.0"},"requestId":"N/A","service":"user-service","stack":"TypeError: logger.info is not a function\n    at EventEmitter.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js:25:12)\n    at EventEmitter.emit (node:events:519:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)","trace":[{"column":12,"file":"/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js","function":null,"line":25,"method":null,"native":false},{"column":28,"file":"node:events","function":"EventEmitter.emit","line":519,"method":"emit","native":false},{"column":11,"file":"node:internal/process/task_queues","function":"process.processTicksAndRejections","line":77,"method":"processTicksAndRejections","native":false}]},"timestamp":"2024-11-18 11:02:06"}
+{"level":"error","message":"uncaughtException: The \"original\" argument must be of type function. Received undefined\nTypeError [ERR_INVALID_ARG_TYPE]: The \"original\" argument must be of type function. Received undefined\n    at promisify (node:internal/util:400:3)\n    at new CacheManager (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/cache.middleware.js:25:23)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/cache.middleware.js:249:22)\n    at Module._compile (node:internal/modules/cjs/loader:1469:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)\n    at Module.load (node:internal/modules/cjs/loader:1288:32)\n    at Module._load (node:internal/modules/cjs/loader:1104:12)\n    at Module.require (node:internal/modules/cjs/loader:1311:19)\n    at require (node:internal/modules/helpers:179:18)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/server.js:17:22)","metadata":{"date":"Mon Nov 18 2024 11:03:44 GMT+0330 (Iran Standard Time)","environment":"deveopment","error":{"code":"ERR_INVALID_ARG_TYPE"},"exception":true,"moduleName":"unknown","os":{"loadavg":[1.87,1.59,1.63],"uptime":7572.46},"process":{"argv":["/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","/home/mhossein/Desktop/Cooleh.project/index.js"],"cwd":"/home/mhossein/Desktop/Cooleh.project","execPath":"/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","gid":1000,"memoryUsage":{"arrayBuffers":18378100,"external":21567013,"heapTotal":81121280,"heapUsed":52467544,"rss":140034048},"pid":129674,"uid":1000,"version":"v20.17.0"},"requestId":"N/A","service":"user-service","stack":"TypeError [ERR_INVALID_ARG_TYPE]: The \"original\" argument must be of type function. Received undefined\n    at promisify (node:internal/util:400:3)\n    at new CacheManager (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/cache.middleware.js:25:23)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/cache.middleware.js:249:22)\n    at Module._compile (node:internal/modules/cjs/loader:1469:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)\n    at Module.load (node:internal/modules/cjs/loader:1288:32)\n    at Module._load (node:internal/modules/cjs/loader:1104:12)\n    at Module.require (node:internal/modules/cjs/loader:1311:19)\n    at require (node:internal/modules/helpers:179:18)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/server.js:17:22)","trace":[{"column":3,"file":"node:internal/util","function":"promisify","line":400,"method":null,"native":false},{"column":23,"file":"/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/cache.middleware.js","function":"new CacheManager","line":25,"method":null,"native":false},{"column":22,"file":"/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/cache.middleware.js","function":null,"line":249,"method":null,"native":false},{"column":14,"file":"node:internal/modules/cjs/loader","function":"Module._compile","line":1469,"method":"_compile","native":false},{"column":10,"file":"node:internal/modules/cjs/loader","function":"Module._extensions..js","line":1548,"method":".js","native":false},{"column":32,"file":"node:internal/modules/cjs/loader","function":"Module.load","line":1288,"method":"load","native":false},{"column":12,"file":"node:internal/modules/cjs/loader","function":"Module._load","line":1104,"method":"_load","native":false},{"column":19,"file":"node:internal/modules/cjs/loader","function":"Module.require","line":1311,"method":"require","native":false},{"column":18,"file":"node:internal/modules/helpers","function":"require","line":179,"method":null,"native":false},{"column":22,"file":"/home/mhossein/Desktop/Cooleh.project/app/server.js","function":null,"line":17,"method":null,"native":false}]},"timestamp":"2024-11-18 11:03:44"}
+{"level":"error","message":"uncaughtException: logger.info is not a function\nTypeError: logger.info is not a function\n    at EventEmitter.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js:25:12)\n    at EventEmitter.emit (node:events:519:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)","metadata":{"date":"Mon Nov 18 2024 11:03:44 GMT+0330 (Iran Standard Time)","environment":"deveopment","error":{},"exception":true,"moduleName":"unknown","os":{"loadavg":[1.87,1.59,1.63],"uptime":7572.49},"process":{"argv":["/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","/home/mhossein/Desktop/Cooleh.project/index.js"],"cwd":"/home/mhossein/Desktop/Cooleh.project","execPath":"/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","gid":1000,"memoryUsage":{"arrayBuffers":18389116,"external":21578069,"heapTotal":81121280,"heapUsed":52987480,"rss":140165120},"pid":129674,"uid":1000,"version":"v20.17.0"},"requestId":"N/A","service":"user-service","stack":"TypeError: logger.info is not a function\n    at EventEmitter.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js:25:12)\n    at EventEmitter.emit (node:events:519:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)","trace":[{"column":12,"file":"/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js","function":null,"line":25,"method":null,"native":false},{"column":28,"file":"node:events","function":"EventEmitter.emit","line":519,"method":"emit","native":false},{"column":11,"file":"node:internal/process/task_queues","function":"process.processTicksAndRejections","line":77,"method":"processTicksAndRejections","native":false}]},"timestamp":"2024-11-18 11:03:44"}
+{"level":"error","message":"uncaughtException: The \"original\" argument must be of type function. Received undefined\nTypeError [ERR_INVALID_ARG_TYPE]: The \"original\" argument must be of type function. Received undefined\n    at promisify (node:internal/util:400:3)\n    at new CacheManager (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/cache.middleware.js:25:23)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/cache.middleware.js:249:22)\n    at Module._compile (node:internal/modules/cjs/loader:1469:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)\n    at Module.load (node:internal/modules/cjs/loader:1288:32)\n    at Module._load (node:internal/modules/cjs/loader:1104:12)\n    at Module.require (node:internal/modules/cjs/loader:1311:19)\n    at require (node:internal/modules/helpers:179:18)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/server.js:17:22)","metadata":{"date":"Mon Nov 18 2024 11:05:23 GMT+0330 (Iran Standard Time)","environment":"deveopment","error":{"code":"ERR_INVALID_ARG_TYPE"},"exception":true,"moduleName":"unknown","os":{"loadavg":[0.96,1.34,1.53],"uptime":7670.8},"process":{"argv":["/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","/home/mhossein/Desktop/Cooleh.project/index.js"],"cwd":"/home/mhossein/Desktop/Cooleh.project","execPath":"/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","gid":1000,"memoryUsage":{"arrayBuffers":18378100,"external":21567013,"heapTotal":82169856,"heapUsed":52073768,"rss":141029376},"pid":131365,"uid":1000,"version":"v20.17.0"},"requestId":"N/A","service":"user-service","stack":"TypeError [ERR_INVALID_ARG_TYPE]: The \"original\" argument must be of type function. Received undefined\n    at promisify (node:internal/util:400:3)\n    at new CacheManager (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/cache.middleware.js:25:23)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/cache.middleware.js:249:22)\n    at Module._compile (node:internal/modules/cjs/loader:1469:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)\n    at Module.load (node:internal/modules/cjs/loader:1288:32)\n    at Module._load (node:internal/modules/cjs/loader:1104:12)\n    at Module.require (node:internal/modules/cjs/loader:1311:19)\n    at require (node:internal/modules/helpers:179:18)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/server.js:17:22)","trace":[{"column":3,"file":"node:internal/util","function":"promisify","line":400,"method":null,"native":false},{"column":23,"file":"/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/cache.middleware.js","function":"new CacheManager","line":25,"method":null,"native":false},{"column":22,"file":"/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/cache.middleware.js","function":null,"line":249,"method":null,"native":false},{"column":14,"file":"node:internal/modules/cjs/loader","function":"Module._compile","line":1469,"method":"_compile","native":false},{"column":10,"file":"node:internal/modules/cjs/loader","function":"Module._extensions..js","line":1548,"method":".js","native":false},{"column":32,"file":"node:internal/modules/cjs/loader","function":"Module.load","line":1288,"method":"load","native":false},{"column":12,"file":"node:internal/modules/cjs/loader","function":"Module._load","line":1104,"method":"_load","native":false},{"column":19,"file":"node:internal/modules/cjs/loader","function":"Module.require","line":1311,"method":"require","native":false},{"column":18,"file":"node:internal/modules/helpers","function":"require","line":179,"method":null,"native":false},{"column":22,"file":"/home/mhossein/Desktop/Cooleh.project/app/server.js","function":null,"line":17,"method":null,"native":false}]},"timestamp":"2024-11-18 11:05:23"}
+{"level":"error","message":"uncaughtException: logger.info is not a function\nTypeError: logger.info is not a function\n    at EventEmitter.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js:25:12)\n    at EventEmitter.emit (node:events:519:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)","metadata":{"date":"Mon Nov 18 2024 11:05:23 GMT+0330 (Iran Standard Time)","environment":"deveopment","error":{},"exception":true,"moduleName":"unknown","os":{"loadavg":[0.96,1.34,1.53],"uptime":7670.83},"process":{"argv":["/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","/home/mhossein/Desktop/Cooleh.project/index.js"],"cwd":"/home/mhossein/Desktop/Cooleh.project","execPath":"/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","gid":1000,"memoryUsage":{"arrayBuffers":18389116,"external":21578069,"heapTotal":82169856,"heapUsed":52493264,"rss":141160448},"pid":131365,"uid":1000,"version":"v20.17.0"},"requestId":"N/A","service":"user-service","stack":"TypeError: logger.info is not a function\n    at EventEmitter.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js:25:12)\n    at EventEmitter.emit (node:events:519:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)","trace":[{"column":12,"file":"/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js","function":null,"line":25,"method":null,"native":false},{"column":28,"file":"node:events","function":"EventEmitter.emit","line":519,"method":"emit","native":false},{"column":11,"file":"node:internal/process/task_queues","function":"process.processTicksAndRejections","line":77,"method":"processTicksAndRejections","native":false}]},"timestamp":"2024-11-18 11:05:23"}
+{"level":"error","message":"uncaughtException: Cannot find module './path/to/logger-config'\nRequire stack:\n- /home/mhossein/Desktop/Cooleh.project/app/server.js\n- /home/mhossein/Desktop/Cooleh.project/index.js\nError: Cannot find module './path/to/logger-config'\nRequire stack:\n- /home/mhossein/Desktop/Cooleh.project/app/server.js\n- /home/mhossein/Desktop/Cooleh.project/index.js\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1225:15)\n    at Module._load (node:internal/modules/cjs/loader:1051:27)\n    at Module.require (node:internal/modules/cjs/loader:1311:19)\n    at require (node:internal/modules/helpers:179:18)\n    at Application.createServer (/home/mhossein/Desktop/Cooleh.project/app/server.js:229:26)\n    at new Application (/home/mhossein/Desktop/Cooleh.project/app/server.js:35:14)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/index.js:2:1)\n    at Module._compile (node:internal/modules/cjs/loader:1469:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)\n    at Module.load (node:internal/modules/cjs/loader:1288:32)","metadata":{"date":"Mon Nov 18 2024 11:06:29 GMT+0330 (Iran Standard Time)","environment":"deveopment","error":{"code":"MODULE_NOT_FOUND","requireStack":["/home/mhossein/Desktop/Cooleh.project/app/server.js","/home/mhossein/Desktop/Cooleh.project/index.js"]},"exception":true,"moduleName":"unknown","os":{"loadavg":[0.99,1.23,1.47],"uptime":7736.69},"process":{"argv":["/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","/home/mhossein/Desktop/Cooleh.project/index.js"],"cwd":"/home/mhossein/Desktop/Cooleh.project","execPath":"/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","gid":1000,"memoryUsage":{"arrayBuffers":18378618,"external":21567531,"heapTotal":91107328,"heapUsed":64327688,"rss":152997888},"pid":132471,"uid":1000,"version":"v20.17.0"},"requestId":"N/A","service":"user-service","stack":"Error: Cannot find module './path/to/logger-config'\nRequire stack:\n- /home/mhossein/Desktop/Cooleh.project/app/server.js\n- /home/mhossein/Desktop/Cooleh.project/index.js\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1225:15)\n    at Module._load (node:internal/modules/cjs/loader:1051:27)\n    at Module.require (node:internal/modules/cjs/loader:1311:19)\n    at require (node:internal/modules/helpers:179:18)\n    at Application.createServer (/home/mhossein/Desktop/Cooleh.project/app/server.js:229:26)\n    at new Application (/home/mhossein/Desktop/Cooleh.project/app/server.js:35:14)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/index.js:2:1)\n    at Module._compile (node:internal/modules/cjs/loader:1469:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)\n    at Module.load (node:internal/modules/cjs/loader:1288:32)","trace":[{"column":15,"file":"node:internal/modules/cjs/loader","function":"Module._resolveFilename","line":1225,"method":"_resolveFilename","native":false},{"column":27,"file":"node:internal/modules/cjs/loader","function":"Module._load","line":1051,"method":"_load","native":false},{"column":19,"file":"node:internal/modules/cjs/loader","function":"Module.require","line":1311,"method":"require","native":false},{"column":18,"file":"node:internal/modules/helpers","function":"require","line":179,"method":null,"native":false},{"column":26,"file":"/home/mhossein/Desktop/Cooleh.project/app/server.js","function":"Application.createServer","line":229,"method":"createServer","native":false},{"column":14,"file":"/home/mhossein/Desktop/Cooleh.project/app/server.js","function":"new Application","line":35,"method":null,"native":false},{"column":1,"file":"/home/mhossein/Desktop/Cooleh.project/index.js","function":null,"line":2,"method":null,"native":false},{"column":14,"file":"node:internal/modules/cjs/loader","function":"Module._compile","line":1469,"method":"_compile","native":false},{"column":10,"file":"node:internal/modules/cjs/loader","function":"Module._extensions..js","line":1548,"method":".js","native":false},{"column":32,"file":"node:internal/modules/cjs/loader","function":"Module.load","line":1288,"method":"load","native":false}]},"timestamp":"2024-11-18 11:06:29"}
+{"level":"error","message":"uncaughtException: logger.info is not a function\nTypeError: logger.info is not a function\n    at EventEmitter.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js:25:12)\n    at EventEmitter.emit (node:events:519:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)","metadata":{"date":"Mon Nov 18 2024 11:06:29 GMT+0330 (Iran Standard Time)","environment":"deveopment","error":{},"exception":true,"moduleName":"unknown","os":{"loadavg":[0.99,1.23,1.47],"uptime":7736.71},"process":{"argv":["/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","/home/mhossein/Desktop/Cooleh.project/index.js"],"cwd":"/home/mhossein/Desktop/Cooleh.project","execPath":"/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","gid":1000,"memoryUsage":{"arrayBuffers":18390040,"external":21578993,"heapTotal":91631616,"heapUsed":65200848,"rss":153260032},"pid":132471,"uid":1000,"version":"v20.17.0"},"requestId":"N/A","service":"user-service","stack":"TypeError: logger.info is not a function\n    at EventEmitter.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js:25:12)\n    at EventEmitter.emit (node:events:519:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)","trace":[{"column":12,"file":"/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js","function":null,"line":25,"method":null,"native":false},{"column":28,"file":"node:events","function":"EventEmitter.emit","line":519,"method":"emit","native":false},{"column":11,"file":"node:internal/process/task_queues","function":"process.processTicksAndRejections","line":77,"method":"processTicksAndRejections","native":false}]},"timestamp":"2024-11-18 11:06:29"}
+{"level":"error","message":"uncaughtException: logger.info is not a function\nTypeError: logger.info is not a function\n    at EventEmitter.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js:25:12)\n    at EventEmitter.emit (node:events:519:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)","metadata":{"date":"Mon Nov 18 2024 11:08:22 GMT+0330 (Iran Standard Time)","environment":"deveopment","error":{},"exception":true,"moduleName":"unknown","os":{"loadavg":[1.15,1.12,1.4],"uptime":7850},"process":{"argv":["/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","/home/mhossein/Desktop/Cooleh.project/index.js"],"cwd":"/home/mhossein/Desktop/Cooleh.project","execPath":"/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","gid":1000,"memoryUsage":{"arrayBuffers":18381618,"external":21588990,"heapTotal":89534464,"heapUsed":65270448,"rss":151113728},"pid":134414,"uid":1000,"version":"v20.17.0"},"requestId":"N/A","service":"user-service","stack":"TypeError: logger.info is not a function\n    at EventEmitter.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js:25:12)\n    at EventEmitter.emit (node:events:519:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)","trace":[{"column":12,"file":"/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js","function":null,"line":25,"method":null,"native":false},{"column":28,"file":"node:events","function":"EventEmitter.emit","line":519,"method":"emit","native":false},{"column":11,"file":"node:internal/process/task_queues","function":"process.processTicksAndRejections","line":77,"method":"processTicksAndRejections","native":false}]},"timestamp":"2024-11-18 11:08:22"}
+{"level":"error","message":"uncaughtException: logger.info is not a function\nTypeError: logger.info is not a function\n    at EventEmitter.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js:25:12)\n    at EventEmitter.emit (node:events:519:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)","metadata":{"date":"Mon Nov 18 2024 11:13:17 GMT+0330 (Iran Standard Time)","environment":"info","error":{},"exception":true,"moduleName":"unknown","os":{"loadavg":[0.85,0.98,1.26],"uptime":8145.26},"process":{"argv":["/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","/home/mhossein/Desktop/Cooleh.project/index.js"],"cwd":"/home/mhossein/Desktop/Cooleh.project","execPath":"/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","gid":1000,"memoryUsage":{"arrayBuffers":18381618,"external":21588990,"heapTotal":85864448,"heapUsed":60171184,"rss":147689472},"pid":139095,"uid":1000,"version":"v20.17.0"},"requestId":"N/A","service":"user-service","stack":"TypeError: logger.info is not a function\n    at EventEmitter.<anonymous> (/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js:25:12)\n    at EventEmitter.emit (node:events:519:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)","trace":[{"column":12,"file":"/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js","function":null,"line":25,"method":null,"native":false},{"column":28,"file":"node:events","function":"EventEmitter.emit","line":519,"method":"emit","native":false},{"column":11,"file":"node:internal/process/task_queues","function":"process.processTicksAndRejections","line":77,"method":"processTicksAndRejections","native":false}]},"timestamp":"2024-11-18 11:13:17"}
+{"level":"error","message":"uncaughtException: logger.http is not a function\nTypeError: logger.http is not a function\n    at Object.write (/home/mhossein/Desktop/Cooleh.project/app/utils/logger/morgan.js:38:14)\n    at Array.logRequest (/home/mhossein/Desktop/Cooleh.project/node_modules/morgan/index.js:130:14)\n    at listener (/home/mhossein/Desktop/Cooleh.project/node_modules/morgan/node_modules/on-finished/index.js:169:15)\n    at onFinish (/home/mhossein/Desktop/Cooleh.project/node_modules/morgan/node_modules/on-finished/index.js:100:5)\n    at callback (/home/mhossein/Desktop/Cooleh.project/node_modules/ee-first/index.js:55:10)\n    at ServerResponse.onevent (/home/mhossein/Desktop/Cooleh.project/node_modules/ee-first/index.js:93:5)\n    at ServerResponse.emit (node:events:531:35)\n    at onFinish (node:_http_outgoing:1031:10)\n    at callback (node:internal/streams/writable:764:21)\n    at afterWrite (node:internal/streams/writable:708:5)","metadata":{"date":"Mon Nov 18 2024 11:14:31 GMT+0330 (Iran Standard Time)","environment":"info","error":{},"exception":true,"moduleName":"unknown","os":{"loadavg":[0.97,0.99,1.24],"uptime":8219.22},"process":{"argv":["/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","/home/mhossein/Desktop/Cooleh.project/index.js"],"cwd":"/home/mhossein/Desktop/Cooleh.project","execPath":"/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","gid":1000,"memoryUsage":{"arrayBuffers":18406527,"external":21747019,"heapTotal":92418048,"heapUsed":69480040,"rss":227938304},"pid":140214,"uid":1000,"version":"v20.17.0"},"requestId":"N/A","service":"user-service","stack":"TypeError: logger.http is not a function\n    at Object.write (/home/mhossein/Desktop/Cooleh.project/app/utils/logger/morgan.js:38:14)\n    at Array.logRequest (/home/mhossein/Desktop/Cooleh.project/node_modules/morgan/index.js:130:14)\n    at listener (/home/mhossein/Desktop/Cooleh.project/node_modules/morgan/node_modules/on-finished/index.js:169:15)\n    at onFinish (/home/mhossein/Desktop/Cooleh.project/node_modules/morgan/node_modules/on-finished/index.js:100:5)\n    at callback (/home/mhossein/Desktop/Cooleh.project/node_modules/ee-first/index.js:55:10)\n    at ServerResponse.onevent (/home/mhossein/Desktop/Cooleh.project/node_modules/ee-first/index.js:93:5)\n    at ServerResponse.emit (node:events:531:35)\n    at onFinish (node:_http_outgoing:1031:10)\n    at callback (node:internal/streams/writable:764:21)\n    at afterWrite (node:internal/streams/writable:708:5)","trace":[{"column":14,"file":"/home/mhossein/Desktop/Cooleh.project/app/utils/logger/morgan.js","function":"Object.write","line":38,"method":"write","native":false},{"column":14,"file":"/home/mhossein/Desktop/Cooleh.project/node_modules/morgan/index.js","function":"Array.logRequest","line":130,"method":"logRequest","native":false},{"column":15,"file":"/home/mhossein/Desktop/Cooleh.project/node_modules/morgan/node_modules/on-finished/index.js","function":"listener","line":169,"method":null,"native":false},{"column":5,"file":"/home/mhossein/Desktop/Cooleh.project/node_modules/morgan/node_modules/on-finished/index.js","function":"onFinish","line":100,"method":null,"native":false},{"column":10,"file":"/home/mhossein/Desktop/Cooleh.project/node_modules/ee-first/index.js","function":"callback","line":55,"method":null,"native":false},{"column":5,"file":"/home/mhossein/Desktop/Cooleh.project/node_modules/ee-first/index.js","function":"ServerResponse.onevent","line":93,"method":"onevent","native":false},{"column":35,"file":"node:events","function":"ServerResponse.emit","line":531,"method":"emit","native":false},{"column":10,"file":"node:_http_outgoing","function":"onFinish","line":1031,"method":null,"native":false},{"column":21,"file":"node:internal/streams/writable","function":"callback","line":764,"method":null,"native":false},{"column":5,"file":"node:internal/streams/writable","function":"afterWrite","line":708,"method":null,"native":false}]},"timestamp":"2024-11-18 11:14:31"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","path":"/api-doc/","requestQuery":{},"statusCode":500,"timestamp":"2024-11-18T08:03:00.869Z","trackingId":"a4e5ae61-d609-4867-a4d2-adaabf63c7d2","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"moduleName":"unknown","requestId":"N/A","service":"user-service"},"timestamp":"2024-11-18 11:33:00"}
+{"level":"error","message":"Programming Error","metadata":{"environment":"info","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","message":"Right-hand side of 'instanceof' is not an object","method":"GET","needsImmediate":true,"path":"/api-doc/","priority":"high","requestQuery":{},"statusCode":500,"timestamp":"2024-11-18T08:03:00.869Z","trackingId":"a4e5ae61-d609-4867-a4d2-adaabf63c7d2","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"moduleName":"unknown","requestId":"N/A","service":"user-service"},"timestamp":"2024-11-18 11:33:00"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","path":"/favicon.ico","requestQuery":{},"statusCode":500,"timestamp":"2024-11-18T08:03:00.954Z","trackingId":"d280737b-5b2c-4530-a753-357413163a1b","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"moduleName":"unknown","requestId":"N/A","service":"user-service"},"timestamp":"2024-11-18 11:33:00"}
+{"level":"error","message":"Programming Error","metadata":{"environment":"info","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","message":"Right-hand side of 'instanceof' is not an object","method":"GET","needsImmediate":true,"path":"/favicon.ico","priority":"high","requestQuery":{},"statusCode":500,"timestamp":"2024-11-18T08:03:00.954Z","trackingId":"d280737b-5b2c-4530-a753-357413163a1b","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"moduleName":"unknown","requestId":"N/A","service":"user-service"},"timestamp":"2024-11-18 11:33:00"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","path":"/api-doc/","requestQuery":{},"statusCode":500,"timestamp":"2024-11-18T08:03:01.828Z","trackingId":"f8f95be1-6b96-4c60-9880-253e4856cd18","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"moduleName":"unknown","requestId":"N/A","service":"user-service"},"timestamp":"2024-11-18 11:33:01"}
+{"level":"error","message":"Programming Error","metadata":{"environment":"info","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","message":"Right-hand side of 'instanceof' is not an object","method":"GET","needsImmediate":true,"path":"/api-doc/","priority":"high","requestQuery":{},"statusCode":500,"timestamp":"2024-11-18T08:03:01.828Z","trackingId":"f8f95be1-6b96-4c60-9880-253e4856cd18","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"moduleName":"unknown","requestId":"N/A","service":"user-service"},"timestamp":"2024-11-18 11:33:01"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","path":"/favicon.ico","requestQuery":{},"statusCode":500,"timestamp":"2024-11-18T08:03:01.917Z","trackingId":"930279d9-d524-4b8b-914e-d8ba57c35d10","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"moduleName":"unknown","requestId":"N/A","service":"user-service"},"timestamp":"2024-11-18 11:33:01"}
+{"level":"error","message":"Programming Error","metadata":{"environment":"info","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","message":"Right-hand side of 'instanceof' is not an object","method":"GET","needsImmediate":true,"path":"/favicon.ico","priority":"high","requestQuery":{},"statusCode":500,"timestamp":"2024-11-18T08:03:01.917Z","trackingId":"930279d9-d524-4b8b-914e-d8ba57c35d10","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"moduleName":"unknown","requestId":"N/A","service":"user-service"},"timestamp":"2024-11-18 11:33:01"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/api-doc/","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"de8d9ca9-864b-4751-af40-186aa35420dc","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:34:10"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/api-doc/","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"de8d9ca9-864b-4751-af40-186aa35420dc","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:34:10"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/favicon.ico","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"792eb09b-a5ec-4e43-8b45-c935ae1cb393","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:34:10"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/favicon.ico","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"792eb09b-a5ec-4e43-8b45-c935ae1cb393","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:34:10"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/api-doc/","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"96145e9f-dc39-4abf-91b9-d01709f9f8af","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:34:48"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/api-doc/","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"96145e9f-dc39-4abf-91b9-d01709f9f8af","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:34:48"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/favicon.ico","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"0b2ce046-be7d-4304-87fa-695078b45ecb","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:34:48"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/favicon.ico","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"0b2ce046-be7d-4304-87fa-695078b45ecb","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:34:48"}
+{"level":"error","message":"uncaughtException: cacheManager is not defined\nReferenceError: cacheManager is not defined\n    at Application.configApplication (/home/mhossein/Desktop/Cooleh.project/app/server.js:126:29)\n    at new Application (/home/mhossein/Desktop/Cooleh.project/app/server.js:30:14)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/index.js:2:1)\n    at Module._compile (node:internal/modules/cjs/loader:1469:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)\n    at Module.load (node:internal/modules/cjs/loader:1288:32)\n    at Module._load (node:internal/modules/cjs/loader:1104:12)\n    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:174:12)\n    at node:internal/main/run_main_module:28:49","metadata":{"date":"Mon Nov 18 2024 11:35:33 GMT+0330 (Iran Standard Time)","environment":"info","error":{},"exception":true,"moduleName":"unknown","os":{"loadavg":[2.15,1.87,1.63],"uptime":9481.08},"process":{"argv":["/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","/home/mhossein/Desktop/Cooleh.project/index.js"],"cwd":"/home/mhossein/Desktop/Cooleh.project","execPath":"/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","gid":1000,"memoryUsage":{"arrayBuffers":18378300,"external":21567213,"heapTotal":81121280,"heapUsed":52610400,"rss":139456512},"pid":161686,"uid":1000,"version":"v20.17.0"},"requestId":"N/A","service":"user-service","stack":"ReferenceError: cacheManager is not defined\n    at Application.configApplication (/home/mhossein/Desktop/Cooleh.project/app/server.js:126:29)\n    at new Application (/home/mhossein/Desktop/Cooleh.project/app/server.js:30:14)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/index.js:2:1)\n    at Module._compile (node:internal/modules/cjs/loader:1469:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)\n    at Module.load (node:internal/modules/cjs/loader:1288:32)\n    at Module._load (node:internal/modules/cjs/loader:1104:12)\n    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:174:12)\n    at node:internal/main/run_main_module:28:49","trace":[{"column":29,"file":"/home/mhossein/Desktop/Cooleh.project/app/server.js","function":"Application.configApplication","line":126,"method":"configApplication","native":false},{"column":14,"file":"/home/mhossein/Desktop/Cooleh.project/app/server.js","function":"new Application","line":30,"method":null,"native":false},{"column":1,"file":"/home/mhossein/Desktop/Cooleh.project/index.js","function":null,"line":2,"method":null,"native":false},{"column":14,"file":"node:internal/modules/cjs/loader","function":"Module._compile","line":1469,"method":"_compile","native":false},{"column":10,"file":"node:internal/modules/cjs/loader","function":"Module._extensions..js","line":1548,"method":".js","native":false},{"column":32,"file":"node:internal/modules/cjs/loader","function":"Module.load","line":1288,"method":"load","native":false},{"column":12,"file":"node:internal/modules/cjs/loader","function":"Module._load","line":1104,"method":"_load","native":false},{"column":12,"file":"node:internal/modules/run_main","function":"Function.executeUserEntryPoint [as runMain]","line":174,"method":"executeUserEntryPoint [as runMain]","native":false},{"column":49,"file":"node:internal/main/run_main_module","function":null,"line":28,"method":null,"native":false}]},"timestamp":"2024-11-18 11:35:33"}
+{"level":"error","message":"uncaughtException: Cannot find module './path/to/logger-config'\nRequire stack:\n- /home/mhossein/Desktop/Cooleh.project/app/server.js\n- /home/mhossein/Desktop/Cooleh.project/index.js\nError: Cannot find module './path/to/logger-config'\nRequire stack:\n- /home/mhossein/Desktop/Cooleh.project/app/server.js\n- /home/mhossein/Desktop/Cooleh.project/index.js\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1225:15)\n    at Module._load (node:internal/modules/cjs/loader:1051:27)\n    at Module.require (node:internal/modules/cjs/loader:1311:19)\n    at require (node:internal/modules/helpers:179:18)\n    at Application.createServer (/home/mhossein/Desktop/Cooleh.project/app/server.js:229:26)\n    at new Application (/home/mhossein/Desktop/Cooleh.project/app/server.js:35:14)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/index.js:2:1)\n    at Module._compile (node:internal/modules/cjs/loader:1469:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)\n    at Module.load (node:internal/modules/cjs/loader:1288:32)","metadata":{"date":"Mon Nov 18 2024 11:35:52 GMT+0330 (Iran Standard Time)","environment":"info","error":{"code":"MODULE_NOT_FOUND","requireStack":["/home/mhossein/Desktop/Cooleh.project/app/server.js","/home/mhossein/Desktop/Cooleh.project/index.js"]},"exception":true,"moduleName":"unknown","os":{"loadavg":[1.91,1.83,1.63],"uptime":9499.96},"process":{"argv":["/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","/home/mhossein/Desktop/Cooleh.project/index.js"],"cwd":"/home/mhossein/Desktop/Cooleh.project","execPath":"/home/mhossein/.nvm/versions/node/v20.17.0/bin/node","gid":1000,"memoryUsage":{"arrayBuffers":18378618,"external":21567531,"heapTotal":92155904,"heapUsed":63818936,"rss":153591808},"pid":162097,"uid":1000,"version":"v20.17.0"},"requestId":"N/A","service":"user-service","stack":"Error: Cannot find module './path/to/logger-config'\nRequire stack:\n- /home/mhossein/Desktop/Cooleh.project/app/server.js\n- /home/mhossein/Desktop/Cooleh.project/index.js\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1225:15)\n    at Module._load (node:internal/modules/cjs/loader:1051:27)\n    at Module.require (node:internal/modules/cjs/loader:1311:19)\n    at require (node:internal/modules/helpers:179:18)\n    at Application.createServer (/home/mhossein/Desktop/Cooleh.project/app/server.js:229:26)\n    at new Application (/home/mhossein/Desktop/Cooleh.project/app/server.js:35:14)\n    at Object.<anonymous> (/home/mhossein/Desktop/Cooleh.project/index.js:2:1)\n    at Module._compile (node:internal/modules/cjs/loader:1469:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)\n    at Module.load (node:internal/modules/cjs/loader:1288:32)","trace":[{"column":15,"file":"node:internal/modules/cjs/loader","function":"Module._resolveFilename","line":1225,"method":"_resolveFilename","native":false},{"column":27,"file":"node:internal/modules/cjs/loader","function":"Module._load","line":1051,"method":"_load","native":false},{"column":19,"file":"node:internal/modules/cjs/loader","function":"Module.require","line":1311,"method":"require","native":false},{"column":18,"file":"node:internal/modules/helpers","function":"require","line":179,"method":null,"native":false},{"column":26,"file":"/home/mhossein/Desktop/Cooleh.project/app/server.js","function":"Application.createServer","line":229,"method":"createServer","native":false},{"column":14,"file":"/home/mhossein/Desktop/Cooleh.project/app/server.js","function":"new Application","line":35,"method":null,"native":false},{"column":1,"file":"/home/mhossein/Desktop/Cooleh.project/index.js","function":null,"line":2,"method":null,"native":false},{"column":14,"file":"node:internal/modules/cjs/loader","function":"Module._compile","line":1469,"method":"_compile","native":false},{"column":10,"file":"node:internal/modules/cjs/loader","function":"Module._extensions..js","line":1548,"method":".js","native":false},{"column":32,"file":"node:internal/modules/cjs/loader","function":"Module.load","line":1288,"method":"load","native":false}]},"timestamp":"2024-11-18 11:35:52"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/api-doc/","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"06d97abc-693c-4809-b001-aae35751c7ff","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:37:11"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/api-doc/","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"06d97abc-693c-4809-b001-aae35751c7ff","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:37:11"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/favicon.ico","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"dbf3520b-0628-4ae4-a3d8-e3c09bc2560b","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:37:11"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/favicon.ico","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"dbf3520b-0628-4ae4-a3d8-e3c09bc2560b","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:37:11"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/api-doc/","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"89dbfc8a-7a58-4c08-8c0e-5f4887d8c0ef","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:37:15"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/api-doc/","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"89dbfc8a-7a58-4c08-8c0e-5f4887d8c0ef","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:37:15"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/favicon.ico","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"e70e28a7-c67a-4c81-9218-59f29c0b3cf1","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:37:15"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/favicon.ico","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"e70e28a7-c67a-4c81-9218-59f29c0b3cf1","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:37:15"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/api-doc/","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"5bdec1df-c1d6-4490-99b8-b2a069855d0e","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:37:18"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/api-doc/","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"5bdec1df-c1d6-4490-99b8-b2a069855d0e","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:37:18"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/favicon.ico","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"7ffab638-4c84-46c1-b8b1-8afee13588c8","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:37:18"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/favicon.ico","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"7ffab638-4c84-46c1-b8b1-8afee13588c8","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:37:18"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/api-doc/","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"26b2b740-b93c-41ef-9a47-05863c364c0f","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:41:41"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/api-doc/","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"26b2b740-b93c-41ef-9a47-05863c364c0f","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:41:41"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/favicon.ico","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"a8f94008-0834-499d-9724-cbfa353f99e4","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:41:41"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/favicon.ico","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"a8f94008-0834-499d-9724-cbfa353f99e4","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:41:41"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"74dd9a55-0f9a-45cc-ab3a-92f23e8b2d8e","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:43:03"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"74dd9a55-0f9a-45cc-ab3a-92f23e8b2d8e","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:43:03"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/favicon.ico","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"3481ee5d-e51e-4ce3-8992-9fa241b59a5d","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:43:03"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/favicon.ico","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"3481ee5d-e51e-4ce3-8992-9fa241b59a5d","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:43:03"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"6f5c54ed-4808-42d3-baa1-a374ef8b799b","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:43:07"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"6f5c54ed-4808-42d3-baa1-a374ef8b799b","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:43:07"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/favicon.ico","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"e81d96d8-9f40-46ba-8e27-6f9a77dcd20a","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:43:07"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/favicon.ico","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"e81d96d8-9f40-46ba-8e27-6f9a77dcd20a","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:43:07"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"fd6f7ca6-9a2c-424a-a990-82360136455d","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:43:08"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"fd6f7ca6-9a2c-424a-a990-82360136455d","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:43:08"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/favicon.ico","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"aa845b7d-48bb-4de1-aa6b-ab864cb082f7","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:43:08"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/favicon.ico","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"aa845b7d-48bb-4de1-aa6b-ab864cb082f7","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:43:08"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"cecd1088-a40e-4480-a4cf-dcd51382a2c5","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:43:28"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"cecd1088-a40e-4480-a4cf-dcd51382a2c5","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:43:28"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/favicon.ico","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"994bb9bc-d087-4a49-8d07-ded9523fa022","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:43:28"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/favicon.ico","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"994bb9bc-d087-4a49-8d07-ded9523fa022","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:43:28"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/favicon.ico","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"b486e453-9d65-4e76-86c7-ad581975c1e5","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:46:38"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/favicon.ico","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"b486e453-9d65-4e76-86c7-ad581975c1e5","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:46:38"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/favicon.ico","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"cdd17595-67da-4477-a353-136d96957f11","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:46:38"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/favicon.ico","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"cdd17595-67da-4477-a353-136d96957f11","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:46:38"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/api-doc/","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"fa3e5e7b-9790-43f2-8059-8338d188a78d","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:46:41"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/api-doc/","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"fa3e5e7b-9790-43f2-8059-8338d188a78d","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:46:41"}
+{"level":"error","message":"TypeError occurred","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","path":"/favicon.ico","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"e7a543e3-aa8a-49c7-a7fd-b4a15cc9df28","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:46:41"}
+{"level":"error","message":"Programming Error Right-hand side of 'instanceof' is not an object","metadata":{"environment":"info","errorName":"TypeError","ip":"::1","method":"GET","moduleName":"unknown","needsImmediate":true,"path":"/favicon.ico","priority":"high","requestQuery":{},"service":"user-service","statusCode":500,"trackingId":"e7a543e3-aa8a-49c7-a7fd-b4a15cc9df28","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"},"timestamp":"2024-11-18 11:46:41"}
+undefined error: TypeError occurred
+    Location: 
+    Stack: No stack trace
+    Metadata: {"metadata":{"service":"user-service","environment":"info","moduleName":"unknown","trackingId":"bd7ccebc-a283-4354-884d-0541c051e9c2","errorName":"TypeError","statusCode":500,"path":"/api-doc/","method":"GET","ip":"::1","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36","timestamp":"2024-11-18 11:51:04","requestQuery":{}},"timestamp":"2024-11-18 11:51:04"}
+    ModuleName: unknown
+    RequestId: N/A
+    
+undefined error: Programming Error Right-hand side of 'instanceof' is not an object
+    Location: 
+    Stack: No stack trace
+    Metadata: {"metadata":{"service":"user-service","environment":"info","moduleName":"unknown","trackingId":"bd7ccebc-a283-4354-884d-0541c051e9c2","errorName":"TypeError","statusCode":500,"path":"/api-doc/","method":"GET","ip":"::1","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36","timestamp":"2024-11-18 11:51:04","requestQuery":{},"priority":"high","needsImmediate":true},"timestamp":"2024-11-18 11:51:04"}
+    ModuleName: unknown
+    RequestId: N/A
+    
+undefined error: TypeError occurred
+    Location: 
+    Stack: No stack trace
+    Metadata: {"metadata":{"service":"user-service","environment":"info","moduleName":"unknown","trackingId":"acf511b9-0e33-4ce9-bffa-57bc3951a484","errorName":"TypeError","statusCode":500,"path":"/favicon.ico","method":"GET","ip":"::1","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36","timestamp":"2024-11-18 11:51:04","requestQuery":{}},"timestamp":"2024-11-18 11:51:04"}
+    ModuleName: unknown
+    RequestId: N/A
+    
+undefined error: Programming Error Right-hand side of 'instanceof' is not an object
+    Location: 
+    Stack: No stack trace
+    Metadata: {"metadata":{"service":"user-service","environment":"info","moduleName":"unknown","trackingId":"acf511b9-0e33-4ce9-bffa-57bc3951a484","errorName":"TypeError","statusCode":500,"path":"/favicon.ico","method":"GET","ip":"::1","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36","timestamp":"2024-11-18 11:51:04","requestQuery":{},"priority":"high","needsImmediate":true},"timestamp":"2024-11-18 11:51:04"}
+    ModuleName: unknown
+    RequestId: N/A
+    
+2024-11-18T08:40:14.825Z error: Right-hand side of 'instanceof' is not an object
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "moduleName": "unknown",
+    "trackingId": "238a234a-ff63-4b38-a702-2844ff1c6ed1",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "errorLocation": {
+      "fileName": "server.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+      "line": "119",
+      "column": "17"
+    },
+    "path": "/api-doc/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "location": {
+      "fileName": "server.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+      "line": "119",
+      "column": "17"
+    }
+  },
+  "trackingId": "238a234a-ff63-4b38-a702-2844ff1c6ed1",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "errorLocation": {
+    "fileName": "server.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+    "line": "119",
+    "column": "17"
+  },
+  "path": "/api-doc/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {},
+  "location": {
+    "fileName": "server.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+    "line": "119",
+    "column": "17"
+  }
+}
+2024-11-18T08:40:14.825Z error: Right-hand side of 'instanceof' is not an object
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "moduleName": "unknown",
+    "trackingId": "238a234a-ff63-4b38-a702-2844ff1c6ed1",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "errorLocation": {
+      "fileName": "server.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+      "line": "119",
+      "column": "17"
+    },
+    "path": "/api-doc/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "location": {
+      "fileName": "server.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+      "line": "119",
+      "column": "17"
+    },
+    "priority": "high",
+    "needsImmediate": true
+  },
+  "trackingId": "238a234a-ff63-4b38-a702-2844ff1c6ed1",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "errorLocation": {
+    "fileName": "server.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+    "line": "119",
+    "column": "17"
+  },
+  "path": "/api-doc/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {},
+  "location": {
+    "fileName": "server.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+    "line": "119",
+    "column": "17"
+  },
+  "priority": "high",
+  "needsImmediate": true
+}
+2024-11-18T08:40:14.950Z error: Right-hand side of 'instanceof' is not an object
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "moduleName": "unknown",
+    "trackingId": "02674631-debc-4e17-9700-c8dcacf579a2",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "errorLocation": {
+      "fileName": "server.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+      "line": "119",
+      "column": "17"
+    },
+    "path": "/favicon.ico",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "location": {
+      "fileName": "server.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+      "line": "119",
+      "column": "17"
+    }
+  },
+  "trackingId": "02674631-debc-4e17-9700-c8dcacf579a2",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "errorLocation": {
+    "fileName": "server.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+    "line": "119",
+    "column": "17"
+  },
+  "path": "/favicon.ico",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {},
+  "location": {
+    "fileName": "server.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+    "line": "119",
+    "column": "17"
+  }
+}
+2024-11-18T08:40:14.950Z error: Right-hand side of 'instanceof' is not an object
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "moduleName": "unknown",
+    "trackingId": "02674631-debc-4e17-9700-c8dcacf579a2",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "errorLocation": {
+      "fileName": "server.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+      "line": "119",
+      "column": "17"
+    },
+    "path": "/favicon.ico",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "location": {
+      "fileName": "server.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+      "line": "119",
+      "column": "17"
+    },
+    "priority": "high",
+    "needsImmediate": true
+  },
+  "trackingId": "02674631-debc-4e17-9700-c8dcacf579a2",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "errorLocation": {
+    "fileName": "server.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+    "line": "119",
+    "column": "17"
+  },
+  "path": "/favicon.ico",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {},
+  "location": {
+    "fileName": "server.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+    "line": "119",
+    "column": "17"
+  },
+  "priority": "high",
+  "needsImmediate": true
+}
+2024-11-18T08:41:08.111Z error: Right-hand side of 'instanceof' is not an object
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "moduleName": "unknown",
+    "trackingId": "503bd163-c0f6-4f5b-9468-a2a704299bd2",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "errorLocation": {
+      "fileName": "server.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+      "line": "119",
+      "column": "17"
+    },
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "location": {
+      "fileName": "server.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+      "line": "119",
+      "column": "17"
+    }
+  },
+  "trackingId": "503bd163-c0f6-4f5b-9468-a2a704299bd2",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "errorLocation": {
+    "fileName": "server.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+    "line": "119",
+    "column": "17"
+  },
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {},
+  "location": {
+    "fileName": "server.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+    "line": "119",
+    "column": "17"
+  }
+}
+2024-11-18T08:41:08.111Z error: Right-hand side of 'instanceof' is not an object
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "moduleName": "unknown",
+    "trackingId": "503bd163-c0f6-4f5b-9468-a2a704299bd2",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "errorLocation": {
+      "fileName": "server.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+      "line": "119",
+      "column": "17"
+    },
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "location": {
+      "fileName": "server.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+      "line": "119",
+      "column": "17"
+    },
+    "priority": "high",
+    "needsImmediate": true
+  },
+  "trackingId": "503bd163-c0f6-4f5b-9468-a2a704299bd2",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "errorLocation": {
+    "fileName": "server.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+    "line": "119",
+    "column": "17"
+  },
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {},
+  "location": {
+    "fileName": "server.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+    "line": "119",
+    "column": "17"
+  },
+  "priority": "high",
+  "needsImmediate": true
+}
+2024-11-18T08:41:08.228Z error: Right-hand side of 'instanceof' is not an object
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "moduleName": "unknown",
+    "trackingId": "07f190fe-e4cd-485d-963d-781082024cf0",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "errorLocation": {
+      "fileName": "server.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+      "line": "119",
+      "column": "17"
+    },
+    "path": "/favicon.ico",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "location": {
+      "fileName": "server.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+      "line": "119",
+      "column": "17"
+    }
+  },
+  "trackingId": "07f190fe-e4cd-485d-963d-781082024cf0",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "errorLocation": {
+    "fileName": "server.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+    "line": "119",
+    "column": "17"
+  },
+  "path": "/favicon.ico",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {},
+  "location": {
+    "fileName": "server.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+    "line": "119",
+    "column": "17"
+  }
+}
+2024-11-18T08:41:08.228Z error: Right-hand side of 'instanceof' is not an object
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "moduleName": "unknown",
+    "trackingId": "07f190fe-e4cd-485d-963d-781082024cf0",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "errorLocation": {
+      "fileName": "server.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+      "line": "119",
+      "column": "17"
+    },
+    "path": "/favicon.ico",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "location": {
+      "fileName": "server.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+      "line": "119",
+      "column": "17"
+    },
+    "priority": "high",
+    "needsImmediate": true
+  },
+  "trackingId": "07f190fe-e4cd-485d-963d-781082024cf0",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "errorLocation": {
+    "fileName": "server.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+    "line": "119",
+    "column": "17"
+  },
+  "path": "/favicon.ico",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {},
+  "location": {
+    "fileName": "server.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/server.js",
+    "line": "119",
+    "column": "17"
+  },
+  "priority": "high",
+  "needsImmediate": true
+}
+2024-11-18T08:52:15.125Z error: app.use is not a function
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "moduleName": "unknown",
+    "trackingId": "642623e7-95c4-42a0-a1d6-5002e54ffff0",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "errorLocation": {
+      "fileName": "security.middleware.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js",
+      "line": "98",
+      "column": "7"
+    },
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "location": {
+      "fileName": "security.middleware.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js",
+      "line": "98",
+      "column": "7"
+    }
+  },
+  "trackingId": "642623e7-95c4-42a0-a1d6-5002e54ffff0",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "errorLocation": {
+    "fileName": "security.middleware.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js",
+    "line": "98",
+    "column": "7"
+  },
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {},
+  "location": {
+    "fileName": "security.middleware.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js",
+    "line": "98",
+    "column": "7"
+  }
+}
+2024-11-18T08:52:15.125Z error: app.use is not a function
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "moduleName": "unknown",
+    "trackingId": "642623e7-95c4-42a0-a1d6-5002e54ffff0",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "errorLocation": {
+      "fileName": "security.middleware.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js",
+      "line": "98",
+      "column": "7"
+    },
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "location": {
+      "fileName": "security.middleware.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js",
+      "line": "98",
+      "column": "7"
+    },
+    "priority": "high",
+    "needsImmediate": true
+  },
+  "trackingId": "642623e7-95c4-42a0-a1d6-5002e54ffff0",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "errorLocation": {
+    "fileName": "security.middleware.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js",
+    "line": "98",
+    "column": "7"
+  },
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {},
+  "location": {
+    "fileName": "security.middleware.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js",
+    "line": "98",
+    "column": "7"
+  },
+  "priority": "high",
+  "needsImmediate": true
+}
+2024-11-18T08:52:15.242Z error: app.use is not a function
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "moduleName": "unknown",
+    "trackingId": "569a2575-d61e-482a-ba9c-38431cb32dd8",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "errorLocation": {
+      "fileName": "security.middleware.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js",
+      "line": "98",
+      "column": "7"
+    },
+    "path": "/favicon.ico",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "location": {
+      "fileName": "security.middleware.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js",
+      "line": "98",
+      "column": "7"
+    }
+  },
+  "trackingId": "569a2575-d61e-482a-ba9c-38431cb32dd8",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "errorLocation": {
+    "fileName": "security.middleware.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js",
+    "line": "98",
+    "column": "7"
+  },
+  "path": "/favicon.ico",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {},
+  "location": {
+    "fileName": "security.middleware.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js",
+    "line": "98",
+    "column": "7"
+  }
+}
+2024-11-18T08:52:15.242Z error: app.use is not a function
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "moduleName": "unknown",
+    "trackingId": "569a2575-d61e-482a-ba9c-38431cb32dd8",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "errorLocation": {
+      "fileName": "security.middleware.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js",
+      "line": "98",
+      "column": "7"
+    },
+    "path": "/favicon.ico",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "location": {
+      "fileName": "security.middleware.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js",
+      "line": "98",
+      "column": "7"
+    },
+    "priority": "high",
+    "needsImmediate": true
+  },
+  "trackingId": "569a2575-d61e-482a-ba9c-38431cb32dd8",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "errorLocation": {
+    "fileName": "security.middleware.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js",
+    "line": "98",
+    "column": "7"
+  },
+  "path": "/favicon.ico",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {},
+  "location": {
+    "fileName": "security.middleware.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/security.middleware.js",
+    "line": "98",
+    "column": "7"
+  },
+  "priority": "high",
+  "needsImmediate": true
+}
+2024-11-18T08:53:20.894Z error: RateLimitError is not a constructor
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "moduleName": "unknown",
+    "trackingId": "de2a2209-eac1-46ed-9c09-7d24a7702ff6",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "errorLocation": {
+      "fileName": "rateLimiter.middleware.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js",
+      "line": "68",
+      "column": "23"
+    },
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "location": {
+      "fileName": "rateLimiter.middleware.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js",
+      "line": "68",
+      "column": "23"
+    }
+  },
+  "trackingId": "de2a2209-eac1-46ed-9c09-7d24a7702ff6",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "errorLocation": {
+    "fileName": "rateLimiter.middleware.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js",
+    "line": "68",
+    "column": "23"
+  },
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {},
+  "location": {
+    "fileName": "rateLimiter.middleware.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js",
+    "line": "68",
+    "column": "23"
+  }
+}
+2024-11-18T08:53:20.894Z error: RateLimitError is not a constructor
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "moduleName": "unknown",
+    "trackingId": "de2a2209-eac1-46ed-9c09-7d24a7702ff6",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "errorLocation": {
+      "fileName": "rateLimiter.middleware.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js",
+      "line": "68",
+      "column": "23"
+    },
+    "path": "/",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "location": {
+      "fileName": "rateLimiter.middleware.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js",
+      "line": "68",
+      "column": "23"
+    },
+    "priority": "high",
+    "needsImmediate": true
+  },
+  "trackingId": "de2a2209-eac1-46ed-9c09-7d24a7702ff6",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "errorLocation": {
+    "fileName": "rateLimiter.middleware.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js",
+    "line": "68",
+    "column": "23"
+  },
+  "path": "/",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {},
+  "location": {
+    "fileName": "rateLimiter.middleware.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js",
+    "line": "68",
+    "column": "23"
+  },
+  "priority": "high",
+  "needsImmediate": true
+}
+2024-11-18T08:53:21.021Z error: RateLimitError is not a constructor
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "moduleName": "unknown",
+    "trackingId": "6db5034c-5c10-4b9a-8d18-a512ecc8364f",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "errorLocation": {
+      "fileName": "rateLimiter.middleware.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js",
+      "line": "166",
+      "column": "15"
+    },
+    "path": "/favicon.ico",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "location": {
+      "fileName": "rateLimiter.middleware.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js",
+      "line": "166",
+      "column": "15"
+    }
+  },
+  "trackingId": "6db5034c-5c10-4b9a-8d18-a512ecc8364f",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "errorLocation": {
+    "fileName": "rateLimiter.middleware.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js",
+    "line": "166",
+    "column": "15"
+  },
+  "path": "/favicon.ico",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {},
+  "location": {
+    "fileName": "rateLimiter.middleware.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js",
+    "line": "166",
+    "column": "15"
+  }
+}
+2024-11-18T08:53:21.021Z error: RateLimitError is not a constructor
+Metadata:
+{
+  "metadata": {
+    "service": "user-service",
+    "environment": "info",
+    "moduleName": "unknown",
+    "trackingId": "6db5034c-5c10-4b9a-8d18-a512ecc8364f",
+    "errorName": "TypeError",
+    "statusCode": 500,
+    "errorLocation": {
+      "fileName": "rateLimiter.middleware.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js",
+      "line": "166",
+      "column": "15"
+    },
+    "path": "/favicon.ico",
+    "method": "GET",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "requestQuery": {},
+    "location": {
+      "fileName": "rateLimiter.middleware.js",
+      "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js",
+      "line": "166",
+      "column": "15"
+    },
+    "priority": "high",
+    "needsImmediate": true
+  },
+  "trackingId": "6db5034c-5c10-4b9a-8d18-a512ecc8364f",
+  "errorName": "TypeError",
+  "statusCode": 500,
+  "errorLocation": {
+    "fileName": "rateLimiter.middleware.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js",
+    "line": "166",
+    "column": "15"
+  },
+  "path": "/favicon.ico",
+  "method": "GET",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  "environment": "info",
+  "requestQuery": {},
+  "location": {
+    "fileName": "rateLimiter.middleware.js",
+    "filePath": "/home/mhossein/Desktop/Cooleh.project/app/http/middlewares/rateLimiter.middleware.js",
+    "line": "166",
+    "column": "15"
+  },
+  "priority": "high",
+  "needsImmediate": true
+}

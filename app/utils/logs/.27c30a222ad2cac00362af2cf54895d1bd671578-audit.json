@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/home/mhossein/Desktop/Cooleh.project/app/utils/logs/.27c30a222ad2cac00362af2cf54895d1bd671578-audit.json",
+    "files": [
+        {
+            "date": 1731918056610,
+            "name": "/home/mhossein/Desktop/Cooleh.project/app/utils/logs/exceptions-2024-11-18.log",
+            "hash": "603657e5ccd37d6fb8b4390383fc7799128a631d1992184f93af7f7b1164c988"
+        }
+    ],
+    "hashType": "sha256"
+}

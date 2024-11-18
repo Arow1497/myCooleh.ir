@@ -1,10 +1,10 @@
 const createError = require("http-errors");
 const { StatusCodes: HttpStatus } = require("http-status-codes");
-const Controller = require("../../controller");
+const Controller = require("../controller");
 const { PrismaClient } = require('@prisma/client');
 const path = require('path');
 const prisma = new PrismaClient();
-const { ListOfImagesFromRequest, getTime, audioSeconds } = require("../../../../utils/functions");
+const { ListOfImagesFromRequest, getTime, audioSeconds } = require("../../../utils/functions");
 const { garagesSchema } = require("../../validators/MainApp/garages.schema");
 const { ObjectIdValidator } = require("../../validators/public.validator");
 
