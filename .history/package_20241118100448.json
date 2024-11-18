@@ -1,7 +1,7 @@
 {
   "name": "cooleh.project",
   "version": "1.0.0",
-  "description": "A comprehensive backend service for Cooleh App Project",
+  "description": "A comprehensive backend service for Cooleh Project",
   "main": "index.js",
   "engines": {
     "node": ">=18.0.0",
