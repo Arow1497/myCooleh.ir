@@ -6,9 +6,9 @@
     "auditLog": "/home/mhossein/Desktop/Cooleh.project/app/logs/.e91caf6cc48cf380e117cc2bc3180bd6812cac43-audit.json",
     "files": [
         {
-            "date": 1731920576773,
+            "date": 1731934074702,
             "name": "/home/mhossein/Desktop/Cooleh.project/app/logs/combined-2024-11-18.log",
-            "hash": "11e73be0b0b547b7c7887dcabc9850cac4c6abcda1f155a2af1e7c9afaf26ddb"
+            "hash": "70d39c2ffc37ebea8efa43356db6def3a4646547ff9c862dc2a9cd28f608e133"
         }
     ],
     "hashType": "sha256"

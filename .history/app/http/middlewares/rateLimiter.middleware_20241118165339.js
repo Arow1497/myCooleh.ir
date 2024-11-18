@@ -35,14 +35,12 @@ redisClient.on('connect', () => {
 const getRateLimitConfig = () => {
     switch(process.env.NODE_ENV) {
         case 'production':
-            return { windowMs: 60000, max: 30 };
+            return { windowMs: 60000, max: 30 }; // 5 requests per minute
         case 'staging':
-            return { windowMs: 60000, max: 30 };
+            return { windowMs: 60000, max: 30 }; // 10 requests per minute
         default:
-            return { 
-                windowMs: 24 * 60 * 60 * 1000, // 24 ساعت
-                max: 1000000 // تعداد درخواست بسیار زیاد
-            };    }
+            return { windowMs: 60000, max: 30 }; // 30 requests per minute for development
+    }
 };
 
 // Rate limiter برای API های عمومی
@@ -74,8 +72,8 @@ const authRateLimiter = rateLimit({
         sendCommand: (...args) => redisClient.call(...args),
         prefix: 'rl:auth:',
     }),
-    windowMs: process.env.NODE_ENV === 'development' ? 1000000 : 15 * 60 * 1000,
-    max: process.env.NODE_ENV === 'development' ? 1000000 : 30,
+    windowMs: process.env.NODE_ENV === 'development' ? Infinity : 15 * 60 * 1000,
+    max: process.env.NODE_ENV === 'development' ? Infinity : 30,
     handler: (req, res, next) => {
         const retryAfter = Math.ceil(15 * 60); // 15 دقیقه به ثانیه
         const error = new RateLimitError('محدودیت تعداد تلاش‌های ورود به سیستم', {
@@ -177,8 +175,8 @@ const sensitivePathLimiter = rateLimit({
         sendCommand: (...args) => redisClient.call(...args),
         prefix: 'rl:sensitive:',
     }),
-    windowMs: process.env.NODE_ENV === 'development' ? 1000000 : 15 * 60 * 1000,
-    max: process.env.NODE_ENV === 'development' ? 1000000 : 30,
+    windowMs: process.env.NODE_ENV === 'development' ? Infinity : 15 * 60 * 1000,
+    max: process.env.NODE_ENV === 'development' ? Infinity : 30,
     handler: (req, res) => {
         throw new RateLimitError('دسترسی به این مسیر محدود شده است. لطفاً بعداً تلاش کنید.');
     }

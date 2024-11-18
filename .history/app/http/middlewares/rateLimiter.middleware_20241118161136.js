@@ -5,12 +5,6 @@ const Redis = require('ioredis');
 const logger = require('../../utils/logger/winston'); 
 const { RateLimitError } = require('../errors/RateLimitError'); // کلاس خطای سفارشی
 
-
-const isAdminRequest = (req) => {
-    const adminIPs = ['127.0.0.1', '::1', '::ffff:127.0.0.1'];
-    return adminIPs.some(ip => req.ip.includes(ip));
-};
-
 // تنظیمات Redis با قابلیت retry
 const redisClient = new Redis({
     host: process.env.REDIS_HOST || '127.0.0.1',
@@ -35,14 +29,12 @@ redisClient.on('connect', () => {
 const getRateLimitConfig = () => {
     switch(process.env.NODE_ENV) {
         case 'production':
-            return { windowMs: 60000, max: 30 };
+            return { windowMs: 60000, max: 5 }; // 5 requests per minute
         case 'staging':
-            return { windowMs: 60000, max: 30 };
+            return { windowMs: 60000, max: 10 }; // 10 requests per minute
         default:
-            return { 
-                windowMs: 24 * 60 * 60 * 1000, // 24 ساعت
-                max: 1000000 // تعداد درخواست بسیار زیاد
-            };    }
+            return { windowMs: 60000, max: 30 }; // 30 requests per minute for development
+    }
 };
 
 // Rate limiter برای API های عمومی
@@ -56,12 +48,7 @@ const generalRateLimiter = rateLimit({
         throw new RateLimitError('تعداد درخواست‌های شما از حد مجاز بیشتر شده است.');
     },
     keyGenerator: (req) => {
-        // اگر ادمین بود، کلید ثابت برگردان تا محدود نشود
-        const adminIPs = ['127.0.0.1', '::1', '::ffff:127.0.0.1'];
-        if (adminIPs.some(ip => req.ip.includes(ip))) {
-            return 'admin-request';
-        }
-        // در غیر این صورت کلید قبلی
+        // ترکیبی از IP و User-Agent برای شناسایی بهتر
         return `${req.ip}-${req.headers['user-agent']}`;
     },
     standardHeaders: true,
@@ -74,13 +61,13 @@ const authRateLimiter = rateLimit({
         sendCommand: (...args) => redisClient.call(...args),
         prefix: 'rl:auth:',
     }),
-    windowMs: process.env.NODE_ENV === 'development' ? 1000000 : 15 * 60 * 1000,
-    max: process.env.NODE_ENV === 'development' ? 1000000 : 30,
+    windowMs: 15 * 60 * 1000, // 15 دقیقه
+    max: 5, // محدودیت به 5 درخواست
     handler: (req, res, next) => {
         const retryAfter = Math.ceil(15 * 60); // 15 دقیقه به ثانیه
         const error = new RateLimitError('محدودیت تعداد تلاش‌های ورود به سیستم', {
             retryAfter,
-            limit: 30,
+            limit: 5,
             windowMs: 15 * 60 * 1000,
             remaining: 0,
             resetTime: new Date(Date.now() + (15 * 60 * 1000))
@@ -156,14 +143,10 @@ const suspiciousDetector = new SuspiciousActivityDetector();
 
 // Middleware اصلی برای بررسی فعالیت‌های مشکوک
 const checkSuspiciousActivity = async (req, res, next) => {
-    if (isAdminRequest(req)) {
-        return next(); // عبور بدون محدودیت برای ادمین
-    }
-    
     try {
         const isAllowed = await suspiciousDetector.checkActivity(req);
         if (!isAllowed) {
-            throw new RateLimitError('فعالیت مشکوک شناسایی شده است.');
+            throw new RateLimitError('فعالیت مشکوک شناسایی شده است. دسترسی شما موقتاً مسدود شده است.');
         }
         next();
     } catch (error) {
@@ -177,8 +160,8 @@ const sensitivePathLimiter = rateLimit({
         sendCommand: (...args) => redisClient.call(...args),
         prefix: 'rl:sensitive:',
     }),
-    windowMs: process.env.NODE_ENV === 'development' ? 1000000 : 15 * 60 * 1000,
-    max: process.env.NODE_ENV === 'development' ? 1000000 : 30,
+    windowMs: 5 * 60 * 1000, // 5 دقیقه
+    max: 10, // 3 درخواست
     handler: (req, res) => {
         throw new RateLimitError('دسترسی به این مسیر محدود شده است. لطفاً بعداً تلاش کنید.');
     }
