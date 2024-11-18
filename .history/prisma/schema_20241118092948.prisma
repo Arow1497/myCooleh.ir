@@ -716,21 +716,8 @@ model RolePermission {
   
   @@unique([roleId, permissionId]) // جلوگیری از تخصیص تکراری مجوز به یک نقش
 }
-//////////////
-// اگر نیاز به دسترسی‌های ساده و عمومی دارید، RolePermission کافی است.
-// اگر نیاز دارید که دسترسی‌ها را به سطح منابع
-//  خاص (مانند گاراژ، پروژه و ...) محدود کنید، از RoleResource استفاده کنید.
-// مثال:
-// مدیر گاراژ دارای مجوز عمومی نقش 
-// "MANAGE" 
-// در تمام گاراژها است 
-// (از طریق RolePermission).
-// نقش مکانیک تنها مجوز 
-// "UPDATE" 
-// در گاراژ شماره ۱۲۳ دارد 
-// (از طریق RoleResource).
+
 // Resource-specific permissions enums
-////////////
 enum ResourcePermission {
   CREATE
   READ
