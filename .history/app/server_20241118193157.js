@@ -6,7 +6,6 @@ const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const cors = require("cors");
 const helmet = require('helmet');
-const initRedis = require('./utils/initRedis');
 const hpp = require('hpp');
 const mongoSanitize = require('express-mongo-sanitize');
 const xssClean = require('xss-clean');
@@ -44,6 +43,7 @@ module.exports = class Application {
         this.#DB_URI = DB_URI;
         this.#prisma = new PrismaClient();
         this.configApplication();
+        this.initRedis();
         this.createRoutes();
         this.connectToMongoDB();
         this.connectToMariaDB();
@@ -136,9 +136,9 @@ module.exports = class Application {
 
         // Speed Limiter
         const speedLimiter = slowDown({
-            windowMs: 15 * 60 * 1000, //15 دقیقه
-            delayAfter: 100, // بعد از 100 درخواست، شروع به تأخیر می‌کند
-            delayMs: () => 1000 // 1000 میلی‌ثانیه تأخیر برای هر درخواست اضافی
+            windowMs: 15 * 60 * 1000,
+            delayAfter: 100,
+            delayMs: 500
         });
         this.#app.use(speedLimiter);
 
@@ -349,6 +349,7 @@ module.exports = class Application {
     async startServer() {
         try {
             await initRedis();
+            logger.info('Redis connection successfull');
         } catch (error) {
             logger.error('Redis initialization error:', error.message);
         }

@@ -138,7 +138,7 @@ module.exports = class Application {
         const speedLimiter = slowDown({
             windowMs: 15 * 60 * 1000, //15 دقیقه
             delayAfter: 100, // بعد از 100 درخواست، شروع به تأخیر می‌کند
-            delayMs: () => 1000 // 1000 میلی‌ثانیه تأخیر برای هر درخواست اضافی
+            delayMs: () => 500 // 500 میلی‌ثانیه تأخیر برای هر درخواست اضافی
         });
         this.#app.use(speedLimiter);
 

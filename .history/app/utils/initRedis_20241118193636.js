@@ -40,7 +40,7 @@
 // module.exports = redisClient;
 
 const redis = require('redis');
-const {logger} = require('../utils/logger/winston'); // مسیر دقیق logger را وارد کنید.
+const logger = require('../utils/logger/winston'); // مسیر دقیق logger را وارد کنید.
 
 async function initRedis() {
     try {

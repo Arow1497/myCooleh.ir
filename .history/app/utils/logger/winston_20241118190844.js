@@ -1,7 +1,7 @@
-const winston = require('winston');
+const {winston} = require('winston');
 const path = require('path');
 require('winston-daily-rotate-file');
-const Transport = require('winston-transport');
+const { MongoDB } = require('winston-mongodb');
 require('source-map-support').install();
 const mongoose = require('mongoose');
 
@@ -89,7 +89,7 @@ const logSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Custom MongoDB Transport with Schema
-class EnhancedMongoTransport extends Transport {
+class EnhancedMongoTransport extends winston.transport {
   constructor(opts) {
     super(opts);
     this.collection = mongoose.model('Log', logSchema).collection;

@@ -1,6 +1,7 @@
 const winston = require('winston');
 const path = require('path');
 require('winston-daily-rotate-file');
+const { MongoDB } = require('winston-mongodb');
 const Transport = require('winston-transport');
 require('source-map-support').install();
 const mongoose = require('mongoose');
