@@ -32,10 +32,10 @@ const levels = {
   info: 2,
   http: 3,
   debug: 4,
-  security: 2,  // Same level as info
-  system: 2,    // Same level as info
-  performance: 2, // Same level as info
-  custom: 2     // Same level as info
+  security: 5,
+  system: 6,
+  performance: 7,
+  custom: 8
 };
 
 const colors = {
@@ -96,8 +96,7 @@ const detailedFormat = winston.format.combine(
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
   winston.format.errors({ stack: true }),
   winston.format.splat(),
-  winston.format.metadata({ fillExcept: ['message', 'level', 'timestamp', 'stack', 'error', 'errorLocation', 'context'] }),
-  errorFormat
+  winston.format.metadata({ fillExcept: ['message', 'level', 'timestamp', 'stack', 'error', 'errorLocation', 'context'] })
 );
 
 const logSchema = new mongoose.Schema({
@@ -134,23 +133,28 @@ class EnhancedMongoTransport extends Transport {
   }
 }
 
-const getLogFileName = (type) => {
-  const date = moment().format('YYYY-MM-DD');
-  return path.join(LOG_DIR, type, `${type}-${date}.log`);
+// Create separate transports for each log type
+const createTransport = (type) => {
+  return new winston.transports.DailyRotateFile({
+    filename: path.join(LOG_DIR, type, `%DATE%-${type}.log`),
+    datePattern: 'YYYY-MM-DD',
+    maxSize: '10m',
+    maxFiles: '14d',
+    zippedArchive: true,
+    format: winston.format.combine(
+      detailedFormat,
+      winston.format.printf(info => {
+        if (type === 'general' && (!info.logType || info.logType === 'general')) {
+          return `${info.timestamp} [${type}] ${info.level}: ${info.message} ${JSON.stringify(info.metadata)}`;
+        }
+        if (info.logType === type) {
+          return `${info.timestamp} [${type}] ${info.level}: ${info.message} ${JSON.stringify(info.metadata)}`;
+        }
+        return false;
+      })
+    )
+  });
 };
-
-
-const createCustomFormat = (logType) => {
-  return winston.format((info) => {
-    // بررسی وجود logType و تطابق آن با مقدار مورد انتظار
-    if (info.metadata && info.metadata.logType === logType) {
-      return info;
-    }
-    return false; // لاگ فیلتر شود اگر نوع لاگ مطابقت ندارد
-  })();
-};
-
-
 
 const logger = winston.createLogger({
   level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
@@ -161,93 +165,16 @@ const logger = winston.createLogger({
     version: process.env.APP_VERSION || '1.0.0'
   },
   transports: [
-    // Error logs
-    new winston.transports.DailyRotateFile({
-      filename: getLogFileName('error'),
-      datePattern: 'YYYY-MM-DD',
-      level: 'error',
-      maxSize: '20m',
-      maxFiles: '14d',
-      zippedArchive: true,
-      format: winston.format.combine(
-        detailedFormat,
-        createCustomFormat('error')
-      )
-    }),
-
-    // Security logs
-    new winston.transports.DailyRotateFile({
-      filename: getLogFileName('security'),
-      datePattern: 'YYYY-MM-DD',
-      maxSize: '10m',
-      maxFiles: '30d',
-      zippedArchive: true,
-      format: winston.format.combine(
-        detailedFormat,
-        createCustomFormat('security')
-      )
-    }),
-
-    // Performance logs
-    new winston.transports.DailyRotateFile({
-      filename: getLogFileName('performance'),
-      datePattern: 'YYYY-MM-DD',
-      maxSize: '10m',
-      maxFiles: '7d',
-      zippedArchive: true,
-      format: winston.format.combine(
-        detailedFormat,
-        createCustomFormat('performance')
-      )
-    }),
-
-    // System logs
-    new winston.transports.DailyRotateFile({
-      filename: getLogFileName('system'),
-      datePattern: 'YYYY-MM-DD',
-      maxSize: '10m',
-      maxFiles: '14d',
-      zippedArchive: true,
-      format: winston.format.combine(
-        detailedFormat,
-        createCustomFormat('system')
-      )
-    }),
-
-    // Custom logs
-    new winston.transports.DailyRotateFile({
-      filename: getLogFileName('custom'),
-      datePattern: 'YYYY-MM-DD',
-      maxSize: '10m',
-      maxFiles: '14d',
-      zippedArchive: true,
-      format: winston.format.combine(
-        detailedFormat,
-        createCustomFormat('custom')
-      )
-    }),
-
-    // General logs for all non-categorized logs
-    new winston.transports.DailyRotateFile({
-      filename: getLogFileName('general'),
-      datePattern: 'YYYY-MM-DD',
-      maxSize: '20m',
-      maxFiles: '14d',
-      zippedArchive: true,
-      format: winston.format.combine(
-        detailedFormat,
-      )
-    }),
-
-    // MongoDB Transport
+    createTransport('error'),
+    createTransport('security'),
+    createTransport('performance'),
+    createTransport('system'),
+    createTransport('custom'),
+    createTransport('general'),
     new EnhancedMongoTransport({
       level: 'info',
       collection: 'application_logs',
-      format: detailedFormat,
-      options: { 
-        useUnifiedTopology: true,
-        expireAfterSeconds: 14 * 24 * 60 * 60
-      }
+      format: detailedFormat
     })
   ]
 });
@@ -303,7 +230,9 @@ if (process.env.NODE_ENV !== 'production') {
   }));
 }
 
-module.exports = { logger };
+module.exports = {logger}
+
+
 /*
 درباره loggerMiddleware
 تابع loggerMiddleware یک middleware در Express است که هدفش اضافه کردن دسته‌بندی‌های پویا 

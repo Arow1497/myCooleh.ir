@@ -7,10 +7,10 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const fs = require('fs');
 
-const LOG_DIR = path.join(__dirname, '../../logs');
+const LOG_DIR = path.join(__dirname, 'logs');
 
 const createLogDirectories = () => {
-  const types = ['error', 'security', 'performance', 'system', 'custom', 'general'];
+  const types = ['error', 'security', 'performance', 'system', 'custom'];
   
   if (!fs.existsSync(LOG_DIR)) {
     fs.mkdirSync(LOG_DIR, { recursive: true });
@@ -32,10 +32,6 @@ const levels = {
   info: 2,
   http: 3,
   debug: 4,
-  security: 2,  // Same level as info
-  system: 2,    // Same level as info
-  performance: 2, // Same level as info
-  custom: 2     // Same level as info
 };
 
 const colors = {
@@ -44,11 +40,8 @@ const colors = {
   info: 'green',
   http: 'magenta',
   debug: 'blue',
-  security: 'cyan',
-  system: 'grey',
-  performance: 'blue',
-  custom: 'green'
 };
+
 winston.addColors(colors);
 
 function getErrorLocation(error) {
@@ -139,18 +132,15 @@ const getLogFileName = (type) => {
   return path.join(LOG_DIR, type, `${type}-${date}.log`);
 };
 
-
+// Custom format for each log type
 const createCustomFormat = (logType) => {
   return winston.format((info) => {
-    // بررسی وجود logType و تطابق آن با مقدار مورد انتظار
-    if (info.metadata && info.metadata.logType === logType) {
+    if (info.logType === logType) {
       return info;
     }
-    return false; // لاگ فیلتر شود اگر نوع لاگ مطابقت ندارد
+    return false;
   })();
 };
-
-
 
 const logger = winston.createLogger({
   level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
@@ -234,9 +224,7 @@ const logger = winston.createLogger({
       maxSize: '20m',
       maxFiles: '14d',
       zippedArchive: true,
-      format: winston.format.combine(
-        detailedFormat,
-      )
+      format: detailedFormat
     }),
 
     // MongoDB Transport
@@ -267,10 +255,6 @@ logger.system = (message, metadata = {}) => {
 
 logger.custom = (message, metadata = {}) => {
   logger.info(message, { ...metadata, logType: 'custom' });
-};
-
-logger.general = (message, metadata = {}) => {
-  logger.info(message, { ...metadata, logType: 'general' });
 };
 
 logger.logError = function(err, metadata = {}, context = {}) {
@@ -304,6 +288,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 module.exports = { logger };
+
 /*
 درباره loggerMiddleware
 تابع loggerMiddleware یک middleware در Express است که هدفش اضافه کردن دسته‌بندی‌های پویا 

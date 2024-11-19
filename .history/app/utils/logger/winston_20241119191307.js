@@ -5,26 +5,8 @@ const Transport = require('winston-transport');
 require('source-map-support').install();
 const mongoose = require('mongoose');
 const moment = require('moment');
-const fs = require('fs');
 
 const LOG_DIR = path.join(__dirname, '../../logs');
-
-const createLogDirectories = () => {
-  const types = ['error', 'security', 'performance', 'system', 'custom', 'general'];
-  
-  if (!fs.existsSync(LOG_DIR)) {
-    fs.mkdirSync(LOG_DIR, { recursive: true });
-  }
-  
-  types.forEach(type => {
-    const typeDir = path.join(LOG_DIR, type);
-    if (!fs.existsSync(typeDir)) {
-      fs.mkdirSync(typeDir, { recursive: true });
-    }
-  });
-};
-
-createLogDirectories();
 
 const levels = {
   error: 0,
@@ -32,10 +14,6 @@ const levels = {
   info: 2,
   http: 3,
   debug: 4,
-  security: 2,  // Same level as info
-  system: 2,    // Same level as info
-  performance: 2, // Same level as info
-  custom: 2     // Same level as info
 };
 
 const colors = {
@@ -44,11 +22,8 @@ const colors = {
   info: 'green',
   http: 'magenta',
   debug: 'blue',
-  security: 'cyan',
-  system: 'grey',
-  performance: 'blue',
-  custom: 'green'
 };
+
 winston.addColors(colors);
 
 function getErrorLocation(error) {
@@ -134,23 +109,21 @@ class EnhancedMongoTransport extends Transport {
   }
 }
 
-const getLogFileName = (type) => {
+const getLogFileName = (type, level) => {
   const date = moment().format('YYYY-MM-DD');
-  return path.join(LOG_DIR, type, `${type}-${date}.log`);
+  const hour = moment().format('HH');
+  return path.join(LOG_DIR, `${type}`, `${type}-${date}`, `${hour}-${level}.log`);
 };
 
-
+// Custom format for each log type
 const createCustomFormat = (logType) => {
   return winston.format((info) => {
-    // بررسی وجود logType و تطابق آن با مقدار مورد انتظار
-    if (info.metadata && info.metadata.logType === logType) {
+    if (info.logType === logType) {
       return info;
     }
-    return false; // لاگ فیلتر شود اگر نوع لاگ مطابقت ندارد
+    return false;
   })();
 };
-
-
 
 const logger = winston.createLogger({
   level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
@@ -163,7 +136,7 @@ const logger = winston.createLogger({
   transports: [
     // Error logs
     new winston.transports.DailyRotateFile({
-      filename: getLogFileName('error'),
+      filename: getLogFileName('error', 'error'),
       datePattern: 'YYYY-MM-DD',
       level: 'error',
       maxSize: '20m',
@@ -177,7 +150,7 @@ const logger = winston.createLogger({
 
     // Security logs
     new winston.transports.DailyRotateFile({
-      filename: getLogFileName('security'),
+      filename: getLogFileName('security', 'security'),
       datePattern: 'YYYY-MM-DD',
       maxSize: '10m',
       maxFiles: '30d',
@@ -190,7 +163,7 @@ const logger = winston.createLogger({
 
     // Performance logs
     new winston.transports.DailyRotateFile({
-      filename: getLogFileName('performance'),
+      filename: getLogFileName('performance', 'performance'),
       datePattern: 'YYYY-MM-DD',
       maxSize: '10m',
       maxFiles: '7d',
@@ -203,7 +176,7 @@ const logger = winston.createLogger({
 
     // System logs
     new winston.transports.DailyRotateFile({
-      filename: getLogFileName('system'),
+      filename: getLogFileName('system', 'system'),
       datePattern: 'YYYY-MM-DD',
       maxSize: '10m',
       maxFiles: '14d',
@@ -216,7 +189,7 @@ const logger = winston.createLogger({
 
     // Custom logs
     new winston.transports.DailyRotateFile({
-      filename: getLogFileName('custom'),
+      filename: getLogFileName('custom', 'custom'),
       datePattern: 'YYYY-MM-DD',
       maxSize: '10m',
       maxFiles: '14d',
@@ -224,18 +197,6 @@ const logger = winston.createLogger({
       format: winston.format.combine(
         detailedFormat,
         createCustomFormat('custom')
-      )
-    }),
-
-    // General logs for all non-categorized logs
-    new winston.transports.DailyRotateFile({
-      filename: getLogFileName('general'),
-      datePattern: 'YYYY-MM-DD',
-      maxSize: '20m',
-      maxFiles: '14d',
-      zippedArchive: true,
-      format: winston.format.combine(
-        detailedFormat,
       )
     }),
 
@@ -269,10 +230,6 @@ logger.custom = (message, metadata = {}) => {
   logger.info(message, { ...metadata, logType: 'custom' });
 };
 
-logger.general = (message, metadata = {}) => {
-  logger.info(message, { ...metadata, logType: 'general' });
-};
-
 logger.logError = function(err, metadata = {}, context = {}) {
   const errorLocation = getErrorLocation(err);
   this.error(err.message, {
@@ -304,6 +261,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 module.exports = { logger };
+
 /*
 درباره loggerMiddleware
 تابع loggerMiddleware یک middleware در Express است که هدفش اضافه کردن دسته‌بندی‌های پویا 

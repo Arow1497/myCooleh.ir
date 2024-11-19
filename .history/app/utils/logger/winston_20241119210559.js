@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const fs = require('fs');
 
-const LOG_DIR = path.join(__dirname, '../../logs');
+const LOG_DIR = path.join(__dirname, 'logs');
 
 const createLogDirectories = () => {
   const types = ['error', 'security', 'performance', 'system', 'custom', 'general'];
@@ -142,15 +142,15 @@ const getLogFileName = (type) => {
 
 const createCustomFormat = (logType) => {
   return winston.format((info) => {
-    // بررسی وجود logType و تطابق آن با مقدار مورد انتظار
-    if (info.metadata && info.metadata.logType === logType) {
-      return info;
+    if (logType === 'general') {
+      if (!info.logType || info.logType === 'general') {
+        return info;
+      }
+      return false;
     }
-    return false; // لاگ فیلتر شود اگر نوع لاگ مطابقت ندارد
+    return info.logType === logType ? info : false;
   })();
 };
-
-
 
 const logger = winston.createLogger({
   level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
@@ -236,6 +236,7 @@ const logger = winston.createLogger({
       zippedArchive: true,
       format: winston.format.combine(
         detailedFormat,
+        createCustomFormat('general')
       )
     }),
 

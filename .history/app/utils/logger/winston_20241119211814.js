@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const fs = require('fs');
 
-const LOG_DIR = path.join(__dirname, '../../logs');
+const LOG_DIR = path.join(__dirname, 'logs');
 
 const createLogDirectories = () => {
   const types = ['error', 'security', 'performance', 'system', 'custom', 'general'];
@@ -236,6 +236,7 @@ const logger = winston.createLogger({
       zippedArchive: true,
       format: winston.format.combine(
         detailedFormat,
+        createCustomFormat('general')
       )
     }),
 

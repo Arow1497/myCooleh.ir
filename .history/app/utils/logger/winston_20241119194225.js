@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const fs = require('fs');
 
-const LOG_DIR = path.join(__dirname, '../../logs');
+const LOG_DIR = path.join(__dirname, 'logs');
 
 const createLogDirectories = () => {
   const types = ['error', 'security', 'performance', 'system', 'custom', 'general'];
@@ -32,10 +32,6 @@ const levels = {
   info: 2,
   http: 3,
   debug: 4,
-  security: 2,  // Same level as info
-  system: 2,    // Same level as info
-  performance: 2, // Same level as info
-  custom: 2     // Same level as info
 };
 
 const colors = {
@@ -44,11 +40,8 @@ const colors = {
   info: 'green',
   http: 'magenta',
   debug: 'blue',
-  security: 'cyan',
-  system: 'grey',
-  performance: 'blue',
-  custom: 'green'
 };
+
 winston.addColors(colors);
 
 function getErrorLocation(error) {
@@ -139,18 +132,16 @@ const getLogFileName = (type) => {
   return path.join(LOG_DIR, type, `${type}-${date}.log`);
 };
 
-
 const createCustomFormat = (logType) => {
   return winston.format((info) => {
-    // بررسی وجود logType و تطابق آن با مقدار مورد انتظار
-    if (info.metadata && info.metadata.logType === logType) {
-      return info;
+    // اگر logType عمومی است، لاگ‌های بدون logType را هم قبول کن
+    if (logType === 'general') {
+      return !info.logType || info.logType === 'general' ? info : false;
     }
-    return false; // لاگ فیلتر شود اگر نوع لاگ مطابقت ندارد
+    // برای سایر انواع، فقط لاگ‌های با logType مطابق را قبول کن
+    return info.logType === logType ? info : false;
   })();
 };
-
-
 
 const logger = winston.createLogger({
   level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
@@ -236,6 +227,7 @@ const logger = winston.createLogger({
       zippedArchive: true,
       format: winston.format.combine(
         detailedFormat,
+        createCustomFormat('general')
       )
     }),
 

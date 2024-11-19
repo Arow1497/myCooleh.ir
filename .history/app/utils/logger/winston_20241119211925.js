@@ -236,6 +236,7 @@ const logger = winston.createLogger({
       zippedArchive: true,
       format: winston.format.combine(
         detailedFormat,
+        createCustomFormat('general')
       )
     }),
 

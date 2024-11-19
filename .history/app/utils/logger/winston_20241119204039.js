@@ -32,10 +32,10 @@ const levels = {
   info: 2,
   http: 3,
   debug: 4,
-  security: 2,  // Same level as info
-  system: 2,    // Same level as info
-  performance: 2, // Same level as info
-  custom: 2     // Same level as info
+  security: 5,  // Same level as info
+  system: 6,    // Same level as info
+  performance: 7, // Same level as info
+  custom:  8    // Same level as info
 };
 
 const colors = {
@@ -97,6 +97,9 @@ const detailedFormat = winston.format.combine(
   winston.format.errors({ stack: true }),
   winston.format.splat(),
   winston.format.metadata({ fillExcept: ['message', 'level', 'timestamp', 'stack', 'error', 'errorLocation', 'context'] }),
+  winston.format.printf(({ timestamp, level, message, logType, metadata }) => {
+    return `${timestamp} [${logType || 'general'}] ${level}: ${message} ${metadata ? JSON.stringify(metadata) : ''}`;
+  }),
   errorFormat
 );
 
@@ -142,15 +145,15 @@ const getLogFileName = (type) => {
 
 const createCustomFormat = (logType) => {
   return winston.format((info) => {
-    // بررسی وجود logType و تطابق آن با مقدار مورد انتظار
-    if (info.metadata && info.metadata.logType === logType) {
-      return info;
+    if (logType === 'general') {
+      if (!info.logType || info.logType === 'general') {
+        return info;
+      }
+      return false;
     }
-    return false; // لاگ فیلتر شود اگر نوع لاگ مطابقت ندارد
+    return info.logType === logType ? info : false;
   })();
 };
-
-
 
 const logger = winston.createLogger({
   level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
@@ -161,84 +164,20 @@ const logger = winston.createLogger({
     version: process.env.APP_VERSION || '1.0.0'
   },
   transports: [
-    // Error logs
-    new winston.transports.DailyRotateFile({
-      filename: getLogFileName('error'),
-      datePattern: 'YYYY-MM-DD',
-      level: 'error',
-      maxSize: '20m',
-      maxFiles: '14d',
-      zippedArchive: true,
-      format: winston.format.combine(
-        detailedFormat,
-        createCustomFormat('error')
-      )
-    }),
-
-    // Security logs
-    new winston.transports.DailyRotateFile({
-      filename: getLogFileName('security'),
-      datePattern: 'YYYY-MM-DD',
-      maxSize: '10m',
-      maxFiles: '30d',
-      zippedArchive: true,
-      format: winston.format.combine(
-        detailedFormat,
-        createCustomFormat('security')
-      )
-    }),
-
-    // Performance logs
-    new winston.transports.DailyRotateFile({
-      filename: getLogFileName('performance'),
-      datePattern: 'YYYY-MM-DD',
-      maxSize: '10m',
-      maxFiles: '7d',
-      zippedArchive: true,
-      format: winston.format.combine(
-        detailedFormat,
-        createCustomFormat('performance')
-      )
-    }),
-
-    // System logs
-    new winston.transports.DailyRotateFile({
-      filename: getLogFileName('system'),
-      datePattern: 'YYYY-MM-DD',
-      maxSize: '10m',
-      maxFiles: '14d',
-      zippedArchive: true,
-      format: winston.format.combine(
-        detailedFormat,
-        createCustomFormat('system')
-      )
-    }),
-
-    // Custom logs
-    new winston.transports.DailyRotateFile({
-      filename: getLogFileName('custom'),
-      datePattern: 'YYYY-MM-DD',
-      maxSize: '10m',
-      maxFiles: '14d',
-      zippedArchive: true,
-      format: winston.format.combine(
-        detailedFormat,
-        createCustomFormat('custom')
-      )
-    }),
-
-    // General logs for all non-categorized logs
-    new winston.transports.DailyRotateFile({
-      filename: getLogFileName('general'),
-      datePattern: 'YYYY-MM-DD',
-      maxSize: '20m',
-      maxFiles: '14d',
-      zippedArchive: true,
-      format: winston.format.combine(
-        detailedFormat,
-      )
-    }),
-
+    // ثبت لاگ‌ها در فایل‌ها بر اساس دسته‌بندی
+    ...['error', 'security', 'performance', 'system', 'custom', 'general'].map(type => 
+      new winston.transports.DailyRotateFile({
+        filename: getLogFileName(type),
+        datePattern: 'YYYY-MM-DD',
+        maxSize: '10m',
+        maxFiles: '14d',
+        zippedArchive: true,
+        format: winston.format.combine(
+          detailedFormat,
+          createCustomFormat(type)
+        )
+      })
+    ),
     // MongoDB Transport
     new EnhancedMongoTransport({
       level: 'info',

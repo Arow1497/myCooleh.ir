@@ -142,15 +142,15 @@ const getLogFileName = (type) => {
 
 const createCustomFormat = (logType) => {
   return winston.format((info) => {
-    // بررسی وجود logType و تطابق آن با مقدار مورد انتظار
-    if (info.metadata && info.metadata.logType === logType) {
-      return info;
+    if (logType === 'general') {
+      if (!info.logType || info.logType === 'general') {
+        return info;
+      }
+      return false;
     }
-    return false; // لاگ فیلتر شود اگر نوع لاگ مطابقت ندارد
+    return info.logType === logType ? info : false;
   })();
 };
-
-
 
 const logger = winston.createLogger({
   level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
@@ -185,7 +185,8 @@ const logger = winston.createLogger({
       format: winston.format.combine(
         detailedFormat,
         createCustomFormat('security')
-      )
+      ),
+      level: 'info'  // Allow info level logs
     }),
 
     // Performance logs
@@ -198,7 +199,8 @@ const logger = winston.createLogger({
       format: winston.format.combine(
         detailedFormat,
         createCustomFormat('performance')
-      )
+      ),
+      level: 'info'  // Allow info level logs
     }),
 
     // System logs
@@ -211,7 +213,8 @@ const logger = winston.createLogger({
       format: winston.format.combine(
         detailedFormat,
         createCustomFormat('system')
-      )
+      ),
+      level: 'info'  // Allow info level logs
     }),
 
     // Custom logs
@@ -224,7 +227,8 @@ const logger = winston.createLogger({
       format: winston.format.combine(
         detailedFormat,
         createCustomFormat('custom')
-      )
+      ),
+      level: 'info'  // Allow info level logs
     }),
 
     // General logs for all non-categorized logs
@@ -236,6 +240,7 @@ const logger = winston.createLogger({
       zippedArchive: true,
       format: winston.format.combine(
         detailedFormat,
+        createCustomFormat('general')
       )
     }),
 
@@ -254,19 +259,39 @@ const logger = winston.createLogger({
 
 // Enhanced logging methods
 logger.security = (message, metadata = {}) => {
-  logger.info(message, { ...metadata, logType: 'security' });
+  const logData = {
+    ...metadata,
+    logType: 'security',
+    level: 'info'  // Explicitly set level
+  };
+  logger.log({ level: 'info', message, ...logData });
 };
 
 logger.performance = (message, metadata = {}) => {
-  logger.info(message, { ...metadata, logType: 'performance' });
+  const logData = {
+    ...metadata,
+    logType: 'performance',
+    level: 'info'  // Explicitly set level
+  };
+  logger.log({ level: 'info', message, ...logData });
 };
 
 logger.system = (message, metadata = {}) => {
-  logger.info(message, { ...metadata, logType: 'system' });
+  const logData = {
+    ...metadata,
+    logType: 'system',
+    level: 'info'  // Explicitly set level
+  };
+  logger.log({ level: 'info', message, ...logData });
 };
 
 logger.custom = (message, metadata = {}) => {
-  logger.info(message, { ...metadata, logType: 'custom' });
+  const logData = {
+    ...metadata,
+    logType: 'custom',
+    level: 'info'  // Explicitly set level
+  };
+  logger.log({ level: 'info', message, ...logData });
 };
 
 logger.general = (message, metadata = {}) => {
