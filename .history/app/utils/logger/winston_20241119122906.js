@@ -116,7 +116,7 @@ class EnhancedMongoTransport extends Transport {
 
 const getLogFileName = (type, level) => {
   const date = moment().format('YYYY-MM-DD');
-  const hour = moment().format('HH'); // ساعت فعلی
+  const hour = moment().format('HH-MM'); // ساعت فعلی
   return path.join(LOG_DIR, `${type}`, `${type}-${date}`, `${hour}-${level}.log`);
 };
 

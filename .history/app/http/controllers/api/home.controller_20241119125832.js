@@ -63,7 +63,7 @@ module.exports = new (class HomeController extends Controller {
       if (format === 'html') {
         // ارسال نسخه HTML ساده
         const htmlResponse = `
-      <!DOCTYPE html>
+        <!DOCTYPE html>
 <html dir="rtl" lang="fa">
 <head>
     <meta charset="UTF-8">
@@ -268,15 +268,6 @@ module.exports = new (class HomeController extends Controller {
         .contact-item i {
             font-size: 1.5rem;
             color: #0284c7;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            background: #0284c7;
-            color: white;
-            border-radius: 1rem;
-            font-size: 0.875rem;
         }
 
         @media (max-width: 768px) {
