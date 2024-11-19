@@ -4,7 +4,6 @@ require('winston-daily-rotate-file');
 const Transport = require('winston-transport');
 require('source-map-support').install();
 const mongoose = require('mongoose');
-const moment = require('moment');
 
 // Unified log directory
 const LOG_DIR = path.join(__dirname, '../../logs');
@@ -99,7 +98,7 @@ class EnhancedMongoTransport extends Transport {
   async log(info, callback) {
     try {
       await this.collection.insertOne({
-        timestamp: moment().format('YYYY-MM-DD HH:mm:ss.SSS'),
+        timestamp: new Date(),
         level: info.level,
         message: info.message,
         context: info.context || {},
@@ -114,12 +113,6 @@ class EnhancedMongoTransport extends Transport {
   }
 }
 
-const getLogFileName = (type, level) => {
-  const date = moment().format('YYYY-MM-DD');
-  const hour = moment().format('HH-MM'); // ساعت فعلی
-  return path.join(LOG_DIR, `${type}`, `${type}-${date}`, `${hour}-${level}.log`);
-};
-
 const logger = winston.createLogger({
   level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
   levels,
@@ -130,20 +123,24 @@ const logger = winston.createLogger({
     version: process.env.APP_VERSION || '1.0.0'
   },
   transports: [
+    // Error logs
     new winston.transports.DailyRotateFile({
-      filename: getLogFileName('error', 'error'),
-      datePattern: 'YYYY-MM-DD',
+      filename: path.join(LOG_DIR, 'error-%DATE%-%H.log'), // ساختار پوشه‌ای بر اساس ساعت
+      datePattern: 'YYYY-MM-DD-HH',
       level: 'error',
       maxSize: '20m',
       maxFiles: '14d',
       zippedArchive: true,
+      format: detailedFormat
     }),
+    // Combined logs
     new winston.transports.DailyRotateFile({
-      filename: getLogFileName('combined', 'combined'),
-      datePattern: 'YYYY-MM-DD',
+      filename: path.join(LOG_DIR, 'combined-%DATE%-%H.log'),
+      datePattern: 'YYYY-MM-DD-HH',
       maxSize: '20m',
       maxFiles: '14d',
       zippedArchive: true,
+      format: detailedFormat
     }),
     // MongoDB Transport
     new EnhancedMongoTransport({
@@ -158,49 +155,14 @@ const logger = winston.createLogger({
     }),
     // اضافه کردن لاگ برای موارد حساس امنیتی
     new winston.transports.DailyRotateFile({
-      filename: getLogFileName('security', 'security'),
+      filename: path.join(LOG_DIR, 'security-%DATE%.log'),
       datePattern: 'YYYY-MM-DD',
       level: 'warn',
       maxSize: '10m',
       maxFiles: '30d', // نگهداری طولانی‌تر برای لاگ‌های امنیتی
       zippedArchive: true,
       format: detailedFormat
-    }),
-    // لاگ‌های مربوط به عملکرد (Performance Logs)
-    //برای مانیتور کردن کارایی سرور، زمان پاسخ‌دهی API‌ها، و سایر اطلاعات مرتبط با عملکرد.
-    new winston.transports.DailyRotateFile({
-      filename: getLogFileName('performance', 'performance'),
-      datePattern: 'YYYY-MM-DD',
-      level: 'debug',
-      maxSize: '10m',
-      maxFiles: '7d', 
-      zippedArchive: true,
-      format: detailedFormat
-    }),
-    // لاگ‌های سیستم (System Logs)
-    // برای ثبت وقایع داخلی سیستم، مانند پیام‌های خطای سرور، مشکلات پایگاه داده، یا خطاهای مربوط به حافظه.
-    new winston.transports.DailyRotateFile({
-      filename: getLogFileName('system', 'system'),
-      datePattern: 'YYYY-MM-DD',
-      level: 'error',
-      maxSize: '10m',
-      maxFiles: '14d', 
-      zippedArchive: true,
-      format: detailedFormat
-    }),
-    // لاگ‌های رویدادهای خاص (Custom Logs)
-    // اگر در پروژه خود نیاز به ثبت وقایع خاصی دارید
-    //  (مثل رویدادهای مربوط به کاربران، تراکنش‌های مالی یا پردازش داده‌ها)،
-    //  می‌توانید لاگ‌های اختصاصی تعریف کنید:
-      new winston.transports.DailyRotateFile({
-      filename: getLogFileName('custom', 'custom'),
-      datePattern: 'YYYY-MM-DD',
-      level: 'info',
-      maxSize: '10m',
-      maxFiles: '14d', 
-      zippedArchive: true,
-      format: detailedFormat
-    }),
+    })
   ]
 });
 

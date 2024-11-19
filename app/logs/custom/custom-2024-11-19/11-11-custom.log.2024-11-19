@@ -1,0 +1,5 @@
+{"timestamp":"2024-11-19 11:39:03.128","level":"info","message":"Server is running at http://localhost:7000","context":{},"location":null,"metadata":{"metadata":{"service":"user-service","environment":"development","version":"1.0.0"}}}
+{"timestamp":"2024-11-19 11:39:03.175","level":"info","message":"Connected to MongoDB","context":{},"location":null,"metadata":{"metadata":{"service":"user-service","environment":"development","version":"1.0.0"}}}
+{"timestamp":"2024-11-19 11:39:03.186","level":"info","message":"Connected to Redis and ready to use","context":{},"location":null,"metadata":{"metadata":{"service":"user-service","environment":"development","version":"1.0.0"}}}
+{"timestamp":"2024-11-19 11:39:03.648","level":"info","message":"PrismaORM connected to MariaDB","context":{},"location":null,"metadata":{"metadata":{"service":"user-service","environment":"development","version":"1.0.0"}}}
+{"timestamp":"2024-11-19 11:40:18.239","level":"info","message":"All database connections closed","context":{},"location":null,"metadata":{"metadata":{"service":"user-service","environment":"development","version":"1.0.0"}}}

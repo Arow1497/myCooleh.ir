@@ -1,7 +1,6 @@
 const AppError = require('../errors/AppError');
 const { logger } = require('../../utils/logger/winston');
 const { v4: uuidv4 } = require('uuid');
-const moment = require('moment');
 
 // پیام‌های خطای سفارشی
 const errorMessages = {
@@ -31,7 +30,7 @@ const buildErrorMetadata = (err, req, trackingId) => ({
   ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
   userAgent: req.get('user-agent'),
   userId: req.user?.id,
-  timestamp: moment().format('YYYY-MM-DD HH:mm:ss.SSS'),
+  timestamp: new Date(),
   environment: process.env.NODE_ENV,
   requestBody: process.env.NODE_ENV === 'development' ? req.body : undefined,
   requestQuery: req.query,
