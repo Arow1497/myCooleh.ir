@@ -100,7 +100,7 @@ class AgahiEstNiazController extends Controller {
 
     async getBookmarkedPostsByUserId(req, res, next) {
         try {
-            const result = await noticeService.getBookmarkedPostsByUserId(
+            const result = await noticeService.getBookmarkedPosts(
                 'noticeEstNiaz',
                 req.params.userId,
                 req.params.noticeId,
