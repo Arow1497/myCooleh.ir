@@ -8,9 +8,9 @@ const coworkService = require("../services/cowork.service");
 const { deleteFilesInPublicForOrders } = require("../utils/functions");
 
 class ApprenticeshipNoticeController extends Controller {
-    async createNewNoticeDastyar(req, res, next) {
+    async createNewNoticeOutSourcing(req, res, next) {
         try {
-            const result = await noticeService.createNewNoticeDastyar(
+            const result = await noticeService.createNewNoticeOutSourcing(
                 req.user,
                 req.body,
                 req.params,
@@ -20,7 +20,7 @@ class ApprenticeshipNoticeController extends Controller {
             return res.status(HttpStatus.CREATED).json({
                 statusCode: HttpStatus.CREATED,
                 data: {
-                    message: "آگهی درخواست مکانیک با موفقیت ثبت شد",
+                    message: "آگهی درخواست شاگرد با موفقیت ثبت شد",
                     notice: result.notice,
                     share: result.share
                 }
@@ -31,9 +31,9 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    async getAllNoticeDastyar(req, res, next) {
+    async getAllNoticeOutSourcing(req, res, next) {
         try {
-            const notices = await noticeService.getAllNoticeDastyar(req.query.city);
+            const notices = await noticeService.getAllNoticeOutSourcing(req.query.city);
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: { notices }
@@ -43,9 +43,9 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    async getOneNoticeDastyarById(req, res, next) {
+    async getOneNoticeOutSourcingById(req, res, next) {
         try {
-            const notice = await noticeService.getOneNoticeDastyarById(req.params.noticeDastyarId);
+            const notice = await noticeService.getOneNoticeOutSourcingById(req.params.noticeOutSourcingId);
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: { notice }
@@ -55,9 +55,9 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    async removeNoticeDastyarById(req, res, next) {
+    async removeNoticeOutSourcingById(req, res, next) {
         try {
-            await noticeService.removeNoticeDastyarById(req.params.noticeDastyarId, req.user.id);
+            await noticeService.removeNoticeOutSourcingById(req.params.noticeOutSourcingId, req.user.id);
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: { message: "آگهی با موفقیت حذف شد" }
@@ -67,10 +67,10 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    async editNoticeDastyarsById(req, res, next) {
+    async editNoticeOutSourcingsById(req, res, next) {
         try {
-            const updatedNotice = await noticeService.editNoticeDastyarsById(
-                req.params.noticeDastyarId,
+            const updatedNotice = await noticeService.editNoticeOutSourcingsById(
+                req.params.noticeOutSourcingId,
                 req.user.id,
                 req.body,
                 req.files
@@ -91,7 +91,7 @@ class ApprenticeshipNoticeController extends Controller {
     async toggleBookmark(req, res, next) {
         try {
             const isAdded = await noticeService.toggleBookmark(
-                req.params.noticeDastyarId,
+                req.params.noticeOutSourcingId,
                 req.user.id
             );
             return res.status(HttpStatus.OK).json({
@@ -107,9 +107,9 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    async getAllGarageNoticeDastyars(req, res, next) {
+    async getAllGarageNoticeOutSourcings(req, res, next) {
         try {
-            const { notices, total } = await noticeService.getAllGarageNoticeDastyars(
+            const { notices, total } = await noticeService.getAllGarageNoticeOutSourcings(
                 req.user,
                 req.query.page,
                 req.query.limit
@@ -131,9 +131,9 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    async getAllNoticeDastyarsToItself(req, res, next) {
+    async getAllNoticeOutSourcingsToItself(req, res, next) {
         try {
-            const { requests, total } = await noticeService.getAllNoticeDastyarsToItself(
+            const { requests, total } = await noticeService.getAllNoticeOutSourcingsToItself(
                 req.user.id,
                 req.query.page,
                 req.query.limit,
@@ -204,10 +204,10 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    async shareNoticeDastyar(req, res, next) {
+    async shareNoticeOutSourcing(req, res, next) {
         try {
-            const share = await noticeService.shareNoticeDastyar(
-                req.params.noticeDastyarId,
+            const share = await noticeService.shareNoticeOutSourcing(
+                req.params.noticeOutSourcingId,
                 req.user
             );
             return res.status(HttpStatus.OK).json({
@@ -219,16 +219,16 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    async addCoworkReqForNoticeDastyar(req, res, next) {
+    async addCoworkReqForNoticeOutSourcing(req, res, next) {
         try {
-            const noticeDastyarAppReqs = await coworkService.addCoworkRequest(
+            const noticeOutSourcingAppReqs = await coworkService.addCoworkRequest(
                 req.user,
-                req.params.noticeDastyarId,
+                req.params.noticeOutSourcingId,
                 req.params.apprenticeId
             );
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
-                data: { noticeDastyarAppReqs }
+                data: { noticeOutSourcingAppReqs }
             });
         } catch (error) {
             next(error);
@@ -252,13 +252,13 @@ class ApprenticeshipNoticeController extends Controller {
             const result = await coworkService.addApprenticeToRequest(
                 req.user,
                 req.params.apprenticeId,
-                req.params.noticeDastyarId,
+                req.params.noticeOutSourcingId,
                 req.body
             );
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: {
-                    message: "مکانیک موردنظر به پروژه افزوده شد",
+                    message: "شاگرد موردنظر به پروژه افزوده شد",
                     result
                 }
             });
@@ -267,17 +267,17 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    async deleteThisApprenticeFromNoticeDastyar(req, res, next) {
+    async deleteThisApprenticeFromNoticeOutSourcing(req, res, next) {
         try {
             await coworkService.removeApprenticeFromRequest(
                 req.user.ownedGarage?.id,
-                req.params.noticeDastyarId,
+                req.params.noticeOutSourcingId,
                 req.params.apprenticeId
             );
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: {
-                    message: "مکانیک موردنظر از پروژه حذف شد"
+                    message: "شاگرد موردنظر از پروژه حذف شد"
                 }
             });
         } catch (error) {
@@ -285,10 +285,10 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    async apprenticeRefusingFromThisNoticeDastyarship(req, res, next) {
+    async apprenticeRefusingFromThisNoticeOutSourcingship(req, res, next) {
         try {
             await coworkService.apprenticeRefuseRequest(
-                req.params.noticeDastyarId,
+                req.params.noticeOutSourcingId,
                 req.user.id
             );
             return res.status(HttpStatus.OK).json({
@@ -378,11 +378,11 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    async addReviewForNoticeDastyar(req, res, next) {
+    async addReviewForNoticeOutSourcing(req, res, next) {
         try {
             await transactionService.addReview(
                 req.user,
-                req.params.noticeDastyarId,
+                req.params.noticeOutSourcingId,
                 req.body
             );
             return res.status(HttpStatus.OK).json({
