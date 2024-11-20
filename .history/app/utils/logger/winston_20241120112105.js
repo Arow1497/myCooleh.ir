@@ -218,7 +218,7 @@ const mongoTransport = new EnhancedMongoTransport({
 });
 
 const allTransports = [
-  ...fileTransports,
+  fileTransports,
   mongoTransport
 ];
 
@@ -230,18 +230,22 @@ const logger = winston.createLogger({
     environment: process.env.NODE_ENV,
     version: process.env.APP_VERSION || '1.0.0',
   },
-  transports: allTransports
+  transports: [
+    ...allTransports,
+    new winston.transports.Console({ name: 'Console' }),
+    new winston.transports.File({ filename: 'logs/app.log', name: 'File' }),
+  ],
 });
 
 // Log the number of transports
 console.log(`Number of transports: ${logger.transports.length}`);
 
 // Log the names of transports
-// console.log('Transport names:');
-// logger.transports.forEach((transport, index) => {
-//   const transportName = transport.name || transport.constructor.name;
-//   console.log(`- ${index + 1}: ${transportName}`);
-// });
+console.log('Transport names:');
+logger.transports.forEach((transport, index) => {
+  const transportName = transport.name || transport.constructor.name;
+  console.log(`- ${index + 1}: ${transportName}`);
+});
 
 // Enhanced logging methods
 logger.security = (message, metadata = {}) => {
@@ -298,103 +302,92 @@ module.exports = { logger };
 
 
 /*
-برای اینکه بتوانید تعداد پست‌های ایجاد شده در ۱۴ روز گذشته را شمارش کنید، 
-باید لاگ‌هایتان را به گونه‌ای طراحی کنید که اطلاعات مورد نیاز شما
- (مانند **نوع عملیات**، **زمان ثبت**، و **کاربر ایجادکننده**)
- به صورت ساختاریافته ذخیره شوند. سپس می‌توانید با استفاده از ابزارهای تحلیل لاگ 
- (مانند **Loki**، **Elasticsearch**، یا حتی ابزارهای ساده‌تر) این اطلاعات را جستجو و پردازش کنید.
+درباره loggerMiddleware
+تابع loggerMiddleware یک middleware در Express است که هدفش اضافه کردن دسته‌بندی‌های پویا 
+به لاگ‌ها در طول هر درخواست است. این تابع، ویژگی‌هایی مثل moduleName و requestId را به‌طور اختصاصی برای
+ هر درخواست تنظیم می‌کند و یک logger child ایجاد می‌کند که در هر endpoint قابل استفاده است.
 
-### گام‌های لازم برای شمارش پست‌های ایجاد شده:
+کاربرد loggerMiddleware
+ردیابی درخواست‌ها: اضافه کردن یک requestId به هر درخواست، امکان ردیابی تمام لاگ‌های مرتبط با آن درخواست را فراهم می‌کند.
+دسته‌بندی لاگ‌ها: می‌توانید moduleName را بر اساس بخش‌های مختلف اپلیکیشن (مانند API، Authentication، Database) تنظیم کنید.
+ایجاد لاگ‌های منحصر به هر درخواست: به جای استفاده از logger اصلی،
+ از یک نسخه child استفاده می‌شود که متادیتای خاصی برای هر درخواست دارد.
+نحوه استفاده از loggerMiddleware
+اضافه کردن به Express: در فایل app.js یا server.js، این middleware را به اپلیکیشن اضافه کنید:
 
----
+javascript
+Copy code
+const express = require('express');
+const { loggerMiddleware } = require('./path/to/logger-config');
 
-#### 1. **ساختاردهی لاگ‌ها**
-لاگ‌های مربوط به ایجاد پست باید شامل اطلاعات کلیدی زیر باشند:
-- **نوع رویداد** (مثلاً: `post_created`)
-- **زمان ثبت لاگ** (برای فیلتر کردن لاگ‌های ۱۴ روز گذشته)
-- **شناسه کاربر** یا هر متادیتای دیگر.
+const app = express();
 
-نمونه کد برای ایجاد لاگ ساختاریافته:
-```javascript
-logger.custom('A post was created', {
-  event: 'post_created',
-  userId: 123, // شناسه کاربر
-  postId: 456, // شناسه پست
-  timestamp: new Date().toISOString(), // زمان ایجاد
+استفاده از loggerMiddleware
+app.use(loggerMiddleware);
+استفاده در route‌ها: پس از تنظیم middleware، در هر route می‌توانید از req.logger استفاده کنید:
+
+javascript
+Copy code
+app.get('/example', (req, res) => {
+  req.logger.info('Example endpoint called');
+  res.send('Check the logs!');
 });
-```
+خروجی لاگ برای این درخواست:
 
----
+json
+Copy code
+{
+  "timestamp": "2024-11-17 12:34:56",
+  "level": "info",
+  "message": "Example endpoint called",
+  "service": "user-service",
+  "environment": "development",
+  "moduleName": "API",
+  "requestId": "req-abcdef123456"
+}
+مثال برای dynamic moduleName: اگر می‌خواهید moduleName را برای هر بخش متفاوت تنظیم کنید، می‌توانید به صورت زیر در route‌های خاص تغییر دهید:
 
-#### 2. **ذخیره لاگ‌ها در یک سیستم تحلیل‌پذیر**
-ابزارهایی که می‌توانید استفاده کنید:
-- **Loki/Grafana:** برای ذخیره و جستجوی لاگ‌ها.
-- **Elasticsearch/Kibana:** برای تحلیل پیشرفته‌تر.
-- **یک پایگاه داده ساده:** می‌توانید لاگ‌ها را مستقیماً در دیتابیسی مانند MongoDB ذخیره کنید.
-
----
-
-#### 3. **پرس‌وجو از لاگ‌ها**
-- در **Loki** یا **Elasticsearch** می‌توانید لاگ‌هایی با `event: "post_created"` را در بازه زمانی مشخص جستجو کنید.
-- نمونه کوئری Loki:
-  ```plaintext
-  {event="post_created"} |= "post_created" | json | duration(14d)
-  ```
-  این کوئری تمامی لاگ‌های `post_created` را در ۱۴ روز گذشته فیلتر می‌کند.
-
----
-
-#### 4. **استفاده از اسکریپت برای شمارش لاگ‌ها**
-اگر می‌خواهید به صورت برنامه‌نویسی
- داده‌ها را پردازش کنید، می‌توانید لاگ‌ها را به صورت فایل یا از طریق API لاگ‌سرور پردازش کنید.
-
-نمونه کد برای خواندن لاگ‌ها و شمارش با استفاده از فایل‌های JSON:
-```javascript
-const fs = require('fs');
-const path = require('path');
-
-// مسیر فایل لاگ
-const logFilePath = path.join(__dirname, 'logs/custom.log');
-
-// زمان شروع ۱۴ روز قبل
-const fourteenDaysAgo = new Date();
-fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
-
-// خواندن فایل لاگ
-fs.readFile(logFilePath, 'utf8', (err, data) => {
-  if (err) {
-    console.error('Error reading log file:', err);
-    return;
-  }
-
-  // پردازش لاگ‌ها
-  const logs = data.split('\n').filter(line => line.trim() !== ''); // حذف خطوط خالی
-  const postCreatedLogs = logs.filter(log => {
-    try {
-      const logData = JSON.parse(log);
-      return logData.event === 'post_created' && new Date(logData.timestamp) > fourteenDaysAgo;
-    } catch (e) {
-      return false;
-    }
-  });
-
-  console.log(`Number of posts created in the last 14 days: ${postCreatedLogs.length}`);
+javascript
+Copy code
+app.get('/auth/login', (req, res) => {
+  req.logger = req.logger.child({ moduleName: 'Authentication' });
+  req.logger.info('Login endpoint called');
+  res.send('Login success');
 });
-```
+مسیرهای ذخیره‌سازی لاگ‌ها:
+لاگ‌های سطح error:
+در فایل‌هایی مانند:
+../logs/error-YYYY-MM-DD.log
 
----
+این فایل‌ها به صورت روزانه چرخش پیدا می‌کنند (با استفاده از winston-daily-rotate-file) و حداکثر اندازه هر فایل 20 مگابایت است.
+فایل‌ها تا 14 روز نگهداری می‌شوند و پس از آن حذف می‌شوند.
+لاگ‌های ترکیبی (combined):
+در فایل‌هایی مانند:
+../logs/combined-YYYY-MM-DD.log
 
-#### 5. **هشدار و مانیتورینگ**
-برای اینکه نیازی به اجرای دستی اسکریپت نداشته باشید:
-- می‌توانید یک **کرون‌جاب** تنظیم کنید که این اسکریپت را روزانه اجرا کند.
-- یا از ابزارهایی مانند **Grafana Alerts** استفاده کنید تا گزارش‌ها یا هشدارها را خودکار ارسال کند.
+شامل تمام لاگ‌ها از سطوح مختلف (info, warn, http, debug) است.
+همان تنظیمات چرخش و نگهداری را دارد.
+لاگ‌های خطاهای مدیریت‌نشده (Unhandled Exceptions):
+در فایل‌هایی مانند:
+../logs/exceptions-YYYY-MM-DD.log
 
----
+خطاهایی که توسط Winston مدیریت نشده‌اند در این فایل ذخیره می‌شوند.
+لاگ‌های ریجکت‌شده (Unhandled Promise Rejections):
+در فایل‌هایی مانند:
+../logs/rejections-YYYY-MM-DD.log
 
-### جمع‌بندی:
-1. لاگ‌های مربوط به ایجاد پست را به صورت ساختاریافته ثبت کنید.
-2. لاگ‌ها را در ابزار تحلیل مناسب ذخیره کنید (Loki یا Elasticsearch توصیه می‌شود).
-3. با استفاده از کوئری یا اسکریپت، تعداد لاگ‌ها را در بازه زمانی مشخص شمارش کنید.
-4. گزارش‌ها را به صورت خودکار تنظیم کنید تا به صورت دوره‌ای ایجاد شوند.
+خطاهایی که در Promise‌ها مدیریت نشده‌اند در این فایل ذخیره می‌شوند.
+لاگ‌های کنسول (فقط برای محیط‌های غیرفرآیندی):
+اگر محیط NODE_ENV برابر با production نباشد، لاگ‌ها علاوه بر فایل‌ها، به کنسول نیز ارسال می‌شوند و رنگی نمایش داده می‌شوند.
 
+ساختار پوشه لاگ‌ها:
+تمام لاگ‌ها در پوشه ../logs/ ذخیره می‌شوند که محل نسبی آن نسبت به فایل کانفیگ فعلی تعریف شده است.
+هر فایل لاگ با تاریخ روز (YYYY-MM-DD) در نام فایل ذخیره می‌شود.
+جمع‌بندی:
+این تنظیمات باعث می‌شود:
+
+لاگ‌ها سازمان‌یافته و مرتب در فایل‌های مختلف ذخیره شوند.
+برای هر سطح از لاگ، یک فایل مجزا داشته باشید.
+لاگ‌های قدیمی به صورت خودکار پاک شوند (پس از 14 روز).
+اگر نیاز به تغییر مکان ذخیره‌سازی یا تنظیمات بیشتری دارید، می‌توانید مسیر filename را به یک مکان دیگر (مثلاً روی سرور ابری یا شبکه) تغییر دهید.
 */
