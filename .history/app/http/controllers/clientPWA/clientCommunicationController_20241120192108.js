@@ -1,4 +1,4 @@
-const Controller = require("../../controllers/controller");
+const Controller = require("../../controller");
 
 class ClientsCommunicationsController extends Controller {
     async createCommentForMetric(req, res, next) {
@@ -19,5 +19,5 @@ class ClientsCommunicationsController extends Controller {
 }
 
 module.exports = {
-    ClientsCommunicationsController : new ClientsCommunicationsController()
+    ClientsCommunicationsController
 }

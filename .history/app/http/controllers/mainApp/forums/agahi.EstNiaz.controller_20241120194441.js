@@ -1,6 +1,6 @@
 const { StatusCodes: HttpStatus } = require("http-status-codes");
-const Controller = require("../../controller");
-const noticeService = require("../../../services/mainApp/forums/notice.service");
+const Controller = require("../controller");
+const noticeService = require("../services/notice.service");
 
 class AgahiEstNiazController extends Controller {
     async createNoticeEstNiaz(req, res, next) {

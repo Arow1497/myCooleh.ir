@@ -1,8 +1,7 @@
 const router = require("express").Router();
-const { UserAuthController } = require("../../http/controllers/user/userAuth.controller");
-const { UserProfileController } = require("../../http/controllers/user/userProfile");
-const { MechanicRegistrationController } = require("../../http/controllers/user/freelancer.Mechanic.controller");
-const { UsersCommunicationsController } = require("../../http/controllers/user/communications.controller");
+const { UserAuthController } = require("../controllers/user/userAuth.controller");
+const { UserProfileController } = require("../controllers/user/userProfile");
+const { MechanicRegistrationController } = require("../controllers/user/freelancer.Mechanic.controller");
 
 // User Authentication Routes
 router.post("/auth/request-otp", UserAuthController.requestOtp);
@@ -38,23 +37,14 @@ router.get("/profile/garage/outsourcing-reqs", UserProfileController.ShowGarageO
 router.get("/profile/supplier-store", UserProfileController.ShowUsersSupplierStoreProfile);
 
 // Mechanic Registration Routes
-// router.post("/mechanic/registration", MechanicRegistrationController.mechanicRegistration);
-// router.post("/shagerd/registration", MechanicRegistrationController.shagerdRegistration);
-// router.post("/dastyar-reqs/send-coworking-request-by-mechanic", MechanicRegistrationController.dastyarReqsSendCoWorkingRequestByMechanic);
-// router.post("/apprentice-reqs/send-coworking-request-by-shagerd", MechanicRegistrationController.apprenticeReqsSendCoWorkingRequestByShagerd);
-// router.get("/mechanic/monthly-projects-income-revenue", MechanicRegistrationController.mechanicMonthlyProjectsIncomeRevenue);
-// router.get("/mechanic/monthly-services-income-revenue", MechanicRegistrationController.mechanicMonthlyServicesIncomeRevenue);
-// router.get("/dastyar-req/:dastyarreqID", MechanicRegistrationController.findDastyarReqById);
-// router.get("/apprentice-req/:apprenticereqID", MechanicRegistrationController.findApprenticeReqById);
-
-// Users Communications Routes
-router.post("/communications/comment-for-metric", UsersCommunicationsController.createCommentForMetric);
-router.post("/communications/review-for-metric", UsersCommunicationsController.createReviewForMetric);
-router.post("/communications/comment-for-product", UsersCommunicationsController.createCommentForProduct);
-router.post("/communications/comment-for-project", UsersCommunicationsController.createCommentForProject);
-router.post("/communications/comment-for-coupon", UsersCommunicationsController.createCommentForCoupon);
-router.post("/communications/comment-for-dastyar-req", UsersCommunicationsController.createCommentForDastyarReq);
-router.post("/communications/comment-for-outsourcing-req", UsersCommunicationsController.createCommentForOutsourcingReq);
+router.post("/mechanic/registration", MechanicRegistrationController.mechanicRegistration);
+router.post("/shagerd/registration", MechanicRegistrationController.shagerdRegistration);
+router.post("/dastyar-reqs/send-coworking-request-by-mechanic", MechanicRegistrationController.dastyarReqsSendCoWorkingRequestByMechanic);
+router.post("/apprentice-reqs/send-coworking-request-by-shagerd", MechanicRegistrationController.apprenticeReqsSendCoWorkingRequestByShagerd);
+router.get("/mechanic/monthly-projects-income-revenue", MechanicRegistrationController.mechanicMonthlyProjectsIncomeRevenue);
+router.get("/mechanic/monthly-services-income-revenue", MechanicRegistrationController.mechanicMonthlyServicesIncomeRevenue);
+router.get("/dastyar-req/:dastyarreqID", MechanicRegistrationController.findDastyarReqById);
+router.get("/apprentice-req/:apprenticereqID", MechanicRegistrationController.findApprenticeReqById);
 
 module.exports = {
     UserRoutes: router

@@ -19,5 +19,5 @@ class ClientsCommunicationsController extends Controller {
 }
 
 module.exports = {
-    ClientsCommunicationsController : new ClientsCommunicationsController()
+    ClientsCommunicationsController
 }

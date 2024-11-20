@@ -8,7 +8,7 @@ class ComprehensivePwaAppController extends Controller {
 }
 
 module.exports = {
-    ComprehensivePwaAppController : new ComprehensivePwaAppController()
+    ComprehensivePwaAppController
 }
 // اپلیکیشن pwa مشتریان ما 
 // یک اپلیکیشن جامع و کامل پی دبلیو ای هست مثل نسخه های pwa

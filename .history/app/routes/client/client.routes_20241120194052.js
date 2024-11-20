@@ -13,7 +13,7 @@ router.post("/auth/refresh-token", ClientAuthController.clientRefreshToken);
 router.post("/auth/logout", ClientAuthController.logout);
 
 // Client Communications Routes
-router.post("/communications/comment-for-metric", ClientsCommunicationsController.createCommentForMetric);
+// router.post("/communications/comment-for-metric", ClientsCommunicationsController.createCommentForMetric);
 router.post("/communications/comment-for-product", ClientsCommunicationsController.createCommentForProduct);
 router.post("/communications/comment-for-project", ClientsCommunicationsController.createCommentForProject);
 router.post("/communications/comment-for-coupon", ClientsCommunicationsController.createCommentForCoupon);
