@@ -1,0 +1,19 @@
+datadir="/var/lib/proxysql"
+
+admin_variables=
+{
+    admin_credentials="user:password"
+}
+
+mysql_servers =
+(
+    {
+        address = "db1"
+        port = 3306
+        hostgroup = 0
+        max_connections = 200
+    },
+    {
+        address = "db2"
+        port = 3306
+        hostgroup = 0

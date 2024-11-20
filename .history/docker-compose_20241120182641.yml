@@ -1,0 +1,48 @@
+version: '3'
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://user:password@db:5432/database
+    restart: always
+
+  db:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - db-data:/var/lib/mysql
+    restart: always
+
+  proxysql:
+    build: ./proxySql
+    ports:
+      - "6032:6032"
+    depends_on:
+      - db
+    environment:
+      PROXYSQL_USERNAME: user
+      PROXYSQL_PASSWORD: password
+      PROXYSQL_HOST: db
+      PROXYSQL_PORT: 3306
+    restart: always
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./Nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app
+    restart: always
+
+volumes:
+  db-data:
