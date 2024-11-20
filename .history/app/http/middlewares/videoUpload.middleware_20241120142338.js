@@ -197,7 +197,7 @@ module.exports = {
 
 
 /*
-و برای استفاده از این کانفیگ در routes:
+ر routes:
 javascriptCopyconst express = require('express');
 const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
