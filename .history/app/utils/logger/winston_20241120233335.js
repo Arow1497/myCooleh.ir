@@ -217,6 +217,22 @@ const mongoTransport = new EnhancedMongoTransport({
   }
 });
 
+// اضافه کردن custom format برای خطاهای runtime
+const runtimeErrorFormat = winston.format((info) => {
+  if (info.logType === 'error' && (info.severity === 'CRITICAL' || info.severity === 'HIGH')) {
+      return {
+          ...info,
+          timestamp: info.timestamp || moment().format('YYYY-MM-DD HH:mm:ss.SSS'),
+          environment: process.env.NODE_ENV,
+          processId: process.pid,
+          memoryUsage: process.memoryUsage(),
+      };
+  }
+  return info;
+})();
+
+
+
 const allTransports = [
   ...fileTransports,
   mongoTransport
@@ -232,27 +248,16 @@ const logger = winston.createLogger({
   },
   transports: allTransports
 });
-// افزودن exceptionHandlers
-logger.exceptions.handle(
-  new winston.transports.File({ filename: path.join(LOG_DIR, 'exceptions.log') })
-);
 
-// افزودن rejectionHandlers
-logger.rejections.handle(
-  new winston.transports.File({ filename: path.join(LOG_DIR, 'rejections.log') })
-);
+// Log the number of transports
+// console.log(`Number of transports: ${logger.transports.length}`);
 
-/*
-Log the number of transports
-console.log(`Number of transports: ${logger.transports.length}`);
-
-Log the names of transports
-console.log('Transport names:');
-logger.transports.forEach((transport, index) => {
-  const transportName = transport.name || transport.constructor.name;
-  console.log(`- ${index + 1}: ${transportName}`);
-});
-*/
+// Log the names of transports
+// console.log('Transport names:');
+// logger.transports.forEach((transport, index) => {
+//   const transportName = transport.name || transport.constructor.name;
+//   console.log(`- ${index + 1}: ${transportName}`);
+// });
 
 // Enhanced logging methods
 logger.security = (message, metadata = {}) => {
@@ -285,6 +290,20 @@ logger.logError = function(err, metadata = {}, context = {}) {
     ...metadata
   });
 };
+
+// اضافه کردن transport مخصوص خطاهای runtime
+const runtimeErrorTransport = new winston.transports.File({
+  filename: path.join(LOG_DIR, 'error', 'runtime-errors.log'),
+  level: 'error',
+  format: winston.format.combine(
+      runtimeErrorFormat,
+      winston.format.json()
+  ),
+  maxsize: 10485760, // 10MB
+  maxFiles: 5,
+  tailable: true
+});
+logger.add(runtimeErrorTransport);
 
 if (process.env.NODE_ENV !== 'production') {
   logger.add(new winston.transports.Console({

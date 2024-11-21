@@ -241,9 +241,10 @@ http: برای درخواست‌های HTTP (توسط morgan)
 اطلاعات کارت اعتباری
 
 controllers/orderController.js
+*/
 
-
-                 EXAMPLES EXAMPLES EXAMPLES//
+                 //EXAMPLES EXAMPLES EXAMPLES//
+                 /*
 const { catchAsync } = require('../middleware/errorHandler');
 const logger = require('../utils/logger/winston');
 
@@ -251,7 +252,7 @@ const updateOrderStatus = catchAsync(async (req, res) => {
     const { orderId } = req.params;
     const { newStatus } = req.body;
 
-    1. لاگ شروع عملیات - اختیاری، برای debug
+    // 1. لاگ شروع عملیات - اختیاری، برای debug
     logger.debug('Updating order status', {
         orderId,
         newStatus,
@@ -260,7 +261,7 @@ const updateOrderStatus = catchAsync(async (req, res) => {
 
     const order = await Order.findById(orderId);
     
-    2. بررسی خطا - نیازی به لاگ نیست، توسط errorHandler مدیریت می‌شود
+    // 2. بررسی خطا - نیازی به لاگ نیست، توسط errorHandler مدیریت می‌شود
     if (!order) {
         throw new AppError(404, 'سفارش یافت نشد');
     }
@@ -269,7 +270,7 @@ const updateOrderStatus = catchAsync(async (req, res) => {
     order.status = newStatus;
     await order.save();
 
-    3. لاگ تغییر مهم کسب و کار - باید ثبت شود
+    // 3. لاگ تغییر مهم کسب و کار - باید ثبت شود
     logger.info('Order status updated successfully', {
         orderId,
         oldStatus,
@@ -279,7 +280,7 @@ const updateOrderStatus = catchAsync(async (req, res) => {
         customerEmail: order.customerEmail
     });
 
-    4. اگر تغییر حساس باشد - باید ثبت شود
+    // 4. اگر تغییر حساس باشد - باید ثبت شود
     if (newStatus === 'cancelled') {
         logger.warn('Order cancelled', {
             orderId,
@@ -295,11 +296,11 @@ const updateOrderStatus = catchAsync(async (req, res) => {
     });
 });
 
-مثال دیگر - سرویس احراز هویت
+// مثال دیگر - سرویس احراز هویت
 const loginUser = catchAsync(async (req, res) => {
     const { email, password } = req.body;
 
-    1. لاگ تلاش ورود - مهم برای امنیت
+    // 1. لاگ تلاش ورود - مهم برای امنیت
     logger.debug('Login attempt', {
         email,
         ip: req.ip,
@@ -308,14 +309,14 @@ const loginUser = catchAsync(async (req, res) => {
 
     const user = await User.findOne({ email });
     
-    2. خطای نادرست بودن ایمیل - توسط errorHandler مدیریت می‌شود
+    // 2. خطای نادرست بودن ایمیل - توسط errorHandler مدیریت می‌شود
     if (!user) {
         throw new AppError(401, 'ایمیل یا رمز عبور نادرست است');
     }
 
     const isPasswordCorrect = await user.comparePassword(password);
     
-    3. لاگ ورود ناموفق - مهم برای امنیت
+    // 3. لاگ ورود ناموفق - مهم برای امنیت
     if (!isPasswordCorrect) {
         logger.warn('Failed login attempt', {
             email,
@@ -327,7 +328,7 @@ const loginUser = catchAsync(async (req, res) => {
         throw new AppError(401, 'ایمیل یا رمز عبور نادرست است');
     }
 
-    4. لاگ ورود موفق - مهم برای audit
+    // 4. لاگ ورود موفق - مهم برای audit
     logger.info('User logged in successfully', {
         userId: user.id,
         email: user.email,
@@ -341,5 +342,5 @@ const loginUser = catchAsync(async (req, res) => {
         token
     });
 });
-                 EXAMPLES EXAMPLES EXAMPLES//
+                 //EXAMPLES EXAMPLES EXAMPLES//
                  */

@@ -114,11 +114,13 @@ class EnhancedMongoTransport extends Transport {
   constructor(opts) {
     super(opts);
     this.collection = mongoose.model('Log', logSchema).collection;
+    this.buffer = [];
+    this.flushInterval = setInterval(() => this.flush(), 5000);
   }
 
   async log(info, callback) {
     try {
-      await this.collection.insertOne({
+      this.buffer.push({
         timestamp: moment().format('YYYY-MM-DD HH:mm:ss.SSS'),
         level: info.level,
         message: info.message,
@@ -127,10 +129,31 @@ class EnhancedMongoTransport extends Transport {
         metadata: info.metadata || {},
         stack: info.stack
       });
+      
+      if (this.buffer.length >= 10) {
+        await this.flush();
+      }
+      
       callback();
     } catch (err) {
       callback(err);
     }
+  }
+
+  async flush() {
+    if (this.buffer.length === 0) return;
+    
+    try {
+      await this.collection.insertMany(this.buffer);
+      this.buffer = [];
+    } catch (error) {
+      console.error('Error flushing logs to MongoDB:', error);
+    }
+  }
+
+  async close() {
+    clearInterval(this.flushInterval);
+    await this.flush();
   }
 }
 
@@ -218,6 +241,17 @@ const mongoTransport = new EnhancedMongoTransport({
 });
 
 const allTransports = [
+  new winston.transports.DailyRotateFile({
+    filename: path.join(LOG_DIR, 'error', 'error-%DATE%.log'),
+    level: 'error',
+    format: winston.format.combine(
+      winston.format.errors({ stack: true }),
+      detailedFormat
+    ),
+    ...baseRotateConfig,
+    maxSize: '20m',
+    maxFiles: '14d'
+  }),
   ...fileTransports,
   mongoTransport
 ];
@@ -230,29 +264,21 @@ const logger = winston.createLogger({
     environment: process.env.NODE_ENV,
     version: process.env.APP_VERSION || '1.0.0',
   },
-  transports: allTransports
+  transports: allTransports,
+  exitOnError: false, // جلوگیری از خروج خودکار در صورت خطا
+  handleExceptions: true,
+  handleRejections: true
 });
-// افزودن exceptionHandlers
-logger.exceptions.handle(
-  new winston.transports.File({ filename: path.join(LOG_DIR, 'exceptions.log') })
-);
 
-// افزودن rejectionHandlers
-logger.rejections.handle(
-  new winston.transports.File({ filename: path.join(LOG_DIR, 'rejections.log') })
-);
+// Log the number of transports
+// console.log(`Number of transports: ${logger.transports.length}`);
 
-/*
-Log the number of transports
-console.log(`Number of transports: ${logger.transports.length}`);
-
-Log the names of transports
-console.log('Transport names:');
-logger.transports.forEach((transport, index) => {
-  const transportName = transport.name || transport.constructor.name;
-  console.log(`- ${index + 1}: ${transportName}`);
-});
-*/
+// Log the names of transports
+// console.log('Transport names:');
+// logger.transports.forEach((transport, index) => {
+//   const transportName = transport.name || transport.constructor.name;
+//   console.log(`- ${index + 1}: ${transportName}`);
+// });
 
 // Enhanced logging methods
 logger.security = (message, metadata = {}) => {
