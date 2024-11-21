@@ -115,6 +115,9 @@ class EnhancedMongoTransport extends Transport {
     super(opts);
     this.collection = mongoose.model('Log', opts.logSchema).collection;
     this.levels = opts.levels || []; // سطوح مجاز برای ذخیره‌سازی
+    this.handleExceptions = opts.handleExceptions || false; // پشتیبانی از هندل استثناها
+    this.handleRejections = opts.handleRejections || false; // پشتیبانی از هندل ریجکشن‌ها
+  
   }
 
   async log(info, callback) {

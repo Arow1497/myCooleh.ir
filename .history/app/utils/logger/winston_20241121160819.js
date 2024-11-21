@@ -113,16 +113,10 @@ const logSchema = new mongoose.Schema({
 class EnhancedMongoTransport extends Transport {
   constructor(opts) {
     super(opts);
-    this.collection = mongoose.model('Log', opts.logSchema).collection;
-    this.levels = opts.levels || []; // سطوح مجاز برای ذخیره‌سازی
+    this.collection = mongoose.model('Log', logSchema).collection;
   }
 
   async log(info, callback) {
-    // بررسی سطح لاگ
-    if (this.levels.length > 0 && !this.levels.includes(info.level)) {
-      return callback(); // اگر سطح لاگ موردنظر نیست، عملیات را متوقف کنید
-    }
-
     try {
       await this.collection.insertOne({
         timestamp: moment().format('YYYY-MM-DD HH:mm:ss.SSS'),
@@ -131,7 +125,7 @@ class EnhancedMongoTransport extends Transport {
         context: info.context || {},
         location: info.errorLocation,
         metadata: info.metadata || {},
-        stack: info.stack,
+        stack: info.stack
       });
       callback();
     } catch (err) {
@@ -217,12 +211,13 @@ const fileTransports = logTypes.map(({ type, level, ...config }) => {
   });
 });
 
-const formats = [detailedFormat];
 const generalTransport = new winston.transports.DailyRotateFile({
   filename: getLogFileName('general'),
-  level: 'info',
-  format: winston.format.combine(...formats),
-  ...baseRotateConfig,
+  level: 'info', 
+  format: winston.format.combine(
+    winston.format.timestamp(), 
+    winston.format.json() 
+  ),
   maxSize: '20m',
   maxFiles: '14d',
 });
@@ -232,10 +227,8 @@ fileTransports.push(generalTransport);
 
 // اضافه کردن ترنسپورت مونگو
 const mongoTransport = new EnhancedMongoTransport({
-  logSchema,
-  levels: ['info', 'error'], // سطوح موردنظر
-  handleExceptions: true,
-  handleRejections: true,
+  level: 'info, error',
+  collection: 'application_logs',
   format: detailedFormat,
   options: { 
     useUnifiedTopology: true,
@@ -247,18 +240,6 @@ const allTransports = [
   ...fileTransports,
   mongoTransport
 ];
-
-if (process.env.NODE_ENV === 'development') {
-  const consoleTransport = new winston.transports.Console({
-    format: winston.format.combine(
-      winston.format.colorize(),
-      winston.format.simple()
-    ),
-    handleExceptions: true, // هندل کردن استثناها در کنسول
-    handleRejections: true
-  });
-  allTransports.push(consoleTransport);
-}
 
 const logger = winston.createLogger({
   level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
@@ -273,14 +254,14 @@ const logger = winston.createLogger({
 
 
 // Log the number of transports
-console.log(`Number of transports: ${logger.transports.length}`);
+// console.log(`Number of transports: ${logger.transports.length}`);
 
 // Log the names of transports
-console.log('Transport names:');
-logger.transports.forEach((transport, index) => {
-  const transportName = transport.name || transport.constructor.name;
-  console.log(`- ${index + 1}: ${transportName}`);
-});
+// console.log('Transport names:');
+// logger.transports.forEach((transport, index) => {
+//   const transportName = transport.name || transport.constructor.name;
+//   console.log(`- ${index + 1}: ${transportName}`);
+// });
 
 
 // Enhanced logging methods

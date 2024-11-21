@@ -113,16 +113,10 @@ const logSchema = new mongoose.Schema({
 class EnhancedMongoTransport extends Transport {
   constructor(opts) {
     super(opts);
-    this.collection = mongoose.model('Log', opts.logSchema).collection;
-    this.levels = opts.levels || []; // سطوح مجاز برای ذخیره‌سازی
+    this.collection = mongoose.model('Log', logSchema).collection;
   }
 
   async log(info, callback) {
-    // بررسی سطح لاگ
-    if (this.levels.length > 0 && !this.levels.includes(info.level)) {
-      return callback(); // اگر سطح لاگ موردنظر نیست، عملیات را متوقف کنید
-    }
-
     try {
       await this.collection.insertOne({
         timestamp: moment().format('YYYY-MM-DD HH:mm:ss.SSS'),
@@ -131,7 +125,7 @@ class EnhancedMongoTransport extends Transport {
         context: info.context || {},
         location: info.errorLocation,
         metadata: info.metadata || {},
-        stack: info.stack,
+        stack: info.stack
       });
       callback();
     } catch (err) {
@@ -232,10 +226,10 @@ fileTransports.push(generalTransport);
 
 // اضافه کردن ترنسپورت مونگو
 const mongoTransport = new EnhancedMongoTransport({
-  logSchema,
-  levels: ['info', 'error'], // سطوح موردنظر
+  level: 'info',
   handleExceptions: true,
   handleRejections: true,
+  collection: 'application_logs',
   format: detailedFormat,
   options: { 
     useUnifiedTopology: true,
