@@ -10,7 +10,7 @@ const fs = require('fs');
 const LOG_DIR = path.join(__dirname, '../../logs');
 
 const createLogDirectories = () => {
-  const types = ['error', 'security', 'performance', 'system', 'custom'];
+  const types = ['error', 'security', 'performance', 'system', 'custom', 'general'];
   
   if (!fs.existsSync(LOG_DIR)) {
     fs.mkdirSync(LOG_DIR, { recursive: true });
@@ -189,6 +189,12 @@ const logTypes = [
     level: 'info'
 
   },
+  {
+    type: 'general',
+    maxSize: '20m',
+    maxFiles: '14d',
+    level: 'info'
+  }
 ];
 
 // ایجاد ترنسپورت‌ها براساس تنظیمات
@@ -211,17 +217,16 @@ const fileTransports = logTypes.map(({ type, level, ...config }) => {
 
 const generalTransport = new winston.transports.DailyRotateFile({
   filename: getLogFileName('general'),
-  level: 'info', 
+  level: 'info',
   format: winston.format.combine(
-    winston.format.timestamp(), 
-    winston.format.json() 
+    winston.format.timestamp(),
+    winston.format.json() // فرمت ساده
   ),
   maxSize: '20m',
   maxFiles: '14d',
 });
-
-// افزودن ترنسپورت عمومی به آرایه ترنسپورت‌ها
 fileTransports.push(generalTransport);
+
 
 // اضافه کردن ترنسپورت مونگو
 const mongoTransport = new EnhancedMongoTransport({
@@ -286,6 +291,10 @@ logger.system = (message, metadata = {}) => {
 
 logger.custom = (message, metadata = {}) => {
   logger.info(message, { ...metadata, logType: 'custom' });
+};
+
+logger.general = (message, metadata = {}) => {
+  logger.info(message, { ...metadata, logType: 'general' });
 };
 
 logger.logError = function(err, metadata = {}, context = {}) {

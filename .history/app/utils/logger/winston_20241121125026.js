@@ -10,7 +10,7 @@ const fs = require('fs');
 const LOG_DIR = path.join(__dirname, '../../logs');
 
 const createLogDirectories = () => {
-  const types = ['error', 'security', 'performance', 'system', 'custom'];
+  const types = ['error', 'security', 'performance', 'system', 'custom', 'general'];
   
   if (!fs.existsSync(LOG_DIR)) {
     fs.mkdirSync(LOG_DIR, { recursive: true });
@@ -167,65 +167,48 @@ const logTypes = [
   {
     type: 'security',
     maxSize: '10m',
-    maxFiles: '30d',
-    level: 'info'
+    maxFiles: '30d'
   },
   {
     type: 'performance',
     maxSize: '10m',
-    maxFiles: '7d',
-    level: 'info'
+    maxFiles: '7d'
   },
   {
     type: 'system',
     maxSize: '10m',
-    maxFiles: '14d',
-    level: 'info'
+    maxFiles: '14d'
   },
   {
     type: 'custom',
     maxSize: '10m',
-    maxFiles: '14d',
-    level: 'info'
-
+    maxFiles: '14d'
   },
+  {
+    type: 'general',
+    maxSize: '20m',
+    maxFiles: '14d'
+  }
 ];
 
 // ایجاد ترنسپورت‌ها براساس تنظیمات
 const fileTransports = logTypes.map(({ type, level, ...config }) => {
   const formats = [detailedFormat];
-
-  // اضافه کردن فیلتر فقط برای لاگ‌های غیر عمومی
   if (type !== 'error') {
     formats.push(createCustomFormat(type));
   }
-
+  
   return new winston.transports.DailyRotateFile({
     filename: getLogFileName(type),
-    level: level || 'info', 
     format: winston.format.combine(...formats),
     ...baseRotateConfig,
     ...config
   });
 });
 
-const generalTransport = new winston.transports.DailyRotateFile({
-  filename: getLogFileName('general'),
-  level: 'info', 
-  format: winston.format.combine(
-    winston.format.timestamp(), 
-    winston.format.json() 
-  ),
-  maxSize: '20m',
-  maxFiles: '14d',
-});
-
-// افزودن ترنسپورت عمومی به آرایه ترنسپورت‌ها
-fileTransports.push(generalTransport);
-
 // اضافه کردن ترنسپورت مونگو
 const mongoTransport = new EnhancedMongoTransport({
-  level: 'info, error',
+  level: 'info',
   collection: 'application_logs',
   format: detailedFormat,
   options: { 
@@ -286,6 +269,10 @@ logger.system = (message, metadata = {}) => {
 
 logger.custom = (message, metadata = {}) => {
   logger.info(message, { ...metadata, logType: 'custom' });
+};
+
+logger.general = (message, metadata = {}) => {
+  logger.info(message, { ...metadata, logType: 'general' });
 };
 
 logger.logError = function(err, metadata = {}, context = {}) {

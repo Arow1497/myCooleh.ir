@@ -10,7 +10,7 @@ const fs = require('fs');
 const LOG_DIR = path.join(__dirname, '../../logs');
 
 const createLogDirectories = () => {
-  const types = ['error', 'security', 'performance', 'system', 'custom'];
+  const types = ['error', 'security', 'performance', 'system', 'custom', 'general'];
   
   if (!fs.existsSync(LOG_DIR)) {
     fs.mkdirSync(LOG_DIR, { recursive: true });
@@ -189,6 +189,12 @@ const logTypes = [
     level: 'info'
 
   },
+  {
+    type: 'general',
+    maxSize: '20m',
+    maxFiles: '14d',
+    level: 'info'
+  }
 ];
 
 // ایجاد ترنسپورت‌ها براساس تنظیمات
@@ -202,21 +208,23 @@ const fileTransports = logTypes.map(({ type, level, ...config }) => {
 
   return new winston.transports.DailyRotateFile({
     filename: getLogFileName(type),
-    level: level || 'info', 
+    level: level || 'info', // سطح پیش‌فرض برای ثبت لاگ‌ها
     format: winston.format.combine(...formats),
     ...baseRotateConfig,
     ...config
   });
 });
 
+
+// ایجاد ترنسپورت عمومی برای ثبت همه لاگ‌ها در فایل general
 const generalTransport = new winston.transports.DailyRotateFile({
-  filename: getLogFileName('general'),
-  level: 'info', 
+  filename: getLogFileName('general'), // نام فایل general
+  level: 'silly', // ثبت همه لاگ‌ها از سطح info و بالاتر
   format: winston.format.combine(
-    winston.format.timestamp(), 
-    winston.format.json() 
+    winston.format.timestamp(), // افزودن تایم‌استمپ
+    winston.format.json() // ذخیره لاگ‌ها در قالب JSON
   ),
-  maxSize: '20m',
+    maxSize: '20m',
   maxFiles: '14d',
 });
 
@@ -225,7 +233,7 @@ fileTransports.push(generalTransport);
 
 // اضافه کردن ترنسپورت مونگو
 const mongoTransport = new EnhancedMongoTransport({
-  level: 'info, error',
+  level: 'info',
   collection: 'application_logs',
   format: detailedFormat,
   options: { 
@@ -286,6 +294,10 @@ logger.system = (message, metadata = {}) => {
 
 logger.custom = (message, metadata = {}) => {
   logger.info(message, { ...metadata, logType: 'custom' });
+};
+
+logger.general = (message, metadata = {}) => {
+  logger.info(message, { ...metadata, logType: 'general' });
 };
 
 logger.logError = function(err, metadata = {}, context = {}) {

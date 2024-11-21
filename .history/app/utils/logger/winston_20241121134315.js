@@ -189,6 +189,12 @@ const logTypes = [
     level: 'info'
 
   },
+  {
+    type: 'general',
+    maxSize: '20m',
+    maxFiles: '14d',
+    level: 'info'
+  }
 ];
 
 // ایجاد ترنسپورت‌ها براساس تنظیمات
@@ -196,7 +202,7 @@ const fileTransports = logTypes.map(({ type, level, ...config }) => {
   const formats = [detailedFormat];
 
   // اضافه کردن فیلتر فقط برای لاگ‌های غیر عمومی
-  if (type !== 'error') {
+  if (type !== 'general') {
     formats.push(createCustomFormat(type));
   }
 
@@ -208,20 +214,6 @@ const fileTransports = logTypes.map(({ type, level, ...config }) => {
     ...config
   });
 });
-
-const generalTransport = new winston.transports.DailyRotateFile({
-  filename: getLogFileName('general'),
-  level: 'info', 
-  format: winston.format.combine(
-    winston.format.timestamp(), 
-    winston.format.json() 
-  ),
-  maxSize: '20m',
-  maxFiles: '14d',
-});
-
-// افزودن ترنسپورت عمومی به آرایه ترنسپورت‌ها
-fileTransports.push(generalTransport);
 
 // اضافه کردن ترنسپورت مونگو
 const mongoTransport = new EnhancedMongoTransport({
@@ -261,14 +253,14 @@ logger.rejections.handle(
 
 
 // Log the number of transports
-// console.log(`Number of transports: ${logger.transports.length}`);
+console.log(`Number of transports: ${logger.transports.length}`);
 
 // Log the names of transports
-// console.log('Transport names:');
-// logger.transports.forEach((transport, index) => {
-//   const transportName = transport.name || transport.constructor.name;
-//   console.log(`- ${index + 1}: ${transportName}`);
-// });
+console.log('Transport names:');
+logger.transports.forEach((transport, index) => {
+  const transportName = transport.name || transport.constructor.name;
+  console.log(`- ${index + 1}: ${transportName}`);
+});
 
 
 // Enhanced logging methods

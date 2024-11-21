@@ -261,14 +261,14 @@ logger.rejections.handle(
 
 
 // Log the number of transports
-// console.log(`Number of transports: ${logger.transports.length}`);
+console.log(`Number of transports: ${logger.transports.length}`);
 
 // Log the names of transports
-// console.log('Transport names:');
-// logger.transports.forEach((transport, index) => {
-//   const transportName = transport.name || transport.constructor.name;
-//   console.log(`- ${index + 1}: ${transportName}`);
-// });
+console.log('Transport names:');
+logger.transports.forEach((transport, index) => {
+  const transportName = transport.name || transport.constructor.name;
+  console.log(`- ${index + 1}: ${transportName}`);
+});
 
 
 // Enhanced logging methods

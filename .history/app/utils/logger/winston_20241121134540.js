@@ -210,11 +210,11 @@ const fileTransports = logTypes.map(({ type, level, ...config }) => {
 });
 
 const generalTransport = new winston.transports.DailyRotateFile({
-  filename: getLogFileName('general'),
-  level: 'info', 
+  filename: getLogFileName('general'), // نام فایل general
+  level: 'silly', // ثبت تمام سطوح لاگ (از silly تا error)
   format: winston.format.combine(
-    winston.format.timestamp(), 
-    winston.format.json() 
+    winston.format.timestamp(), // افزودن تایم‌استمپ
+    winston.format.json() // ذخیره لاگ‌ها در قالب JSON
   ),
   maxSize: '20m',
   maxFiles: '14d',
@@ -261,14 +261,14 @@ logger.rejections.handle(
 
 
 // Log the number of transports
-// console.log(`Number of transports: ${logger.transports.length}`);
+console.log(`Number of transports: ${logger.transports.length}`);
 
 // Log the names of transports
-// console.log('Transport names:');
-// logger.transports.forEach((transport, index) => {
-//   const transportName = transport.name || transport.constructor.name;
-//   console.log(`- ${index + 1}: ${transportName}`);
-// });
+console.log('Transport names:');
+logger.transports.forEach((transport, index) => {
+  const transportName = transport.name || transport.constructor.name;
+  console.log(`- ${index + 1}: ${transportName}`);
+});
 
 
 // Enhanced logging methods

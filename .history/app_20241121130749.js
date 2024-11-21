@@ -7,3 +7,4 @@ logger.security('New login attempt', { ip: '192.168.1.1' });
 logger.performance('Hi its james');
 logger.error('it is a test eror');
 logger.custom('Hi its james');
+logger.general('Hi its james');
