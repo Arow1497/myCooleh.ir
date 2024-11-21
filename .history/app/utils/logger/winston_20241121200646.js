@@ -250,22 +250,14 @@ const allTransports = [
 ];
 
 if (process.env.NODE_ENV === 'development') {
-  // تعریف فیلتر برای لاگ‌های با logType = error
-  const filterErrorLogs = winston.format((info) => {
-    return info.level === 'error' ? info : false; 
-  });
-
-  // تعریف Console transport
   const consoleTransport = new winston.transports.Console({
     format: winston.format.combine(
-      filterErrorLogs(), // اعمال فیلتر برای نمایش فقط خطاها
       winston.format.colorize(),
       winston.format.simple()
     ),
-    handleExceptions: true,
-    handleRejections: true,
+    // handleExceptions: true, // هندل کردن استثناها در کنسول
+    // handleRejections: true
   });
-
   allTransports.push(consoleTransport);
 }
 

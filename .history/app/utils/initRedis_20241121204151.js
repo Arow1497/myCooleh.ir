@@ -1,13 +1,32 @@
-const redisDB = require("redis");
-const {logger} = require("../utils/logger/winston")
-const redisClient = redisDB.createClient();
-redisClient.connect();
-redisClient.on("connect", () => logger.info("connected to redis"));
-redisClient.on("ready", () => logger.info("connected to redis and ready to use"));
-redisClient.on("error", (err) => logger.error("RedisError: ", err.message));
-redisClient.on("end", () => logger.error("disconected from redis"));
+const redis = require('redis');
+const {logger} = require('../utils/logger/winston'); 
 
-module.exports = {redisClient}
+async function initRedis() {
+    try {
+        const redisClient = redis.createClient({
+            socket: {
+                host: '127.0.0.1',
+                port: 6379,
+                reconnectStrategy: retries => Math.min(retries * 50, 500), // تنظیم بازگشت خودکار در صورت قطع شدن اتصال
+
+            },
+        });
+
+        redisClient.on('error', (err) => {
+            logger.error('Redis connection error:', err.message);
+        });
+
+        await redisClient.connect();
+        logger.info('Connected to Redis and ready to use');
+
+        return redisClient; // در صورت نیاز به استفاده از client
+    } catch (error) {
+        logger.error('Failed to connect to Redis:', error.message);
+    }
+}
+
+module.exports = {initRedis,
+    redisClient}
 
 /*
  مدیریت بک‌آپ گیری با snapshotting و AOF

@@ -1,11 +1,10 @@
 const redisDB = require("redis");
-const {logger} = require("../utils/logger/winston")
 const redisClient = redisDB.createClient();
 redisClient.connect();
-redisClient.on("connect", () => logger.info("connected to redis"));
-redisClient.on("ready", () => logger.info("connected to redis and ready to use"));
-redisClient.on("error", (err) => logger.error("RedisError: ", err.message));
-redisClient.on("end", () => logger.error("disconected from redis"));
+redisClient.on("connect", () => console.log("connected to redis"));
+redisClient.on("ready", () => console.log("connected to redis and ready to use"));
+redisClient.on("error", (err) => console.log("RedisError: ", err.message));
+redisClient.on("end", () => console.log("disconected from redis"));
 
 module.exports = {redisClient}
 

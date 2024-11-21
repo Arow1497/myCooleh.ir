@@ -41,7 +41,7 @@
 
 /**
  * @swagger
- *  /user/auth/request-otp:
+ *  /user/auth/get-otp:
  *      post:
  *          tags: [User-Authentication]
  *          summary: login user in userpanel with phone number
@@ -67,7 +67,7 @@
  */
 /**
  * @swagger
- *  /user/auth/verify-otp:
+ *  /user/auth/check-otp:
  *      post:
  *          tags : [User-Authentication]
  *          summary: chack-otp value in user controller

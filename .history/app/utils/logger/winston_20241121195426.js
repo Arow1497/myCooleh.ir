@@ -11,7 +11,7 @@ const fs = require('fs');
 const LOG_DIR = path.join(__dirname, '../../logs');
 
 const createLogDirectories = () => {
-  const types = ['error', 'security', 'performance', 'system', 'custom'];
+  const types = ['error', 'security', 'performance', 'system', 'custom', 'general'];
   
   if (!fs.existsSync(LOG_DIR)) {
     fs.mkdirSync(LOG_DIR, { recursive: true });
@@ -114,16 +114,10 @@ const logSchema = new mongoose.Schema({
 class EnhancedMongoTransport extends Transport {
   constructor(opts) {
     super(opts);
-    this.collection = mongoose.model('Log', opts.logSchema).collection;
-    this.levels = opts.levels || []; // سطوح مجاز برای ذخیره‌سازی
+    this.collection = mongoose.model('Log', logSchema).collection;
   }
 
   async log(info, callback) {
-    // بررسی سطح لاگ
-    if (this.levels.length > 0 && !this.levels.includes(info.level)) {
-      return callback(); // اگر سطح لاگ موردنظر نیست، عملیات را متوقف کنید
-    }
-
     try {
       await this.collection.insertOne({
         timestamp: moment().format('YYYY-MM-DD HH:mm:ss.SSS'),
@@ -132,7 +126,7 @@ class EnhancedMongoTransport extends Transport {
         context: info.context || {},
         location: info.errorLocation,
         metadata: info.metadata || {},
-        stack: info.stack,
+        stack: info.stack
       });
       callback();
     } catch (err) {
@@ -155,8 +149,6 @@ const createCustomFormat = (logType, section = null) => {
   })();
 };
 
-
-
 // تنظیمات پایه برای همه لاگ‌ها
 const baseRotateConfig = {
   datePattern: 'YYYY-MM-DD',
@@ -174,69 +166,49 @@ const logTypes = [
   {
     type: 'security',
     maxSize: '10m',
-    maxFiles: '30d',
-    level: 'info'
+    maxFiles: '30d'
   },
   {
     type: 'performance',
     maxSize: '10m',
-    maxFiles: '7d',
-    level: 'info'
+    maxFiles: '7d'
   },
   {
     type: 'system',
     maxSize: '10m',
-    maxFiles: '14d',
-    level: 'info'
+    maxFiles: '14d'
   },
   {
     type: 'custom',
     maxSize: '10m',
-    maxFiles: '14d',
-    level: 'info'
-
+    maxFiles: '14d'
   },
+  {
+    type: 'general',
+    maxSize: '20m',
+    maxFiles: '14d'
+  }
 ];
 
 // ایجاد ترنسپورت‌ها براساس تنظیمات
-const fileTransports = logTypes.map(({ type, level, ...config }) => {
+const fileTransports = logTypes.map(({ type, ...config }) => {
   const formats = [detailedFormat];
-
-  // اضافه کردن فیلتر فقط برای لاگ‌های غیر عمومی
-  if (type !== 'error') {
+  if (type !== 'general') {
     formats.push(createCustomFormat(type));
   }
-
+  
   return new winston.transports.DailyRotateFile({
     filename: getLogFileName(type),
-    level: level || 'info', 
-    handleExceptions: true,
-    handleRejections: true,
     format: winston.format.combine(...formats),
     ...baseRotateConfig,
     ...config
   });
 });
 
-const formats = [detailedFormat];
-const generalTransport = new winston.transports.DailyRotateFile({
-  filename: getLogFileName('general'),
-  level: 'info',
-  format: winston.format.combine(...formats),
-  ...baseRotateConfig,
-  maxSize: '20m',
-  maxFiles: '14d',
-});
-
-// افزودن ترنسپورت عمومی به آرایه ترنسپورت‌ها
-fileTransports.push(generalTransport);
-
 // اضافه کردن ترنسپورت مونگو
 const mongoTransport = new EnhancedMongoTransport({
-  logSchema,
-  levels: ['info', 'error'], // سطوح موردنظر
-  handleExceptions: true,
-  handleRejections: true,
+  level: 'info',
+  collection: 'application_logs',
   format: detailedFormat,
   options: { 
     useUnifiedTopology: true,
@@ -244,28 +216,35 @@ const mongoTransport = new EnhancedMongoTransport({
   }
 });
 
+// اضافه کردن custom format برای خطاهای runtime
+const runtimeErrorFormat = winston.format((info) => {
+  if (info.logType === 'error' && (info.severity === 'CRITICAL' || info.severity === 'HIGH')) {
+      return {
+          ...info,
+          timestamp: info.timestamp || moment().format('YYYY-MM-DD HH:mm:ss.SSS'),
+          environment: process.env.NODE_ENV,
+          processId: process.pid,
+          memoryUsage: process.memoryUsage(),
+          stack: errorStack || 'Stack trace not available',
+      };
+  }
+  return info;
+})();
+
+
+
 const allTransports = [
   ...fileTransports,
   mongoTransport
 ];
 
 if (process.env.NODE_ENV === 'development') {
-  // تعریف فیلتر برای لاگ‌های با logType = error
-  const filterErrorLogs = winston.format((info) => {
-    return info.level === 'error' ? info : false; 
-  });
-
-  // تعریف Console transport
   const consoleTransport = new winston.transports.Console({
     format: winston.format.combine(
-      filterErrorLogs(), // اعمال فیلتر برای نمایش فقط خطاها
       winston.format.colorize(),
       winston.format.simple()
     ),
-    handleExceptions: true,
-    handleRejections: true,
   });
-
   allTransports.push(consoleTransport);
 }
 
@@ -291,7 +270,6 @@ logger.transports.forEach((transport, index) => {
   console.log(`- ${index + 1}: ${transportName}`);
 });
 
-
 // Enhanced logging methods
 logger.security = (message, metadata = {}) => {
   logger.info(message, { ...metadata, logType: 'security' });
@@ -309,6 +287,10 @@ logger.custom = (message, metadata = {}) => {
   logger.info(message, { ...metadata, logType: 'custom' });
 };
 
+logger.general = (message, metadata = {}) => {
+  logger.info(message, { ...metadata, logType: 'general' });
+};
+
 logger.logError = function(err, metadata = {}, context = {}) {
   const errorLocation = getErrorLocation(err);
   this.error(err.message, {
@@ -320,21 +302,32 @@ logger.logError = function(err, metadata = {}, context = {}) {
   });
 };
 
+// اضافه کردن transport مخصوص خطاهای runtime
+const runtimeErrorTransport = new winston.transports.File({
+  filename: path.join(LOG_DIR, 'error', 'runtime-errors.log'),
+  level: 'error',
+  format: winston.format.combine(
+      runtimeErrorFormat,
+      winston.format.json()
+  ),
+  maxsize: 10485760, // 10MB
+  maxFiles: 5,
+  tailable: true
+});
+logger.add(runtimeErrorTransport);
+
 if (process.env.NODE_ENV !== 'production') {
   logger.add(new winston.transports.Console({
     format: winston.format.combine(
       winston.format.colorize({ all: true }),
       winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
-      winston.format.printf(({ level, message, timestamp, context, metadata, logType, stack }) => {
+      winston.format.printf(({ level, message, timestamp, context, metadata, logType }) => {
         let output = `${timestamp} [${logType || 'general'}] ${level}: ${message}`;
         if (context && Object.keys(context).length) {
           output += `\nContext: ${JSON.stringify(context, null, 2)}`;
         }
         if (metadata && Object.keys(metadata).length) {
           output += `\nMetadata: ${JSON.stringify(metadata, null, 2)}`;
-        }
-        if (stack) {
-          output += `\nStack Trace:\n${stack}`;
         }
         return output;
       })
@@ -343,6 +336,8 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 module.exports = { logger };
+
+
 /*
 برای اینکه بتوانید تعداد پست‌های ایجاد شده در ۱۴ روز گذشته را شمارش کنید، 
 باید لاگ‌هایتان را به گونه‌ای طراحی کنید که اطلاعات مورد نیاز شما

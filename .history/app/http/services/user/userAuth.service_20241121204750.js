@@ -2,13 +2,14 @@ const createHttpError = require("http-errors");
 const { RandomNumberGenerator } = require("../../../utils/functions.js");
 const { PrismaClient } = require("@prisma/client");
 const crypto = require('crypto');
+const winston = require('winston');
 const prisma = new PrismaClient();
-const {logger} = require("../../../utils/logger/winston.js")
+const logger = require("../../../utils/logger/winston.js")
 const {redisClient} = require("../../../utils/initRedis.js");
 const { SignAccessToken, SignRefreshToken, VerifyRefreshToken } = require("../../middlewares/authorizationSystem.js");
 
 class UserAuthService {
- 
+
     generateHMAC(data) {
         const secret = process.env.HMAC_SECRET;
         return crypto
@@ -19,11 +20,10 @@ class UserAuthService {
 
     async checkSuspiciousActivity(mobile, ip) {
         const suspiciousKey = `suspicious:${mobile}:${ip}`;
-        const attempts = await redisClient.incr(suspiciousKey);
         await redisClient.expire(suspiciousKey, 3600);
 
         if (attempts > 10) {
-            logger.warn('Suspicious Activity Detected', {
+            this.logger.warn('Suspicious Activity Detected', {
                 mobile, ip, attempts, timestamp: new Date()
             });
             return true;
@@ -41,7 +41,7 @@ class UserAuthService {
         }
 
         if (requestsCount > 5) {
-            logger.warn('OTP Request Limit Exceeded', { mobile, ip });
+            this.logger.warn('OTP Request Limit Exceeded', { mobile, ip });
             throw createHttpError.TooManyRequests('تعداد درخواست‌های کد تایید بیش از حد مجاز است');
         }
 
@@ -53,7 +53,7 @@ class UserAuthService {
         const code = RandomNumberGenerator();
         const result = await this.saveOtpToRedis(mobile, code);
 
-        logger.info('OTP Requested', {
+        this.logger.info('OTP Requested', {
             mobile, ip, timestamp: new Date()
         });
 
@@ -71,7 +71,7 @@ class UserAuthService {
         const storedOtp = await redisClient.get(`otp:${mobile}`);
         if (!storedOtp) throw createHttpError.Unauthorized("کد منقضی شده یا یافت نشد");
         if (storedOtp !== code) {
-            logger.warn('Failed OTP Attempt', {
+            this.logger.warn('Failed OTP Attempt', {
                 mobile, ip, timestamp: new Date()
             });
             throw createHttpError.Unauthorized("کد ارسال شده صحیح نمی‌باشد");
@@ -135,7 +135,7 @@ class UserAuthService {
         const accessToken = await SignAccessToken(user.id, hmac);
         const refreshToken = await SignRefreshToken(user.id, hmac);
     
-        logger.info('Successful Login', {
+        this.logger.info('Successful Login', {
             userId: user.id,
             mobile,
             ip,
@@ -205,7 +205,7 @@ class UserAuthService {
             const ttl = 365 * 24 * 60 * 60;
             await redisClient.SETEX(`blacklist:${token}`, ttl, true);
         } catch (error) {
-            logger.error("Error adding token to blacklist:", error);
+            this.logger.error("Error adding token to blacklist:", error);
         }
     }
 
@@ -214,7 +214,7 @@ class UserAuthService {
             const result = await redisClient.get(`blacklist:${token}`);
             return !!result;
         } catch (error) {
-            logger.error("Error checking token in blacklist:", error);
+            this.logger.error("Error checking token in blacklist:", error);
             return false;
         }
     }
@@ -224,7 +224,7 @@ class UserAuthService {
             const ttl = 3600;
             await redisClient.SETEX(`user:${user.mobile}`, ttl, JSON.stringify(user));
         } catch (error) {
-            logger.error("Error caching user data:", error);
+            this.logger.error("Error caching user data:", error);
         }
     }
 
@@ -233,7 +233,7 @@ class UserAuthService {
             const cachedUser = await redisClient.get(`user:${mobile}`);
             return cachedUser ? JSON.parse(cachedUser) : null;
         } catch (error) {
-            logger.error("Error retrieving user from cache:", error);
+            this.logger.error("Error retrieving user from cache:", error);
             return null;
         }
     }
@@ -248,7 +248,7 @@ class UserAuthService {
             await redisClient.SETEX(cacheKey, ttl, JSON.stringify(userData));
             await redisClient.SADD('active_user_caches', cacheKey);
         } catch (error) {
-            logger.error('Cache Error', { error: error.message });
+            this.logger.error('Cache Error', { error: error.message });
         }
     }
 
@@ -262,7 +262,7 @@ class UserAuthService {
                 }
             }
         } catch (error) {
-            logger.error('Cache Cleanup Error', { error: error.message });
+            this.logger.error('Cache Cleanup Error', { error: error.message });
         }
     }
 
@@ -274,7 +274,7 @@ class UserAuthService {
                 await redisClient.del(keys);
             }
         } catch (error) {
-            logger.error("Error invalidating user tokens:", error);
+            this.logger.error("Error invalidating user tokens:", error);
         }
     }
 
@@ -286,7 +286,7 @@ class UserAuthService {
             }
             return currentCount > 5;
         } catch (error) {
-            logger.error("Error checking rate limit:", error);
+            this.logger.error("Error checking rate limit:", error);
             return false;
         }
     }

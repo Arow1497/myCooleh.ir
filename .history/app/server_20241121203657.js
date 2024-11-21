@@ -6,6 +6,7 @@ const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const cors = require("cors");
 const helmet = require('helmet');
+const {initRedis} = require('./utils/initRedis');
 const hpp = require('hpp');
 const mongoSanitize = require('express-mongo-sanitize');
 const xssClean = require('xss-clean');
@@ -45,7 +46,7 @@ module.exports = class Application {
         this.createRoutes();
         this.connectToMongoDB();
         this.connectToMariaDB();
-        this.initRedis();
+        this.startServer();
         this.createServer();
         this.handleProcessShutdown();
     }
@@ -341,8 +342,13 @@ module.exports = class Application {
             logger.error("Error closing database connections:", error?.message);
         }
     }
-    initRedis(){
-        require("./utils/initRedis");}
+    async startServer() {
+        try {
+            await initRedis();
+        } catch (error) {
+            logger.error('Redis initialization error:', error.message);
+        }
+    }
     
     handleProcessShutdown() {
         process.on("SIGINT", async () => {

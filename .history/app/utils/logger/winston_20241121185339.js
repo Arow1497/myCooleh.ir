@@ -1,4 +1,3 @@
-
 const winston = require('winston');
 const path = require('path');
 require('winston-daily-rotate-file');
@@ -210,8 +209,8 @@ const fileTransports = logTypes.map(({ type, level, ...config }) => {
   return new winston.transports.DailyRotateFile({
     filename: getLogFileName(type),
     level: level || 'info', 
-    handleExceptions: true,
-    handleRejections: true,
+    // handleExceptions: true,
+    // handleRejections: true,
     format: winston.format.combine(...formats),
     ...baseRotateConfig,
     ...config
@@ -235,8 +234,9 @@ fileTransports.push(generalTransport);
 const mongoTransport = new EnhancedMongoTransport({
   logSchema,
   levels: ['info', 'error'], // سطوح موردنظر
-  handleExceptions: true,
-  handleRejections: true,
+  // handleExceptions: true,
+  // handleRejections: true,
+  collection: 'application_logs',
   format: detailedFormat,
   options: { 
     useUnifiedTopology: true,
@@ -250,22 +250,14 @@ const allTransports = [
 ];
 
 if (process.env.NODE_ENV === 'development') {
-  // تعریف فیلتر برای لاگ‌های با logType = error
-  const filterErrorLogs = winston.format((info) => {
-    return info.level === 'error' ? info : false; 
-  });
-
-  // تعریف Console transport
   const consoleTransport = new winston.transports.Console({
     format: winston.format.combine(
-      filterErrorLogs(), // اعمال فیلتر برای نمایش فقط خطاها
       winston.format.colorize(),
       winston.format.simple()
     ),
-    handleExceptions: true,
-    handleRejections: true,
+    // handleExceptions: true, // هندل کردن استثناها در کنسول
+    // handleRejections: true
   });
-
   allTransports.push(consoleTransport);
 }
 
@@ -343,6 +335,8 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 module.exports = { logger };
+
+
 /*
 برای اینکه بتوانید تعداد پست‌های ایجاد شده در ۱۴ روز گذشته را شمارش کنید، 
 باید لاگ‌هایتان را به گونه‌ای طراحی کنید که اطلاعات مورد نیاز شما
@@ -441,5 +435,6 @@ fs.readFile(logFilePath, 'utf8', (err, data) => {
 1. لاگ‌های مربوط به ایجاد پست را به صورت ساختاریافته ثبت کنید.
 2. لاگ‌ها را در ابزار تحلیل مناسب ذخیره کنید (Loki یا Elasticsearch توصیه می‌شود).
 3. با استفاده از کوئری یا اسکریپت، تعداد لاگ‌ها را در بازه زمانی مشخص شمارش کنید.
-4. گزارش‌ها را به صورت خودکار تنظیم کنید تا به صورت دوره‌ای ایجاد شوند
+4. گزارش‌ها را به صورت خودکار تنظیم کنید تا به صورت دوره‌ای ایجاد شوند.
+
 */

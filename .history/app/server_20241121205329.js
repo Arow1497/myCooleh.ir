@@ -45,7 +45,7 @@ module.exports = class Application {
         this.createRoutes();
         this.connectToMongoDB();
         this.connectToMariaDB();
-        this.initRedis();
+        this.startServer();
         this.createServer();
         this.handleProcessShutdown();
     }

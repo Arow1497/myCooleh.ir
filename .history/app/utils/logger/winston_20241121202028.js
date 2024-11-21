@@ -252,7 +252,7 @@ const allTransports = [
 if (process.env.NODE_ENV === 'development') {
   // تعریف فیلتر برای لاگ‌های با logType = error
   const filterErrorLogs = winston.format((info) => {
-    return info.level === 'error' ? info : false; 
+    return info.logType === 'error' ? info : false; // عبور فقط لاگ‌های logType = error
   });
 
   // تعریف Console transport

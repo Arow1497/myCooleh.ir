@@ -67,7 +67,7 @@
  */
 /**
  * @swagger
- *  /user/auth/verify-otp:
+ *  /user/auth/check-otp:
  *      post:
  *          tags : [User-Authentication]
  *          summary: chack-otp value in user controller
