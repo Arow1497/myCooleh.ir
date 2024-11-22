@@ -1,6 +1,6 @@
 const createError = require("http-errors");
 const Controller = require("../controller");
-const { serialNumGenerator } = require("../../../utils/functions");
+const { serialNumGenerator,ListOfImagesFromRequest } = require("../../../utils/functions");
 const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
@@ -244,22 +244,6 @@ class MechanicRegistrationController extends Controller {
    متقاضی تبلیغات در بلتفرم رجیستریشن
    */
 
-   async dontWorkInThisGarageAnyMoreByMechanic(req, res, next) {
-    try {
-        //استعفا از گاراژ - حذف گاراژ
-    } catch (error) {
-        next(error);
-    }
-    }
-
-    async dontWorkInThisGarageAnyMoreByApprentice(req, res, next) {
-      try {
-          //استعفا از گاراژ - حذف گاراژ
-      } catch (error) {
-          next(error);
-      }
-      }
-      
     async updateMechanicProfile(req, res, next) {
     try {
         

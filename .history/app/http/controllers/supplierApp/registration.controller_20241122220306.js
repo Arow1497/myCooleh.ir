@@ -4,7 +4,7 @@ const Controller = require("../controller");
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const { garagesSchema } = require("../../validators/MainApp/garages.schema");
-const { serialNumGenerator } = require("../../../utils/functions");
+const { serialNumGenerator, deleteFileInPublic } = require("../../../utils/functions");
 
 class SupplierStoreRegistrationController extends Controller{
 // Private helper methods

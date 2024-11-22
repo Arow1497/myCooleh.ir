@@ -1,6 +1,6 @@
 const createError = require("http-errors");
 const Controller = require("../controller");
-const { serialNumGenerator } = require("../../../utils/functions");
+const { serialNumGenerator,ListOfImagesFromRequest } = require("../../../utils/functions");
 const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();

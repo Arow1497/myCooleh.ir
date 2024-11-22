@@ -58,14 +58,6 @@ async #validateTransactionOwnership(transactionId, userId, role) {
         }
     }
 
-    async deleteThisGarageByGarageOwner(req, res, next) {
-        try {
-            //حذف گاراژ توسط صاحب گاراژ
-        } catch (error) {
-            next(error);
-        }
-        }
-
     async garageMonthlyProjectsIncomeRevenue(req, res, next){
         try {
             
@@ -107,7 +99,7 @@ async #validateTransactionOwnership(transactionId, userId, role) {
         }
     } 
 
-    async getGarageApprenticesList(req, res, next){
+    async getGarageShagerdsList(req, res, next){
         try {
             const garageID = req.user.GarageID;
             if(!garageID) throw createError.NotAcceptable("هنوز گاراژی ثبت نکرده اید")
@@ -177,7 +169,7 @@ async #validateTransactionOwnership(transactionId, userId, role) {
 //  به‌عنوان مثال، اگر بخواهد دستمزد مکانیک‌ها برای ماه اردیبهشت 1403 محاسبه شود، می‌تواند چنین درخواستی ارسال کند:
 // GET /mechanics/:mechanicId/salary?year=1403&month=2
 
-    async apprenticeMonthlyPercentageCheckOut(req, res, next){
+    async shagerdMonthlyPercentageCheckOut(req, res, next){
         try {
             const shagerdID = req.params.shagerdID;
             const { year, month } = req.query;

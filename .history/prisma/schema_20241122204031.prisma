@@ -89,6 +89,7 @@ model UserProfile {
   // Business Metrics
   mechanicProjectsCount   String?
   apprenticeProjectsCount String?
+  profit                  String?
   mechanicApprenticeCity  String?
   maxReachableReviewPoint  Int         @default(0)
   reviewPoint              Int         @default(0)

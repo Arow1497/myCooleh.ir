@@ -1,6 +1,6 @@
 const createError = require("http-errors");
 const Controller = require("../controller");
-const { serialNumGenerator } = require("../../../utils/functions");
+const { serialNumGenerator,ListOfImagesFromRequest } = require("../../../utils/functions");
 const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
@@ -9,7 +9,6 @@ class MechanicRegistrationController extends Controller {
 
    async mechanicRegistration(req, res, next) {
       try {
-        //this is including freelancers
         const { 
           mobile, firstName, lastName, nationalIdNumber, city, province, location, 
           garageName, garageSerialNumber, garageCity, garageAddress, garageLat_Lng, 
@@ -82,14 +81,8 @@ class MechanicRegistrationController extends Controller {
             // به روز رسانی BusinessProfile با ایدی گاراژ
             await prisma.businessProfile.update({
               where: { id: newUser.businessProfile.id },
-              data: { 
-               ownedGarage: {
-                  connect: {
-                     id: newGarage.id,
-                  },
-               },
-            },
-          });
+              data: { mechanicGarageId: newGarage.id }
+            });
           }
     
           // 4. ثبت لاگ فعالیت
@@ -139,7 +132,7 @@ class MechanicRegistrationController extends Controller {
       }
     }
 
-   async apprenticeRegistration(req, res, next) {
+   async shagerdRegistration(req, res, next) {
       try {
          const { 
            mobile, firstName, lastName, nationalIdNumber, city, province, location, 
@@ -244,44 +237,13 @@ class MechanicRegistrationController extends Controller {
    متقاضی تبلیغات در بلتفرم رجیستریشن
    */
 
-   async dontWorkInThisGarageAnyMoreByMechanic(req, res, next) {
-    try {
-        //استعفا از گاراژ - حذف گاراژ
-    } catch (error) {
-        next(error);
-    }
-    }
-
-    async dontWorkInThisGarageAnyMoreByApprentice(req, res, next) {
-      try {
-          //استعفا از گاراژ - حذف گاراژ
-      } catch (error) {
-          next(error);
-      }
-      }
-      
-    async updateMechanicProfile(req, res, next) {
-    try {
-        
-    } catch (error) {
-        next(error);
-    }
-    }
-
-    async updateAprenticeProfile(req, res, next) {
-      try {
-        
-      } catch (error) {
-        next(error);
-      }
-    }
    async mechanicMonthlyProjectsIncomeRevenue(req, res, next) {
       try {
          
       } catch (error) {
          next(error);
       }
-    }
+}
 // محاسبه و یکجور فیش حقوقی مکانیک یا سرویسکار شاغل در گاراژ برای مشاهده توسط خودش
 
    async mechanicMonthlyServicesIncomeRevenue(req, res, next) {
