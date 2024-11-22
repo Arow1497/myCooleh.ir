@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { ApprenticeshipNoticeController } = require('../../../http/controllers/mainApp/dastyar/agahiApprentice.controller');
+const { ApprenticeshipNoticeController } = require('../../http/controllers/mainApp/dastyar/agahiApprentice.controller');
 
 // Create a new notice
 router.post('/create', ApprenticeshipNoticeController.createNewNoticeApprentice);

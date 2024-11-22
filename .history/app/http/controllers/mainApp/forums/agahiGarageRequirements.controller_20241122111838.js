@@ -1,8 +1,8 @@
 const { StatusCodes: HttpStatus } = require("http-status-codes");
 const Controller = require("../controller");
-const noticeService = require("../../../services/mainApp/forums/notice.service");
+const noticeService = require("../services/notice.service");
 
-class AgahiGarageRequirementsController extends Controller {
+class AgahiEstNiazController extends Controller {
     async createNoticeGarageRequirments(req, res, next) {
         try {
             const notice = await noticeService.createNotice(
@@ -195,5 +195,4 @@ class AgahiGarageRequirementsController extends Controller {
     }
 }
 
-module.exports = {
-    AgahiGarageRequirementsController : new AgahiGarageRequirementsController()}
+module.exports = new AgahiEstNiazController();

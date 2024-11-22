@@ -10,6 +10,6 @@
 // router.use("/apprenticeship", VerifyAccessToken, UserApiApprenticeshipRoutes);
 // router.use("/outsourcing", VerifyAccessToken, UserApiOutsourcingRoutes);
 
-// module.exports = {
-//     MainAppRoutes: router
-// }
+module.exports = {
+    MainAppRoutes: router
+}

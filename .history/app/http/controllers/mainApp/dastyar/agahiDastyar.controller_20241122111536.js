@@ -1,11 +1,11 @@
 const { StatusCodes: HttpStatus } = require("http-status-codes");
-const Controller = require("../../controller");
-const noticeService = require("../../../services/mainApp/datyar/noticeServices/notice.service");
-const conversationService = require("../../../services/mainApp/datyar/noticeServices/conversation.service");
-const complaintService = require("../../../services/mainApp/datyar/noticeServices/complaint.service");
-const transactionService = require("../../../services/mainApp/datyar/noticeServices/transaction.service");
-const coworkService = require("../../../services/mainApp/datyar/noticeServices/coWork.service");
-const { deleteFilesInPublicForOrders } = require("../../../../utils/functions");
+const Controller = require("../controller");
+const noticeService = require("../services/notice.services");
+const conversationService = require("../services/conversation.service");
+const complaintService = require("../services/complaint.service");
+const transactionService = require("../services/transaction.service");
+const coworkService = require("../services/cowork.service");
+const { deleteFilesInPublicForOrders } = require("../utils/functions");
 
 class DivarNoticeController extends Controller {
     async createNewNoticeDastyar(req, res, next) {

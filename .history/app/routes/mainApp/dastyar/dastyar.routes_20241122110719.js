@@ -1,30 +1,30 @@
 const express = require('express');
 const router = express.Router();
-const { ApprenticeshipNoticeController } = require('../../../http/controllers/mainApp/dastyar/agahiApprentice.controller');
+const { ApprenticeshipNoticeController } = require('../../http/controllers/mainApp/dastyar/agahiDastyar.controller');
 
 // Create a new notice
-router.post('/create', ApprenticeshipNoticeController.createNewNoticeApprentice);
+router.post('/create', ApprenticeshipNoticeController.createNewNoticeDastyar);
 
 // Get all notices
-router.get('/', ApprenticeshipNoticeController.getAllNoticeApprentice);
+router.get('/', ApprenticeshipNoticeController.getAllNoticeDastyar);
 
 // Get a notice by ID
-router.get('/:noticeApprenticeId', ApprenticeshipNoticeController.getOneNoticeApprenticeById);
+router.get('/:noticeDastyarId', ApprenticeshipNoticeController.getOneNoticeDastyarById);
 
 // Remove a notice by ID
-router.delete('/:noticeApprenticeId', ApprenticeshipNoticeController.removeNoticeApprenticeById);
+router.delete('/:noticeDastyarId', ApprenticeshipNoticeController.removeNoticeDastyarById);
 
 // Edit a notice by ID
-router.put('/:noticeApprenticeId', ApprenticeshipNoticeController.editNoticeApprenticesById);
+router.put('/:noticeDastyarId', ApprenticeshipNoticeController.editNoticeDastyarsById);
 
 // Toggle bookmark for a notice
-router.post('/:noticeApprenticeId/bookmark', ApprenticeshipNoticeController.toggleBookmark);
+router.post('/:noticeDastyarId/bookmark', ApprenticeshipNoticeController.toggleBookmark);
 
 // Get all garage notices
-router.get('/garage', ApprenticeshipNoticeController.getAllGarageNoticeApprentices);
+router.get('/garage', ApprenticeshipNoticeController.getAllGarageNoticeDastyars);
 
 // Get all notices to itself
-router.get('/to-itself', ApprenticeshipNoticeController.getAllNoticeApprenticesToItself);
+router.get('/to-itself', ApprenticeshipNoticeController.getAllNoticeDastyarsToItself);
 
 // Get all active apprentice notices for an apprentice
 router.get('/apprentice/active', ApprenticeshipNoticeController.getApprenticeAllActiveApprenticeNoticeApps);
@@ -33,22 +33,22 @@ router.get('/apprentice/active', ApprenticeshipNoticeController.getApprenticeAll
 router.get('/garage/active', ApprenticeshipNoticeController.getGarageAllActiveApprenticeNoticeApps);
 
 // Share a notice
-router.post('/:noticeApprenticeId/share', ApprenticeshipNoticeController.shareNoticeApprentice);
+router.post('/:noticeDastyarId/share', ApprenticeshipNoticeController.shareNoticeDastyar);
 
 // Add cowork request for a notice
-router.post('/:noticeApprenticeId/cowork/:apprenticeId', ApprenticeshipNoticeController.addCoworkReqForNoticeApprentice);
+router.post('/:noticeDastyarId/cowork/:apprenticeId', ApprenticeshipNoticeController.addCoworkReqForNoticeDastyar);
 
 // Show cowork requests for a requester garage
 router.get('/cowork/requests', ApprenticeshipNoticeController.showCoworkRequestsForRequesterGarage);
 
 // Add apprentice to a request
-router.post('/cowork/:apprenticeId/:noticeApprenticeId', ApprenticeshipNoticeController.addApprenticeToRequest);
+router.post('/cowork/:apprenticeId/:noticeDastyarId', ApprenticeshipNoticeController.addApprenticeToRequest);
 
 // Delete an apprentice from a notice
-router.delete('/cowork/:noticeApprenticeId/:apprenticeId', ApprenticeshipNoticeController.deleteThisApprenticeFromNoticeApprentice);
+router.delete('/cowork/:noticeDastyarId/:apprenticeId', ApprenticeshipNoticeController.deleteThisApprenticeFromNoticeDastyar);
 
 // Apprentice refusing from a notice
-router.post('/:noticeApprenticeId/refuse', ApprenticeshipNoticeController.apprenticeRefusingFromThisNoticeApprenticeship);
+router.post('/:noticeDastyarId/refuse', ApprenticeshipNoticeController.apprenticeRefusingFromThisNoticeDastyarship);
 
 // Confirm transaction completion
 router.post('/transaction/:transactionId/confirm', ApprenticeshipNoticeController.confirmTransactionCompletion);
@@ -63,7 +63,7 @@ router.delete('/complaint/:complaintId', ApprenticeshipNoticeController.removeAn
 router.post('/complaint/:complaintId/respond', ApprenticeshipNoticeController.respondToComplaint);
 
 // Add review for a notice
-router.post('/:noticeApprenticeId/review', ApprenticeshipNoticeController.addReviewForNoticeApprentice);
+router.post('/:noticeDastyarId/review', ApprenticeshipNoticeController.addReviewForNoticeDastyar);
 
 // Create a transaction room
 router.post('/transaction/:transactionId/room', ApprenticeshipNoticeController.createTransactionRoom);
