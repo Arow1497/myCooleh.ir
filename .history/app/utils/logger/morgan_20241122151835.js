@@ -2,7 +2,6 @@ const morgan = require('morgan');
 const rfs = require('rotating-file-stream');
 const path = require('path');
 const {logger} = require('./winston');
-const fs = require("fs")
 
 // Create logs directory if it doesn't exist
 const LOG_DIR = path.join(__dirname, '../../logs/morganlogs');

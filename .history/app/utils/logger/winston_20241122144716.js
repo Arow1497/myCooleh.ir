@@ -224,7 +224,6 @@ const fileTransports = logTypes.map(({ type, level, ...config }) => {
 const formats = [detailedFormat];
 const generalTransport = new winston.transports.DailyRotateFile({
   filename: getLogFileName('general'),
-  auditFile: getAuditFileName('general'), // مسیر ثابت برای فایل audit
   level: 'info',
   format: winston.format.combine(...formats),
   ...baseRotateConfig,
