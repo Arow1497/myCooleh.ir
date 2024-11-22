@@ -43,7 +43,6 @@
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "@prisma/client": "^5.19.1",
-    "@sentry/node": "^7.120.0",
     "@types/hapi__joi": "^17.1.14",
     "@types/http-errors": "^2.0.4",
     "auto-bind": "^4.0.0",
