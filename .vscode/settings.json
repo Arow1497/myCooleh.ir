@@ -1,1 +1,40 @@
-{}
+{
+    "[dart]": {
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "editor.rulers": [
+            80
+        ],
+        "editor.selectionHighlight": false,
+        "editor.suggestSelection": "first",
+        "editor.tabCompletion": "onlySnippets",
+        "editor.wordBasedSuggestions": "off"
+    },
+    "window.titleBarStyle": "custom",
+    "color-highlight.enable": false,
+    "color-highlight.matchWords": true,
+    "bitoAI.codeCompletion.enableAutoCompletion": true,
+    "bitoAI.codeCompletion.enableCommentToCode": true,
+    "editor.fontFamily": "Ubuntu-Title, monospace",
+    "editor.fontLigatures": true,
+    "editor.inlineSuggest.showToolbar": "onHover",
+    "files.associations": {
+        "*.js": "javascript"
+    },
+    "liveServer.settings.donotShowInfoMsg": true,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "glassit-linux.opacity": 20,
+    "glassit.alpha": 245,
+    "git.autofetch": true,
+    "editor.codeActionsOnSave": {
+    },
+    "editor.tokenColorCustomizations": {
+        "comments": "#e9e64a" // رنگ کامنت‌ها قرمز
+    },
+    "workbench.iconTheme": "helium-icon-theme",
+    "terminal.integrated.fontFamily": "monospace",
+    "window.customTitleBarVisibility": "auto",
+    "zenMode.showTabs": "none",
+    "zenMode.fullScreen": false,
+    "zenMode.hideActivityBar": false
+}
