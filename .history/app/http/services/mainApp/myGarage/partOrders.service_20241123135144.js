@@ -1,5 +1,7 @@
 const createError = require("http-errors");
 const { PrismaClient } = require('@prisma/client');
+const { ListOfImagesFromRequest, getTime, audioSeconds } = require("../../utils/functions");
+const path = require('path');
 const prisma = new PrismaClient();
 const MediaProcessor = require('../../generalServices/attachmentProcess');
 const processor = new MediaProcessor();
