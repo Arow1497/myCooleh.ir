@@ -6,9 +6,9 @@ const { ComprehensivePwaAppController } = require("../../http/controllers/client
 const { PwaRegistrationController } = require("../../http/controllers/clientPWA/registration.PWA");
 
 // Client Authentication Routes
-router.post("/auth/get-otp", ClientAuthController.requestOtp);
-router.post("/auth/check-otp", ClientAuthController.verifyOtp);
-router.post("/auth/refresh-token", ClientAuthController.refreshToken);
+router.post("/auth/get-otp", ClientAuthController.clientGetOtp);
+router.post("/auth/check-otp", ClientAuthController.clientCheckOtp);
+router.post("/auth/refresh-token", ClientAuthController.clientRefreshToken);
 router.post("/auth/logout", ClientAuthController.logout);
 
 // Comprehensive PWA App Routes

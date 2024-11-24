@@ -39,7 +39,7 @@ router.get("/profile/supplier-store", UserProfileController.ShowUsersSupplierSto
 
 // Mechanic Registration Routes
 router.post("/mechanic/registration", MechanicRegistrationController.mechanicRegistration);
-router.post("/shagerd/registration", MechanicRegistrationController.apprenticeRegistration);
+router.post("/shagerd/registration", MechanicRegistrationController.shagerdRegistration);
 router.get("/mechanic/monthly-projects-income-revenue", MechanicRegistrationController.mechanicMonthlyProjectsIncomeRevenue);
 router.get("/mechanic/monthly-services-income-revenue", MechanicRegistrationController.mechanicMonthlyServicesIncomeRevenue);
 

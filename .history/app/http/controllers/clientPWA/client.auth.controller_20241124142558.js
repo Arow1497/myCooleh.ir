@@ -1,7 +1,7 @@
 const createHttpError = require("http-errors");
 const { getOtpSchema, checkOtpSchema } = require("../../validators/user/auth.schema.js");
 const Controller = require("../controller.js");
-const {ClientAuthService} = require("../../services/clientPWA/clientAuth.service.js");
+const {ClientAuthService} = require("../../services/clientPwa/clientAuth.service.js");
 
 class ClientAuthController extends Controller {
     constructor() {

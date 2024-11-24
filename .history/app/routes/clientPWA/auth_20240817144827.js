@@ -2,9 +2,9 @@ const { ClientAuthController } = require("../../http/controllers/clientPWA/clien
 const router = require("express").Router();
 
 
-router.post("/get-otp", ClientAuthController.requestOtp);
-router.post("/check-otp", ClientAuthController.verifyOtp);
-router.post("/refresh-token", ClientAuthController.refreshToken);
+router.post("/get-otp", ClientAuthController.clientGetOtp);
+router.post("/check-otp", ClientAuthController.clientCheckOtp);
+router.post("/refresh-token", ClientAuthController.clientRefreshToken);
 
 
 

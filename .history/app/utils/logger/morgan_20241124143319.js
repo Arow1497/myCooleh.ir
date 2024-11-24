@@ -10,14 +10,15 @@ if (!fs.existsSync(LOG_DIR)) {
     fs.mkdirSync(LOG_DIR, { recursive: true });
 }
 
+const date = moment().format('YYYY-MM-DD');
 // Create a rotating write stream for access logs
-const accessLogStream = rfs.createStream(`${moment().format('YYYY-MM-DD')}-access.log`, {
-  interval: '1d', // تنظیمات برای تغییر روزانه
-  path: LOG_DIR,
-  size: '10M',    // اندازه فایل لاگ حداکثر 10 مگابایت
-  compress: 'gzip', // فشرده‌سازی فایل‌های لاگ
-  maxFiles: 14,     // تعداد حداکثر فایل‌ها
-  teeToStdout: true // این تنظیم باعث می‌شود که لاگ‌ها در کنسول نیز چاپ شوند
+const accessLogStream = rfs.createStream('access.log', {
+  interval: '1d',
+  path: path.join(LOG_DIR, `${access_log}-${date}.log`),
+  size: '10M',
+  compress: 'gzip',
+  maxFiles: 14,
+  teeToStdout: true // This will also log to console
 });
 
 // Enhanced tokens
