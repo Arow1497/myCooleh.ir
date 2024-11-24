@@ -1,0 +1,16 @@
+const Controller = require("../controller");
+
+class ComprehensivePwaAppController extends Controller {
+    // Assuming an index method exists
+    async index(req, res, next) {
+        // Implementation
+    }
+}
+
+module.exports = {
+    ComprehensivePwaAppController : new ComprehensivePwaAppController()
+}
+// اپلیکیشن pwa مشتریان ما 
+// یک اپلیکیشن جامع و کامل پی دبلیو ای هست مثل نسخه های pwa
+//اسنپ و غیره که ما قرار هست تمام سوابق تعمیر سوابق سرویس و ارایه پیشنهاد خرید
+//به مشتریان رو داخلش داشته باشیم نه صرفا یک اپلیکیشن که برای صرفا پذیرش در گاراژ استفاده بشه

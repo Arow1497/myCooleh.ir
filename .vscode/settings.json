@@ -31,7 +31,7 @@
     "editor.tokenColorCustomizations": {
         "comments": "#e9e64a" // رنگ کامنت‌ها قرمز
     },
-    "workbench.iconTheme": "helium-icon-theme",
+    "workbench.iconTheme": "material-icon-theme",
     "terminal.integrated.fontFamily": "monospace",
     "window.customTitleBarVisibility": "auto",
     "zenMode.showTabs": "none",
