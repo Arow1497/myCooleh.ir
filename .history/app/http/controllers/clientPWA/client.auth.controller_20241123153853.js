@@ -119,12 +119,54 @@ class ClientAuthController extends Controller {
         }
     }
 
+    async updateBusinessProfile(req, res, next) {
+        try {
+            const result = await this.authService.updateBusinessProfileInfo(req.client.id, req.body);
+            return res.json({
+                data: {
+                    message: "پروفایل تجاری با موفقیت بروزرسانی شد",
+                    businessProfile: result
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async updateSocialProfile(req, res, next) {
+        try {
+            const result = await this.authService.updateSocialProfileInfo(req.client.id, req.body.socialLinks);
+            return res.json({
+                data: {
+                    message: "پروفایل اجتماعی با موفقیت بروزرسانی شد",
+                    socialProfile: result
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async updateLocationInfo(req, res, next) {
         try {
             const result = await this.authService.updateLocationInfo(req.client.id, req.body);
             return res.json({
                 data: {
                     message: "اطلاعات مکانی با موفقیت بروزرسانی شد",
+                    clientProfile: result
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async updateFinancialInfo(req, res, next) {
+        try {
+            const result = await this.authService.updateFinancialInfo(req.client.id, req.body);
+            return res.json({
+                data: {
+                    message: "اطلاعات مالی و هویتی با موفقیت بروزرسانی شد",
                     clientProfile: result
                 }
             });

@@ -4,12 +4,19 @@ const Controller = require("../controller");
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const { garagesSchema } = require("../../validators/MainApp/garages.schema");
+const { ObjectIdValidator } = require("../../validators/public.validator");
 const publicValidators = require("../../validators/public.validator");
 
 
 class PwaRegistrationController extends Controller{
 // Private helper methods
-
+async #validateGarageOwnership(user) {
+    const garageId = user?.ownedGarage?.id;
+    if (!garageId) {
+      throw createError(HttpStatus.UNAUTHORIZED, "این عملیات فقط برای صاحبین گاراژ مجاز است");
+    }
+    return garageId;
+  }
 
     // Controller methods
     async registrationPWA(req, res, next) {

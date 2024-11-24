@@ -450,6 +450,51 @@ class ClientAuthService {
         };
     }
 
+    async updateBusinessProfileInfo(clientId, profileData) {
+        const {
+            mechanicPercentage,
+            apprenticePercentage,
+            bussinesRole,
+            expertices
+        } = profileData;
+
+        const businessProfile = await prisma.businessProfile.upsert({
+            where: { clientId },
+            update: {
+                mechanicPercentage,
+                apprenticePercentage,
+                bussinesRole,
+                expertices
+            },
+            create: {
+                clientId,
+                mechanicPercentage,
+                apprenticePercentage,
+                bussinesRole,
+                expertices
+            }
+        });
+
+        const client = await this.getClientFromCache(clientId);
+        if (client) {
+            client.businessProfile = businessProfile;
+            await this.cacheClient(client);
+        }
+
+        return businessProfile;
+    }
+
+    async updateSocialProfileInfo(clientId, socialLinks) {
+        return await prisma.socialProfile.upsert({
+            where: { clientId },
+            update: { socialLinks },
+            create: {
+                clientId,
+                socialLinks
+            }
+        });
+    }
+
     async updateLocationInfo(clientId, locationData) {
         const {
             province,
@@ -467,6 +512,32 @@ class ClientAuthService {
                 location,
                 garageLat_Lng,
                 supplierStoreLat_Lng
+            }
+        });
+    }
+
+    async updateFinancialInfo(clientId, { nationalIdNumber, bankAccountNumber }) {
+        const existingProfile = await prisma.clientProfile.findFirst({
+            where: {
+                OR: [
+                    { nationalIdNumber },
+                    { bankAccountNumber }
+                ],
+                NOT: {
+                    clientId
+                }
+            }
+        });
+
+        if (existingProfile) {
+            throw createHttpError.Conflict("اطلاعات وارد شده تکراری است");
+        }
+
+        return await prisma.clientProfile.update({
+            where: { clientId },
+            data: {
+                nationalIdNumber,
+                bankAccountNumber
             }
         });
     }
@@ -586,42 +657,42 @@ module.exports = {
     ClientAuthService
 };
 
-/*
-آها! بذارید دقیقاً توضیح بدم تفاوت این دو مدل رو:
-مدل Notification شما (مدل فعلی):
-این مدل برای نگهداری محتوای خود نوتیفیکیشن‌هاست
-هر رکورد در این جدول یک پیام/نوتیفیکیشن مجزاست
-مثال‌های کاربرد:
 
-نمایش نوتیفیکیشن‌ها در پنل کاربری
-تاریخچه نوتیفیکیشن‌های ارسال شده
-ذخیره وضعیت خوانده شدن پیام‌ها
-نگهداری محتوای پیام‌هایی که از طریق FCM ارسال شده‌اند
+// آها! بذارید دقیقاً توضیح بدم تفاوت این دو مدل رو:
+// مدل Notification شما (مدل فعلی):
+// این مدل برای نگهداری محتوای خود نوتیفیکیشن‌هاست
+// هر رکورد در این جدول یک پیام/نوتیفیکیشن مجزاست
+// مثال‌های کاربرد:
+
+// نمایش نوتیفیکیشن‌ها در پنل کاربری
+// تاریخچه نوتیفیکیشن‌های ارسال شده
+// ذخیره وضعیت خوانده شدن پیام‌ها
+// نگهداری محتوای پیام‌هایی که از طریق FCM ارسال شده‌اند
 
 
-مدل ClientNotificationSettings (مدل پیشنهادی جدید):
-این مدل برای نگهداری تنظیمات و پیکربندی نوتیفیکیشن هر کاربر است
-هر کاربر فقط یک رکورد در این جدول دارد
-مثال‌های کاربرد:
+// مدل ClientNotificationSettings (مدل پیشنهادی جدید):
+// این مدل برای نگهداری تنظیمات و پیکربندی نوتیفیکیشن هر کاربر است
+// هر کاربر فقط یک رکورد در این جدول دارد
+// مثال‌های کاربرد:
 
-ذخیره FCM token های کاربر
-تنظیمات فعال/غیرفعال کردن انواع نوتیفیکیشن
-ذخیره ترجیحات کاربر برای نحوه دریافت نوتیفیکیشن
-در واقع، شما به هر دو مدل نیاز دارید:
+// ذخیره FCM token های کاربر
+// تنظیمات فعال/غیرفعال کردن انواع نوتیفیکیشن
+// ذخیره ترجیحات کاربر برای نحوه دریافت نوتیفیکیشن
+// در واقع، شما به هر دو مدل نیاز دارید:
 
-مثال کاربرد هر دو مدل با هم
+// مثال کاربرد هر دو مدل با هم
 async function sendPushNotification(clientId, message) {
-    دریافت تنظیمات نوتیفیکیشن کاربر
+    // دریافت تنظیمات نوتیفیکیشن کاربر
     const clientSettings = await prisma.clientNotificationSettings.findUnique({
         where: { clientId }
     });
 
-    چک کردن اینکه آیا کاربر push notification رو فعال کرده
+    // چک کردن اینکه آیا کاربر push notification رو فعال کرده
     if (!clientSettings.pushNotifications) {
         return;
     }
 
-    ارسال نوتیفیکیشن با FCM
+    // ارسال نوتیفیکیشن با FCM
     await firebase.messaging().sendToDevice(clientSettings.deviceTokens, {
         notification: {
             title: message.title,
@@ -629,7 +700,7 @@ async function sendPushNotification(clientId, message) {
         }
     });
 
-    ذخیره نوتیفیکیشن در دیتابیس
+    // ذخیره نوتیفیکیشن در دیتابیس
     await prisma.notification.create({
         data: {
             clientId,
@@ -637,8 +708,7 @@ async function sendPushNotification(clientId, message) {
             title: message.title,
             message: message.body,
             status: 'SENT',
-            ... سایر فیلدها
+            // ... سایر فیلدها
         }
     });
 }
-    */

@@ -1,13 +1,13 @@
 const createHttpError = require("http-errors");
 const { RandomNumberGenerator } = require("../../../utils/functions.js");
-const { getOtpSchema, checkOtpSchema } = require("../../validators/client/auth.schema.js");
+const { getOtpSchema, checkOtpSchema } = require("../../validators/user/auth.schema.js");
 const Controller = require("../controller.js");
-const {ClientAuthService} = require("../../services/clientPWA/clientAuth.service.js");
+const {UserAuthService} = require("../../services/user/userAuth.service.js");
 
-class ClientAuthController extends Controller {
+class UserAuthController extends Controller {
     constructor() {
         super();
-        this.authService = new ClientAuthService();
+        this.authService = new UserAuthService();
     }
 
     async requestOtp(req, res, next) {
@@ -45,7 +45,7 @@ class ClientAuthController extends Controller {
     async refreshToken(req, res, next) {
         try {
             const { refreshToken } = req.body;
-            const result = await this.authService.refreshClientToken(refreshToken);
+            const result = await this.authService.refreshUserToken(refreshToken);
             
             return res.json({
                 data: result
@@ -58,7 +58,7 @@ class ClientAuthController extends Controller {
     async logout(req, res, next) {
         try {
             const { refreshToken } = req.body;
-            await this.authService.logoutClient(refreshToken);
+            await this.authService.logoutUser(refreshToken);
             
             return res.status(200).json({
                 message: "خروج با موفقیت انجام شد"
@@ -70,7 +70,7 @@ class ClientAuthController extends Controller {
     
     async completeProfile(req, res, next) {
         try {
-            const result = await this.authService.completeClientProfile(req.client.id, req.body);
+            const result = await this.authService.completeUserProfile(req.user.id, req.body);
             return res.status(201).json({
                 data: result
             });
@@ -81,11 +81,11 @@ class ClientAuthController extends Controller {
 
     async updateMobile(req, res, next) {
         try {
-            const result = await this.authService.updateClientMobile(req.client.id, req.body.newMobile, req.body.code);
+            const result = await this.authService.updateUserMobile(req.user.id, req.body.newMobile, req.body.code);
             return res.json({
                 data: {
                     message: "شماره موبایل با موفقیت تغییر کرد",
-                    client: result
+                    user: result
                 }
             });
         } catch (error) {
@@ -95,7 +95,7 @@ class ClientAuthController extends Controller {
 
     async deactivateAccount(req, res, next) {
         try {
-            await this.authService.deactivateClientAccount(req.client.id);
+            await this.authService.deactivateUserAccount(req.user.id);
             return res.json({
                 message: "حساب کاربری با موفقیت غیرفعال شد"
             });
@@ -107,7 +107,7 @@ class ClientAuthController extends Controller {
     async reactivateAccount(req, res, next) {
         try {
             const { mobile, code } = req.body;
-            const result = await this.authService.reactivateClientAccount(mobile, code);
+            const result = await this.authService.reactivateUserAccount(mobile, code);
             return res.json({
                 data: {
                     message: "حساب کاربری با موفقیت فعال شد",
@@ -119,13 +119,13 @@ class ClientAuthController extends Controller {
         }
     }
 
-    async updateLocationInfo(req, res, next) {
+    async updateBusinessProfile(req, res, next) {
         try {
-            const result = await this.authService.updateLocationInfo(req.client.id, req.body);
+            const result = await this.authService.updateBusinessProfileInfo(req.user.id, req.body);
             return res.json({
                 data: {
-                    message: "اطلاعات مکانی با موفقیت بروزرسانی شد",
-                    clientProfile: result
+                    message: "پروفایل تجاری با موفقیت بروزرسانی شد",
+                    businessProfile: result
                 }
             });
         } catch (error) {
@@ -133,17 +133,59 @@ class ClientAuthController extends Controller {
         }
     }
 
-    async updateClientStatus(req, res, next) {
+    async updateSocialProfile(req, res, next) {
         try {
-            const result = await this.authService.updateClientStatus(
-                req.client.id,
-                req.body.clientId,
+            const result = await this.authService.updateSocialProfileInfo(req.user.id, req.body.socialLinks);
+            return res.json({
+                data: {
+                    message: "پروفایل اجتماعی با موفقیت بروزرسانی شد",
+                    socialProfile: result
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async updateLocationInfo(req, res, next) {
+        try {
+            const result = await this.authService.updateLocationInfo(req.user.id, req.body);
+            return res.json({
+                data: {
+                    message: "اطلاعات مکانی با موفقیت بروزرسانی شد",
+                    userProfile: result
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async updateFinancialInfo(req, res, next) {
+        try {
+            const result = await this.authService.updateFinancialInfo(req.user.id, req.body);
+            return res.json({
+                data: {
+                    message: "اطلاعات مالی و هویتی با موفقیت بروزرسانی شد",
+                    userProfile: result
+                }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async updateUserStatus(req, res, next) {
+        try {
+            const result = await this.authService.updateUserStatus(
+                req.user.id,
+                req.body.userId,
                 req.body.status,
                 req.body.reason
             );
             return res.json({
                 message: "وضعیت کاربر با موفقیت تغییر کرد",
-                client: result
+                user: result
             });
         } catch (error) {
             next(error);
@@ -152,11 +194,11 @@ class ClientAuthController extends Controller {
 
     async updateProfileMedia(req, res, next) {
         try {
-            const result = await this.authService.updateProfileMedia(req.client.id, req.body);
+            const result = await this.authService.updateProfileMedia(req.user.id, req.body);
             return res.json({
                 data: {
                     message: "تصاویر پروفایل با موفقیت بروزرسانی شد",
-                    clientProfile: result
+                    userProfile: result
                 }
             });
         } catch (error) {
@@ -164,16 +206,16 @@ class ClientAuthController extends Controller {
         }
     }
 
-    async updateClientRoles(req, res, next) {
+    async updateUserRoles(req, res, next) {
         try {
-            const result = await this.authService.updateClientRoles(
-                req.client.id,
-                req.body.clientId,
+            const result = await this.authService.updateUserRoles(
+                req.user.id,
+                req.body.userId,
                 req.body.roles
             );
             return res.json({
                 message: "نقش‌های کاربری با موفقیت بروزرسانی شد",
-                clientRoles: result
+                userRoles: result
             });
         } catch (error) {
             next(error);
@@ -183,7 +225,7 @@ class ClientAuthController extends Controller {
     async resetPassword(req, res, next) {
         try {
             const { mobile, code, newPassword } = req.body;
-            await this.authService.resetClientPassword(mobile, code, newPassword);
+            await this.authService.resetUserPassword(mobile, code, newPassword);
             return res.json({
                 message: "رمز عبور با موفقیت بازیابی شد"
             });
@@ -194,7 +236,7 @@ class ClientAuthController extends Controller {
 
     async requestAccountDeletion(req, res, next) {
         try {
-            await this.authService.requestAccountDeletion(req.client.id, req.body.reason);
+            await this.authService.requestAccountDeletion(req.user.id, req.body.reason);
             return res.json({
                 message: "درخواست حذف حساب کاربری با موفقیت ثبت شد"
             });
@@ -205,5 +247,5 @@ class ClientAuthController extends Controller {
 }
 
 module.exports = {
-    ClientAuthController: new ClientAuthController()
+    UserAuthController: new UserAuthController()
 };
