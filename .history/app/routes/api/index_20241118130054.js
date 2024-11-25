@@ -1,5 +1,5 @@
 const homeController = require("../../http/controllers/api/home.controller");
-const { VerifyAccessToken } = require("../../http/middlewares/authorizationSystem.middleware");
+const { VerifyAccessToken } = require("../../http/middlewares/authorizationSystem.js");
 const { ApiPayment } = require("./payment");
 const router = require("express").Router();
 

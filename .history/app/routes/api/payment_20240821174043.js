@@ -1,5 +1,5 @@
 const { PaymentController } = require("../../http/controllers/api/payment.controller");
-const { VerifyAccessToken } = require("../../http/middlewares/authorizationSystem.middleware");
+const { VerifyAccessToken } = require("../../http/middlewares/authorizationSystem.js");
 
 const router = require("express").Router();
 router.post("/payment", VerifyAccessToken, PaymentController.PaymentGateway)

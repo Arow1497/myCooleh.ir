@@ -33,7 +33,7 @@ class CacheManager {
     this.setAsync = promisify(this.client.set).bind(this.client);
     this.delAsync = promisify(this.client.del).bind(this.client);
     this.keysAsync = promisify(this.client.keys).bind(this.client);
-    this.flushAsync = promisify(this.client.flushAll).bind(this.client);
+    this.flushAsync = promisify(this.client.flushall).bind(this.client);
     this.scanAsync = promisify(this.client.scan).bind(this.client);
     this.multiExecAsync = promisify(this.client.multi().exec).bind(this.client.multi());
 

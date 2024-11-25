@@ -41,14 +41,12 @@ morgan.token('request-id', (req) => {
   return req.id || '-';
 });
 
-morgan.token('local-date', () => {
-  return moment().format('YYYY-MM-DD HH:mm:ss'); // زمان محلی
-});
-
+const localTimeStamp = () => moment().format('YYYY-MM-DD HH:mm:ss');
 // Enhanced format with additional useful information
 const morganFormat = [
+  `[${localTimeStamp()}]`, // زمان محلی
   ':remote-addr',
-  '[:local-date]', // زمان محلی به جای زمان UTC
+  '[:date[iso]]',
   ':request-id',
   ':user-id',
   '":method :url HTTP/:http-version"',
