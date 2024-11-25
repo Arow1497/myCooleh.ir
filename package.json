@@ -96,7 +96,8 @@
     "winston-daily-rotate-file": "^5.0.0",
     "winston-mongodb": "^6.0.0",
     "winston-transport": "^4.9.0",
-    "xss-clean": "^0.1.4"
+    "xss-clean": "^0.1.4",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
