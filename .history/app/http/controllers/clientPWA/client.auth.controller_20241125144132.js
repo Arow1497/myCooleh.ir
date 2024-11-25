@@ -78,40 +78,6 @@ class ClientAuthController extends Controller {
         }
     }
 
-    async registrationPWA(req, res, next) {
-        try {
-        const clientDataBody = await createBlogSchema.validateAsync(req.body);
-        const { first_name, last_name, carPlateNumber, carBuildYear, carModel, chassisNumber } = clientDataBody;
-    
-        const data = {};
-        if (first_name) data.first_name = first_name;
-        if (last_name) data.last_name = last_name;
-        if (carPlateNumber) data.carPlateNumber = carPlateNumber;
-        if (carBuildYear) data.carBuildYear = carBuildYear;
-        if (carModel) data.carModel = carModel;
-        if (chassisNumber) data.chassisNumber = chassisNumber;
-        data.role = ROLES.CLIENT;
-    
-        const clientID = req.client.id; // Assuming req.client.id is a string
-    
-        const registration = await prisma.client.update({
-            where: {
-            id: clientID,
-            },
-            data: data, // Directly assign the data object
-        });
-    
-        return res.status(201).json({
-            statusCode: 201,
-            data: {
-            message: "پروفایل مشتری با موفقیت بروز رسانی شد",
-            },
-        });
-        } catch (error) {
-        next(error);
-        }
-    }
-    
     async updateMobile(req, res, next) {
         try {
             const result = await this.authService.updateClientMobile(req.client.id, req.body.newMobile, req.body.code);

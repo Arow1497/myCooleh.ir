@@ -4,57 +4,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const { processAttachments } = require("../../../../../utils/functions");
 
-// Configuration for different notice types
-const NOTICE_TYPES = {
-    APPRENTICE: {
-        model: 'noticeApprenticeship',
-        partnerType: 'apprentice',
-        partnerId: 'apprenticeId',
-        defaultFileId: 'DEFAULT_NOTICEAPPRENTICESHIP_ID',
-        partnerSelect: {
-            id: true,
-            name: true,
-            avatar: true,
-            phone: true,
-            rating: true
-        }
-    },
-    DASTYAR: {
-        model: 'noticeDastyar',
-        partnerType: 'mechanic',
-        partnerId: 'mechanicId',
-        defaultFileId: 'DEFAULT_NOTICEDASTYAR_ID',
-        partnerSelect: {
-            id: true,
-            name: true,
-            avatar: true,
-            phone: true,
-            rating: true
-        }
-    },
-    OUTSOURCING: {
-        model: 'noticeOutsourcing',
-        partnerType: 'acceptorGarage',
-        partnerId: 'acceptorGarageId',
-        defaultFileId: 'DEFAULT_NOTICEOUTSOURCING_ID',
-        partnerSelect: {
-            id: true,
-            name: true,
-            address: true,
-            rating: true
-        }
-    }
-};
-
-class BaseNoticeService {
-    constructor(noticeType) {
-        this.config = NOTICE_TYPES[noticeType];
-        if (!this.config) {
-            throw new Error(`Invalid notice type: ${noticeType}`);
-        }
-        this.model = prisma[this.config.model];
-    }
-
+class NoticeService {
     async validateGarageOwnership(user) {
         const garageId = user?.ownedGarage?.id;
         if (!garageId) {
@@ -63,17 +13,17 @@ class BaseNoticeService {
         return garageId;
     }
 
-    async createNewRequest(user, body, params, files) {
+    async createNewApprenticeRequest(user, body, params, files) {
         const garageId = await this.validateGarageOwnership(user);
         
         const attachments = await processAttachments(
             files, 
             body.fileUploadPath,
-            process.env[this.config.defaultFileId]
+            process.env.DEFAULT_NOTICEAPPRENTICESHIP_ID
         );
 
         const result = await prisma.$transaction(async (prisma) => {
-            const notice = await this.model.create({
+            const notice = await prisma.noticeApprenticeship.create({
                 data: {
                     ...body,
                     publisher: { connect: { id: user.id } },
@@ -88,7 +38,7 @@ class BaseNoticeService {
             const share = await prisma.share.create({
                 data: {
                     shareUrl,
-                    [this.config.model]: { connect: { id: notice.id } }
+                    noticeApprentice: { connect: { id: notice.id } }
                 }
             });
 
@@ -98,8 +48,8 @@ class BaseNoticeService {
         return result;
     }
 
-    async getAllNotices(city) {
-        return await this.model.findMany({
+    async getAllNoticeApprentice(city) {
+        return await prisma.noticeApprenticeship.findMany({
             where: { city },
             include: {
                 publisher: {
@@ -112,9 +62,9 @@ class BaseNoticeService {
         });
     }
 
-    async getOneNoticeById(noticeId) {
-        const notice = await this.model.findUnique({
-            where: { id: noticeId },
+    async getOneNoticeApprenticeById(noticeApprenticeId) {
+        const notice = await prisma.noticeApprenticeship.findUnique({
+            where: { id: noticeApprenticeId },
             include: {
                 publisher: true,
                 requesterGarage: true,
@@ -130,9 +80,9 @@ class BaseNoticeService {
         return notice;
     }
 
-    async removeRequestById(noticeId, userId) {
-        const notice = await this.model.findUnique({
-            where: { id: noticeId },
+    async removeApprenticeRequestById(noticeApprenticeId, userId) {
+        const notice = await prisma.noticeApprenticeship.findUnique({
+            where: { id: noticeApprenticeId },
             select: { publisherId: true }
         });
 
@@ -144,14 +94,14 @@ class BaseNoticeService {
             throw createError(HttpStatus.FORBIDDEN, "شما مجاز به حذف این آگهی نیستید");
         }
 
-        await this.model.delete({
-            where: { id: noticeId }
+        await prisma.noticeApprenticeship.delete({
+            where: { id: noticeApprenticeId }
         });
     }
 
-    async editRequestById(noticeId, userId, body, files) {
-        const notice = await this.model.findUnique({
-            where: { id: noticeId },
+    async editApprenticeRequestsById(noticeApprenticeId, userId, body, files) {
+        const notice = await prisma.noticeApprenticeship.findUnique({
+            where: { id: noticeApprenticeId },
             include: { attachments: true }
         });
 
@@ -170,7 +120,7 @@ class BaseNoticeService {
         const newAttachments = await processAttachments(
             files,
             body.fileUploadPath,
-            process.env[this.config.defaultFileId]
+            process.env.DEFAULT_NOTICEAPPRENTICESHIP_ID
         );
 
         const updateData = { ...body };
@@ -186,8 +136,8 @@ class BaseNoticeService {
         delete updateData.transactionsActivityLogs;
         delete updateData.share;
 
-        return await this.model.update({
-            where: { id: noticeId },
+        return await prisma.noticeApprenticeship.update({
+            where: { id: noticeApprenticeId },
             data: {
                 ...updateData,
                 attachments: {
@@ -200,11 +150,11 @@ class BaseNoticeService {
         });
     }
 
-    async toggleBookmark(noticeId, userId) {
+    async toggleBookmark(noticeApprenticeId, userId) {
         const bookmark = await prisma.bookmark.findFirst({
             where: {
                 userId,
-                [`${this.config.model}Id`]: noticeId
+                noticeApprenticeshipId: noticeApprenticeId
             }
         });
 
@@ -218,13 +168,14 @@ class BaseNoticeService {
         await prisma.bookmark.create({
             data: {
                 userId,
-                [`${this.config.model}Id`]: noticeId
+                noticeApprenticeshipId: noticeApprenticeId
             }
         });
         return true;
     }
 
-    async getAllGarageNotices(user, page = 1, limit = 10) {
+       // Garage Notice Services
+       async getAllGarageNoticeApprentices(user, page = 1, limit = 10) {
         const garageId = await this.validateGarageOwnership(user);
 
         const where = {
@@ -233,13 +184,17 @@ class BaseNoticeService {
         };
 
         const [notices, total] = await prisma.$transaction([
-            this.model.findMany({
+            prisma.noticeApprenticeship.findMany({
                 where,
                 skip: (page - 1) * limit,
                 take: limit,
                 include: {
-                    [this.config.partnerType]: {
-                        select: this.config.partnerSelect
+                    apprentice: {
+                        select: {
+                            id: true,
+                            name: true,
+                            avatar: true
+                        }
                     },
                     project: {
                         select: {
@@ -250,26 +205,24 @@ class BaseNoticeService {
                 },
                 orderBy: { createdAt: 'desc' }
             }),
-            this.model.count({ where })
+            prisma.noticeApprenticeship.count({ where })
         ]);
 
         return { notices, total };
     }
 
-    async getAllPartnerRequests(partnerId, city, page = 1, limit = 10, status) {
-        const where = { 
-            [this.config.partnerId]: partnerId, 
-            city 
-        };
+    // Apprentice Request Services
+    async getAllApprenticeRequestsToItself(apprenticeId, city, page = 1, limit = 10, status) {
+        const where = { apprenticeId, city};
         if (status) where.status = status;
 
         const [requests, total] = await prisma.$transaction([
-            prisma[`${this.config.model}Request`].findMany({
+            prisma.shagerdReqsForApprenticeCoWork.findMany({
                 where,
                 skip: (page - 1) * limit,
                 take: limit,
                 include: {
-                    [this.config.model]: {
+                    noticeApprenticeship: {
                         include: {
                             requesterGarage: {
                                 select: {
@@ -289,21 +242,22 @@ class BaseNoticeService {
                 },
                 orderBy: { createdAt: 'desc' }
             }),
-            prisma[`${this.config.model}Request`].count({ where })
+            prisma.shagerdReqsForApprenticeCoWork.count({ where })
         ]);
 
         return { requests, total };
     }
 
-    async getPartnerAllActiveNotices(partnerId, page = 1, limit = 10) {
+    // Active Notice Services
+    async getApprenticeAllActiveNotices(apprenticeId, page = 1, limit = 10) {
         const where = {
-            [this.config.partnerId]: partnerId,
+            apprenticeId,
             status: 'IN_PROGRESS',
             isAvailable: false
         };
 
         const [activeNotices, total] = await prisma.$transaction([
-            this.model.findMany({
+            prisma.noticeApprenticeship.findMany({
                 where,
                 skip: (page - 1) * limit,
                 take: limit,
@@ -326,7 +280,7 @@ class BaseNoticeService {
                 },
                 orderBy: { startedAt: 'desc' }
             }),
-            this.model.count({ where })
+            prisma.noticeApprenticeship.count({ where })
         ]);
 
         return { activeNotices, total };
@@ -343,13 +297,19 @@ class BaseNoticeService {
         };
 
         const [activeNotices, total] = await prisma.$transaction([
-            this.model.findMany({
+            prisma.noticeApprenticeship.findMany({
                 where,
                 skip: (page - 1) * limit,
                 take: limit,
                 include: {
-                    [this.config.partnerType]: {
-                        select: this.config.partnerSelect
+                    apprentice: {
+                        select: {
+                            id: true,
+                            name: true,
+                            avatar: true,
+                            phone: true,
+                            rating: true
+                        }
                     },
                     project: {
                         select: {
@@ -369,15 +329,15 @@ class BaseNoticeService {
                 },
                 orderBy: { startedAt: 'desc' }
             }),
-            this.model.count({ where })
+            prisma.noticeApprenticeship.count({ where })
         ]);
 
         return { activeNotices, total };
     }
 
-    async shareRequest(noticeId, user) {
-        const notice = await this.model.findUnique({
-            where: { id: noticeId },
+    async shareApprenticeRequest(noticeApprenticeId, user) {
+        const notice = await prisma.noticeApprenticeship.findUnique({
+            where: { id: noticeApprenticeId },
             select: {
                 share: {
                     select: {
@@ -405,7 +365,7 @@ class BaseNoticeService {
             const share = await prisma.share.create({
                 data: {
                     shareUrl,
-                    [this.config.model]: { connect: { id: noticeId } }
+                    noticeApprentice: { connect: { id: noticeApprenticeId } }
                 }
             });
 
@@ -416,13 +376,4 @@ class BaseNoticeService {
     }
 }
 
-// Create specific service instances
-const apprenticeNoticeService = new BaseNoticeService('APPRENTICE');
-const dastyarNoticeService = new BaseNoticeService('DASTYAR');
-const outsourcingNoticeService = new BaseNoticeService('OUTSOURCING');
-
-module.exports = {
-    apprenticeNoticeService,
-    dastyarNoticeService, 
-    outsourcingNoticeService
-};
+module.exports = new NoticeService();

@@ -3214,6 +3214,7 @@ model GaragePartOrder {
   conversation         Conversation[]
 
   // Related records
+  transaction          Transaction?
   reqForSupply         RequestedForSupply[]
   milestones           Milestone[]
   reviews              Review[]
@@ -3633,6 +3634,7 @@ model NoticeOutSourcing {
   conversation         Conversation[]
 
   // Related records
+  transaction          Transaction?
   garageReqForProject  GarageReqsForOutSourcingCoWork?
   milestones           Milestone[]
   reviews              Review[]
@@ -3832,6 +3834,7 @@ model NoticeDastyar {
   conversation         Conversation[]
 
   // Related records
+  transaction          Transaction?
   milestones           Milestone[]
   reviews              Review[]
   transactionsActivityLogs         TransactionsActivityLog[]

@@ -333,7 +333,6 @@ class ApprenticeshipNoticeController extends Controller {
 
     async createComplaint(req, res, next) {
         try {
-            // ثبت شکایت از انجام نشدن تعهدات مالی یا وظایف کاری توسط طرفین
             await complaintService.createComplaint(
                 req.params.transactionId,
                 req.user.id,
@@ -354,7 +353,6 @@ class ApprenticeshipNoticeController extends Controller {
 
     async removeAndRegretComplaintByrequester(req, res, next) {
         try {
-            // پشیمانی از شکایت و لغو شکایت توسط ایجاد کننده شکایت
             await complaintService.removeComplaint(
                 req.params.complaintId,
                 req.user.id
@@ -372,7 +370,6 @@ class ApprenticeshipNoticeController extends Controller {
 
     async respondToComplaint(req, res, next) {
         try {
-            // عکس العمل و پاسخ و مستندات شخص مشتک علیه در جواب شاکی
             const updatedComplaint = await complaintService.respondToComplaint(
                 req.params.complaintId,
                 req.user.id,
@@ -393,7 +390,6 @@ class ApprenticeshipNoticeController extends Controller {
 
     async addReviewForNoticeApprentice(req, res, next) {
         try {
-            // ثبت کامنت نظر امتیاز توسط طرفین همکاری به یکدیگر در این همکاری
             await transactionService.addReview(
                 req.user,
                 req.params.noticeApprenticeId,
@@ -412,7 +408,6 @@ class ApprenticeshipNoticeController extends Controller {
 
     async createTransactionRoom(req, res, next) {
         try {
-            // ایجاد اتاق دایرکت مسج برای ارتباط طرفین همکاری با یکدیگر
             const conversation = await conversationService.createTransactionRoom(
                 req.params.transactionId,
                 req.user.id
