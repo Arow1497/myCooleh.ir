@@ -8,7 +8,6 @@ const gunzip = utilPromisify(zlib.gunzip);
 
 class CacheManager {
   constructor(config = {}) {
-    // تنظیمات پیشفرض
     this.config = {
       host: process.env.REDIS_HOST || 'localhost',
       port: process.env.REDIS_PORT || 6379,
@@ -30,7 +29,7 @@ class CacheManager {
     this.client = Redis.createClient(this.config);
     this.pipeline = this.client.pipeline();
     
-    // تبدیل متدهای Redis به Promise
+    // Promisify Redis methods
     this.getAsync = promisify(this.client.get).bind(this.client);
     this.setAsync = promisify(this.client.set).bind(this.client);
     this.delAsync = promisify(this.client.del).bind(this.client);
@@ -39,7 +38,7 @@ class CacheManager {
     this.scanAsync = promisify(this.client.scan).bind(this.client);
     this.pipelineExecAsync = promisify(this.pipeline.exec).bind(this.pipeline);
 
-    // مدیریت خطاها و وضعیت اتصال
+    // Error handling and connection management
     this.client.on('error', (err) => {
       this.config.logger.error('Redis Client Error:', err);
       this.status = 'error';
@@ -86,16 +85,14 @@ class CacheManager {
       return null;
     }
   }
-  // ایجاد کلید یکتا با استفاده از هش
+
   generateKey(req) {
     const { url, params, query, body, headers } = req;
     const data = {
       url,
       params,
       query,
-      // فقط برای درخواست‌های POST
       body: req.method === 'POST' ? body : undefined,
-      // هدرهای خاص که می‌خواهیم در کلید لحاظ شوند
       authorization: headers.authorization,
       'user-agent': headers['user-agent']
     };
@@ -108,7 +105,6 @@ class CacheManager {
     return `${this.config.prefix}${req.method}:${url}:${hash}`;
   }
 
-  // ذخیره داده در cache با امکان تنظیم tags
   async set(key, data, options = {}) {
     try {
       const {
@@ -131,7 +127,7 @@ class CacheManager {
       pipeline.set(key, compressed ? compressedData : JSON.stringify(cacheData), 'EX', ttl);
       pipeline.set(`${key}:metadata`, JSON.stringify(metadata), 'EX', ttl);
 
-      // ذخیره ارتباط tag ها با کلید
+      // Store tag relationships
       for (const tag of tags) {
         pipeline.set(`${this.config.prefix}tag:${tag}:${key}`, '1', 'EX', ttl);
       }
@@ -145,7 +141,6 @@ class CacheManager {
     }
   }
 
-  // دریافت داده از cache
   async get(key) {
     try {
       const [data, metadata] = await Promise.all([
@@ -175,7 +170,6 @@ class CacheManager {
     }
   }
 
-  // حذف همه داده‌های cache با یک tag خاص
   async invalidateByTag(tag) {
     try {
       const pattern = `${this.config.prefix}tag:${tag}:*`;
@@ -242,7 +236,6 @@ class CacheManager {
     }
   }
 
-  // میدلور اصلی برای Express با قابلیت‌های پیشرفته
   middleware(options = {}) {
     const {
       ttl = this.config.defaultTTL,
@@ -274,7 +267,6 @@ class CacheManager {
       const cacheKey = this.generateKey(req);
 
       try {
-          // بررسی وجود داده در cache
         const cachedData = await this.get(cacheKey);
         
         if (cachedData) {
@@ -287,7 +279,6 @@ class CacheManager {
           }
 
           if (!isStale || (staleWhileRevalidate && age < (ttl + staleWindow) * 1000)) {
-          // اضافه کردن هدرهای cache
             res.set({
               'X-Cache': isStale ? 'STALE' : 'HIT',
               'X-Cache-Age': age,
@@ -297,14 +288,12 @@ class CacheManager {
             return res.json(cachedData.data);
           }
         }
-        // ذخیره پاسخ اصلی
+
         const originalJson = res.json;
         
-        // جایگزینی متد json برای ذخیره در cache
         res.json = async (data) => {
           const processedData = responseHandler ? await responseHandler(data) : data;
 
-            // ذخیره در cache
           if (res.statusCode >= 200 && res.statusCode < 400 || cacheErrors) {
             await this.set(cacheKey, processedData, {
               ttl,
@@ -325,7 +314,6 @@ class CacheManager {
     };
   }
 
-  // دریافت وضعیت سیستم cache
   getStatus() {
     return {
       status: this.status,
