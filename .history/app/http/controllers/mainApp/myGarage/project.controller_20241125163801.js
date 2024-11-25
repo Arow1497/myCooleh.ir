@@ -279,6 +279,51 @@ class ProjectManagementController extends Controller {
         }
     }
 
+       // Add apprentice to project
+       async addApprenticeToProject(req) {
+        try {
+            const { projectId, apprenticeId } = req.body;
+            const userId = req.user.id;
+
+            await this.#validateProjectOwnership(projectId, userId);
+
+            const projectApprentice = await prisma.projectsApprenticeWorkAt.create({
+                data: {
+                    projectId,
+                    apprenticeId,
+                    acceptedAt: new Date(),
+                    status: 'ACTIVE',
+                    totlalIncomeOfProject: 0
+                }
+            });
+
+            return this.success(projectApprentice);
+        } catch (error) {
+            throw createError(error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR, error.message);
+        }
+    }
+
+    // Remove apprentice from project
+    async removeApprenticeFromProject(req) {
+        try {
+            const { projectId, apprenticeId } = req.params;
+            const userId = req.user.id;
+
+            await this.#validateProjectOwnership(projectId, userId);
+
+            await prisma.projectsApprenticeWorkAt.deleteMany({
+                where: {
+                    projectId,
+                    apprenticeId
+                }
+            });
+
+            return this.success({ message: "شاگرد با موفقیت از پروژه حذف شد" });
+        } catch (error) {
+            throw createError(error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR, error.message);
+        }
+    }
+
     // Delete project
     async deleteProject(req) {
         try {
@@ -505,130 +550,26 @@ class ProjectManagementController extends Controller {
     }
 
     // Get project conversation
-
-    async createTransactionRoom(req, res, next) {
+    async getProjectConversation(req) {
         try {
-            // ایجاد اتاق دایرکت مسج برای ارتباط گاراژ و مشتری با یکدیگر
-            const conversation = await conversationService.createTransactionRoom(
-                req.params.transactionId,
-                req.user.id
-            );
-            return res.status(HttpStatus.CREATED).json({
-                statusCode: HttpStatus.CREATED,
-                data: {
-                    message: "اتاق گفتگو با موفقیت ایجاد شد",
-                    conversationId: conversation.id
+            const { projectId } = req.params;
+            const userId = req.user.id;
+
+            await this.#validateProjectOwnership(projectId, userId);
+
+            const conversations = await prisma.conversation.findMany({
+                where: { projectId },
+                include: {
+                    messages: true
+                },
+                orderBy: {
+                    createdAt: 'desc'
                 }
             });
-        } catch (error) {
-            next(error);
-        }
-    }
 
-    async sendMessage(req, res, next) {
-        try {
-            const message = await conversationService.sendMessage(
-                req.params.conversationId,
-                req.user.id,
-                req.body,
-                req.files
-            );
-            return res.status(HttpStatus.OK).json({
-                statusCode: HttpStatus.OK,
-                data: {
-                    message: "پیام با موفقیت ارسال شد",
-                    messageData: message
-                }
-            });
+            return this.success(conversations);
         } catch (error) {
-            next(error);
-        }
-    }
-
-    async getMessages(req, res, next) {
-        try {
-            const { messages, totalMessages } = await conversationService.getMessages(
-                req.params.conversationId,
-                req.user.id,
-                req.query.page,
-                req.query.limit
-            );
-            return res.status(HttpStatus.OK).json({
-                statusCode: HttpStatus.OK,
-                data: {
-                    messages,
-                    pagination: {
-                        currentPage: Number(req.query.page),
-                        totalPages: Math.ceil(totalMessages / req.query.limit),
-                        totalMessages,
-                        limit: Number(req.query.limit)
-                    }
-                }
-            });
-        } catch (error) {
-            next(error);
-        }
-    }
-
-    async getUserConversations(req, res, next) {
-        try {
-            const { conversations, totalConversations } = await conversationService.getUserConversations(
-                req.user.id,
-                req.query.page,
-                req.query.limit,
-                req.query.status
-            );
-            return res.status(HttpStatus.OK).json({
-                statusCode: HttpStatus.OK,
-                data: {
-                    conversations,
-                    pagination: {
-                        currentPage: Number(req.query.page),
-                        totalPages: Math.ceil(totalConversations / req.query.limit),
-                        totalConversations,
-                        limit: Number(req.query.limit)
-                    }
-                }
-            });
-        } catch (error) {
-            next(error);
-        }
-    }
-
-    async markMessagesAsRead(req, res, next) {
-        try {
-            const { count } = await conversationService.markMessagesAsRead(
-                req.params.conversationId,
-                req.user.id
-            );
-            return res.status(HttpStatus.OK).json({
-                statusCode: HttpStatus.OK,
-                data: {
-                    message: count > 0 
-                        ? "پیام‌ها به عنوان خوانده شده علامت‌گذاری شدند"
-                        : "پیام ناخوانده‌ای وجود ندارد",
-                    count
-                }
-            });
-        } catch (error) {
-            next(error);
-        }
-    }
-
-    async getConversationDetails(req, res, next) {
-        try {
-            const conversationDetails = await conversationService.getConversationDetails(
-                req.params.conversationId,
-                req.user.id
-            );
-            return res.status(HttpStatus.OK).json({
-                statusCode: HttpStatus.OK,
-                data: {
-                    conversation: conversationDetails
-                }
-            });
-        } catch (error) {
-            next(error);
+            throw createError(error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR, error.message);
         }
     }
 
