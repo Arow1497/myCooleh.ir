@@ -660,8 +660,8 @@ model ClanCoupon {
   
   // Relations
   clan            Clan            @relation(fields: [clanId], references: [id])
-  // publisher       ProjectProfile   @relation("clanCouponPublisher", fields: [publisherId], references: [id])
-  // supplierStore   SupplierStore   @relation(fields: [supplierStoreId], references: [id])
+  publisher       ProjectProfile   @relation("clanCouponPublisher", fields: [publisherId], references: [id])
+  supplierStore   SupplierStore   @relation(fields: [supplierStoreId], references: [id])
   
   // Acceptors and Success tracking
   acceptorMechanics    ClanCouponMechanicAcceptor[]
@@ -674,12 +674,12 @@ model ClanCoupon {
   description     String
   isAvailable     Boolean         @default(true)
   city            String
-  // attachments     Attachment[]
+  attachments     Attachment[]
   status          CollaborationStatus  @default(PENDING)
   requirements    Json?           // Detailed requirements
   
   // Part specifications
-  // partSpecifications   PartSpecification[]
+  partSpecifications   PartSpecification[]
   quantity            String
   condition           PartCondition     @default(NEW)
   urgencyLevel        Int              @default(1) // 1-5 scale
@@ -696,9 +696,9 @@ model ClanCoupon {
   bookmarks          ClanCouponBookmark[]
   
   // Tracking
-  // transaction        Transaction?
-  // milestones         Milestone[]
-  // reviews            Review[]
+  transaction        Transaction?
+  milestones         Milestone[]
+  reviews            Review[]
   
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
