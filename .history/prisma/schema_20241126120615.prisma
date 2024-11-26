@@ -523,7 +523,7 @@ model ClanActivity {
 model ClanMetric {
   id                String    @id @default(uuid())
   clanId           String
-  creatorGarageId  String     @unique
+  creatorGarageId  String
   title            String
   description      String?
   metricStatus     MetricStatus @default(PENDING)
@@ -586,7 +586,7 @@ model ClanPartSpecification {
 model ClanMetricBid {
   id              String    @id @default(uuid())
   clanMetricId    String
-  supplierId      String    @unique
+  supplierId      String
   bidAmount       Float
   description     String?
   status          BidStatus @default(PENDING)
@@ -2422,7 +2422,6 @@ model Garage {
   course               Course[]
 
   // Metrics
-  clanMetric           ClanMetric?
   metrics              Metric[]
 
  // روابط جدید
@@ -3289,7 +3288,7 @@ model SupplierStore {
   products         Product[]
   // Metrics 
   clanMetricAssignment   ClanMetricAssignment?
-  clanMetricBid        ClanMetricBid?
+  clanMetricBid        ClanMetricBid
   metrics          Metric[]
 
   // Coupons 
