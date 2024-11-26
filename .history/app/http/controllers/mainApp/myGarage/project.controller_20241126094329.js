@@ -173,53 +173,6 @@ class ProjectManagementController extends Controller {
         }
     }
 
-    async getGarageProjects(req) {
-        try {
-            const garageId = await this.#validateGarageOwnership(req.user);
-            const { status, page = 1, limit = 10 } = req.query;
-
-            const skip = (page - 1) * limit;
-            
-            const where = {
-                garageId,
-                ...(status && { status })
-            };
-
-            const [projects, total] = await Promise.all([
-                prisma.project.findMany({
-                    where,
-                    skip,
-                    take: Number(limit),
-                    include: {
-                        client: true,
-                        mechanicsTeam: true,
-                        apprenticesTeam: true,
-                        reviews: true
-                    },
-                    orderBy: {
-                        createdAt: 'desc'
-                    }
-                }),
-                prisma.project.count({ where })
-            ]);
-
-            return {
-                statusCode: HttpStatus.OK,
-                data: {
-                    projects,
-                    pagination: {
-                        total,
-                        page: Number(page),
-                        limit: Number(limit),
-                        totalPages: Math.ceil(total / limit)
-                    }
-                }
-            };
-        } catch (error) {
-            throw createError.BadRequest(error.message);
-        }
-    }
-    
     // Update project
     async updateProject(req) {
         try {
@@ -297,14 +250,8 @@ class ProjectManagementController extends Controller {
                     }
                 });
             }
-            return {
-                statusCode: HttpStatus.OK,
-                data: {
-                    message: "وضعیت پروژه با موفقیت بروزرسانی شد",
-                    project: updatedProject
-                }
-            };
-                } catch (error) {
+            return this.success(updatedProject);
+        } catch (error) {
             throw createError(error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR, error.message);
         }
     }

@@ -149,14 +149,113 @@ async addMechanicToGarage(req) {
         }
     }
 
-    async employmentReqSendToGarageByMechanic_Apprentice(req, res, next){
+    async updateProjectStatus(req) {
         try {
-          
+            const garageId = await this.#validateGarageOwnership(req.user);
+            const { projectId, status } = req.body;
+
+            const project = await prisma.project.findFirst({
+                where: {
+                    id: projectId,
+                    garageId
+                }
+            });
+
+            if (!project) {
+                throw createError.NotFound("پروژه مورد نظر یافت نشد");
+            }
+
+            const updatedProject = await prisma.project.update({
+                where: { id: projectId },
+                data: { 
+                    status,
+                    completedAt: status === 'COMPLETED' ? new Date() : null
+                }
+            });
+
+            // Update garage metrics based on status
+            if (status === 'COMPLETED') {
+                await prisma.garage.update({
+                    where: { id: garageId },
+                    data: {
+                        completedProjects: {
+                            increment: 1
+                        },
+                        successRate: {
+                            set: prisma.raw(`(completedProjects::float / NULLIF(totalProjects, 0)) * 100`)
+                        }
+                    }
+                });
+            } else if (status === 'CANCELLED') {
+                await prisma.garage.update({
+                    where: { id: garageId },
+                    data: {
+                        cancelledProjects: {
+                            increment: 1
+                        }
+                    }
+                });
+            }
+
+            return {
+                statusCode: HttpStatus.OK,
+                data: {
+                    message: "وضعیت پروژه با موفقیت بروزرسانی شد",
+                    project: updatedProject
+                }
+            };
         } catch (error) {
-          
+            throw createError.BadRequest(error.message);
         }
-       }
-       
+    }
+
+    async getGarageProjects(req) {
+        try {
+            const garageId = await this.#validateGarageOwnership(req.user);
+            const { status, page = 1, limit = 10 } = req.query;
+
+            const skip = (page - 1) * limit;
+            
+            const where = {
+                garageId,
+                ...(status && { status })
+            };
+
+            const [projects, total] = await Promise.all([
+                prisma.project.findMany({
+                    where,
+                    skip,
+                    take: Number(limit),
+                    include: {
+                        client: true,
+                        mechanicsTeam: true,
+                        apprenticesTeam: true,
+                        reviews: true
+                    },
+                    orderBy: {
+                        createdAt: 'desc'
+                    }
+                }),
+                prisma.project.count({ where })
+            ]);
+
+            return {
+                statusCode: HttpStatus.OK,
+                data: {
+                    projects,
+                    pagination: {
+                        total,
+                        page: Number(page),
+                        limit: Number(limit),
+                        totalPages: Math.ceil(total / limit)
+                    }
+                }
+            };
+        } catch (error) {
+            throw createError.BadRequest(error.message);
+        }
+    }
+
     async getGarageMetrics(req) {
         try {
             const garageId = await this.#validateGarageOwnership(req.user);

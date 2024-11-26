@@ -149,14 +149,6 @@ async addMechanicToGarage(req) {
         }
     }
 
-    async employmentReqSendToGarageByMechanic_Apprentice(req, res, next){
-        try {
-          
-        } catch (error) {
-          
-        }
-       }
-       
     async getGarageMetrics(req) {
         try {
             const garageId = await this.#validateGarageOwnership(req.user);
