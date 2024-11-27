@@ -48,7 +48,7 @@
     "@types/http-errors": "^2.0.4",
     "auto-bind": "^4.0.0",
     "aws-sdk": "^2.1.0",
-    "axios": "^1.7.4",
+    "axios": "^1.7.8",
     "bcrypt": "^5.1.1",
     "bull": "^4.16.2",
     "compression": "^1.7.5",
