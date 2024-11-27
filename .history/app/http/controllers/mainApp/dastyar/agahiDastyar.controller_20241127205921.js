@@ -1,16 +1,16 @@
 const { StatusCodes: HttpStatus } = require("http-status-codes");
 const Controller = require("../../controller");
-const {dastyarNoticeService} = require("../../../services/mainApp/dastyar/noticeServices/notice.service");
-const {conversationService} = require("../../../services/mainApp/dastyar/noticeServices/conversation.service");
-const {complaintService} = require("../../../services/mainApp/dastyar/noticeServices/complaint.service");
-const {transactionService} = require("../../../services/mainApp/dastyar/noticeServices/transaction.service");
-const {coworkService} = require("../../../services/mainApp/dastyar/noticeServices/coWork.service");
+const noticeService = require("../../../services/mainApp/dastyar/noticeServices/notice.service");
+const conversationService = require("../../../services/mainApp/dastyar/noticeServices/conversation.service");
+const complaintService = require("../../../services/mainApp/dastyar/noticeServices/complaint.service");
+const transactionService = require("../../../services/mainApp/dastyar/noticeServices/transaction.service");
+const coworkService = require("../../../services/mainApp/dastyar/noticeServices/coWork.service");
 const { deleteFilesInPublicForOrders } = require("../../../../utils/functions");
 
 class DivarNoticeController extends Controller {
     async createNewNoticeDastyar(req, res, next) {
         try {
-            const result = await dastyarNoticeService.createNewNoticeDastyar(
+            const result = await noticeService.createNewNoticeDastyar(
                 req.user,
                 req.body,
                 req.params,
@@ -33,7 +33,7 @@ class DivarNoticeController extends Controller {
 
     async getAllNoticeDastyar(req, res, next) {
         try {
-            const notices = await dastyarNoticeService.getAllNoticeDastyar(req.query.city);
+            const notices = await noticeService.getAllNoticeDastyar(req.query.city);
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: { notices }
@@ -45,7 +45,7 @@ class DivarNoticeController extends Controller {
 
     async getOneNoticeDastyarById(req, res, next) {
         try {
-            const notice = await dastyarNoticeService.getOneNoticeDastyarById(req.params.noticeDastyarId);
+            const notice = await noticeService.getOneNoticeDastyarById(req.params.noticeDastyarId);
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: { notice }
@@ -57,7 +57,7 @@ class DivarNoticeController extends Controller {
 
     async removeNoticeDastyarById(req, res, next) {
         try {
-            await dastyarNoticeService.removeNoticeDastyarById(req.params.noticeDastyarId, req.user.id);
+            await noticeService.removeNoticeDastyarById(req.params.noticeDastyarId, req.user.id);
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: { message: "آگهی با موفقیت حذف شد" }
@@ -69,7 +69,7 @@ class DivarNoticeController extends Controller {
 
     async editNoticeDastyarsById(req, res, next) {
         try {
-            const updatedNotice = await dastyarNoticeService.editNoticeDastyarsById(
+            const updatedNotice = await noticeService.editNoticeDastyarsById(
                 req.params.noticeDastyarId,
                 req.user.id,
                 req.body,
@@ -90,7 +90,7 @@ class DivarNoticeController extends Controller {
 
     async toggleBookmark(req, res, next) {
         try {
-            const isAdded = await dastyarNoticeService.toggleBookmark(
+            const isAdded = await noticeService.toggleBookmark(
                 req.params.noticeDastyarId,
                 req.user.id
             );
@@ -109,7 +109,7 @@ class DivarNoticeController extends Controller {
 
     async getAllGarageNoticeDastyars(req, res, next) {
         try {
-            const { notices, total } = await dastyarNoticeService.getAllGarageNoticeDastyars(
+            const { notices, total } = await noticeService.getAllGarageNoticeDastyars(
                 req.user,
                 req.query.page,
                 req.query.limit
@@ -133,7 +133,7 @@ class DivarNoticeController extends Controller {
 
     async getAllNoticeDastyarsToItself(req, res, next) {
         try {
-            const { requests, total } = await dastyarNoticeService.getAllNoticeDastyarsToItself(
+            const { requests, total } = await noticeService.getAllNoticeDastyarsToItself(
                 req.user.id,
                 req.query.page,
                 req.query.limit,
@@ -158,7 +158,7 @@ class DivarNoticeController extends Controller {
 
     async getMechanicAllActiveDastyarNotice(req, res, next) {
         try {
-            const { activeNotices, total } = await dastyarNoticeService.getMechanicAllActiveNotices(
+            const { activeNotices, total } = await noticeService.getMechanicAllActiveNotices(
                 req.user.id,
                 req.query.page,
                 req.query.limit
@@ -182,7 +182,7 @@ class DivarNoticeController extends Controller {
 
     async getGarageAllActiveDastyarNotice(req, res, next) {
         try {
-            const { activeNotices, total } = await dastyarNoticeService.getGarageAllActiveNotices(
+            const { activeNotices, total } = await noticeService.getGarageAllActiveNotices(
                 req.user,
                 req.query.page,
                 req.query.limit
@@ -206,7 +206,7 @@ class DivarNoticeController extends Controller {
 
     async shareNoticeDastyar(req, res, next) {
         try {
-            const share = await dastyarNoticeService.shareNoticeDastyar(
+            const share = await noticeService.shareNoticeDastyar(
                 req.params.noticeDastyarId,
                 req.user
             );

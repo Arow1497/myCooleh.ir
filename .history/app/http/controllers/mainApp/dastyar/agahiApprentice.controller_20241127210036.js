@@ -1,6 +1,6 @@
 const { StatusCodes: HttpStatus } = require("http-status-codes");
 const Controller = require("../../controller");
-const {apprenticeNoticeService} = require("../../../services/mainApp/dastyar/noticeServices/notice.service");
+const {noticeService} = require("../../../services/mainApp/dastyar/noticeServices/notice.service");
 const {conversationService} = require("../../../services/mainApp/dastyar/noticeServices/conversation.service");
 const {complaintService} = require("../../../services/mainApp/dastyar/noticeServices/complaint.service");
 const {transactionService} = require("../../../services/mainApp/dastyar/noticeServices/transaction.service");
@@ -9,7 +9,7 @@ const {coworkService} = require("../../../services/mainApp/dastyar/noticeService
 class ApprenticeshipNoticeController extends Controller {
     async createNewNoticeApprentice(req, res, next) {
         try {
-            const result = await apprenticeNoticeService.createNewNoticeApprentice(
+            const result = await noticeService.createNewNoticeApprentice(
                 req.user,
                 req.body,
                 req.params,
@@ -32,7 +32,7 @@ class ApprenticeshipNoticeController extends Controller {
 
     async getAllNoticeApprentice(req, res, next) {
         try {
-            const notices = await apprenticeNoticeService.getAllNoticeApprentice(req.query.city);
+            const notices = await noticeService.getAllNoticeApprentice(req.query.city);
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: { notices }
@@ -44,7 +44,7 @@ class ApprenticeshipNoticeController extends Controller {
 
     async getOneNoticeApprenticeById(req, res, next) {
         try {
-            const notice = await apprenticeNoticeService.getOneNoticeApprenticeById(req.params.noticeApprenticeId);
+            const notice = await noticeService.getOneNoticeApprenticeById(req.params.noticeApprenticeId);
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: { notice }
@@ -56,7 +56,7 @@ class ApprenticeshipNoticeController extends Controller {
 
     async removeNoticeApprenticeById(req, res, next) {
         try {
-            await apprenticeNoticeService.removeNoticeApprenticeById(req.params.noticeApprenticeId, req.user.id);
+            await noticeService.removeNoticeApprenticeById(req.params.noticeApprenticeId, req.user.id);
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: { message: "آگهی با موفقیت حذف شد" }
@@ -68,7 +68,7 @@ class ApprenticeshipNoticeController extends Controller {
 
     async editNoticeApprenticesById(req, res, next) {
         try {
-            const updatedNotice = await apprenticeNoticeService.editNoticeApprenticesById(
+            const updatedNotice = await noticeService.editNoticeApprenticesById(
                 req.params.noticeApprenticeId,
                 req.user.id,
                 req.body,
@@ -89,7 +89,7 @@ class ApprenticeshipNoticeController extends Controller {
 
     async toggleBookmark(req, res, next) {
         try {
-            const isAdded = await apprenticeNoticeService.toggleBookmark(
+            const isAdded = await noticeService.toggleBookmark(
                 req.params.noticeApprenticeId,
                 req.user.id
             );
@@ -110,7 +110,7 @@ class ApprenticeshipNoticeController extends Controller {
         try {
             // همهی اگهی های شاگرد منتج به همکاری شده گاراژ تاریخچه اش چون اونهایی که 
             //منتج به همکاری نشند بعد مدتی از دیتابیس حذف میشن
-            const { notices, total } = await apprenticeNoticeService.getAllGarageNoticeApprentices(
+            const { notices, total } = await noticeService.getAllGarageNoticeApprentices(
                 req.user,
                 req.query.page,
                 req.query.limit
@@ -134,7 +134,7 @@ class ApprenticeshipNoticeController extends Controller {
 
     async getAllNoticeApprenticesToItself(req, res, next) {
         try { // همه ی پروژه های تعریف شده از نوع شاگرد که این شخص به عنوان شاگرد درش همکاری داشته
-            const { requests, total } = await apprenticeNoticeService.getAllNoticeApprenticesToItself(
+            const { requests, total } = await noticeService.getAllNoticeApprenticesToItself(
                 req.user.id,
                 req.query.page,
                 req.query.limit,
@@ -160,7 +160,7 @@ class ApprenticeshipNoticeController extends Controller {
     async getApprenticeAllActiveApprenticeNoticeApps(req, res, next) {
         try {
             // همکاری های درخواست شاگرد جاری و فعال شخص به عنوان شاگرد
-            const { activeNotices, total } = await apprenticeNoticeService.getApprenticeAllActiveNotices(
+            const { activeNotices, total } = await noticeService.getApprenticeAllActiveNotices(
                 req.user.id,
                 req.query.page,
                 req.query.limit
@@ -185,7 +185,7 @@ class ApprenticeshipNoticeController extends Controller {
     async getGarageAllActiveApprenticeNoticeApps(req, res, next) {
         try {
             // همکاری های درخواست شاگرد جاری و فعال شخص به عنوان گاراژ
-            const { activeNotices, total } = await apprenticeNoticeService.getGarageAllActiveNotices(
+            const { activeNotices, total } = await noticeService.getGarageAllActiveNotices(
                 req.user,
                 req.query.page,
                 req.query.limit
@@ -209,7 +209,7 @@ class ApprenticeshipNoticeController extends Controller {
 
     async shareNoticeApprentice(req, res, next) {
         try {
-            const share = await apprenticeNoticeService.shareNoticeApprentice(
+            const share = await noticeService.shareNoticeApprentice(
                 req.params.noticeApprenticeId,
                 req.user
             );
