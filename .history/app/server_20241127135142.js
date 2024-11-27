@@ -423,32 +423,31 @@ module.exports = class Application {
 
     async closeConnections() {
         try {
-            // ابتدا یک لاگ ساده قبل از بستن اتصال‌ها
-            logger.info('Starting to close all database connections...');
-    
-            // بستن اتصال Redis (اگر استفاده می‌شود)
-            if (this.redisClient && this.redisClient.isOpen) {
-                await this.redisClient.quit();
-                console.log('Redis connection closed'); // استفاده از console.log به جای logger
+            // اگر اتصال mongoose هنوز فعال است، آن را ببندید
+            if (mongoose.connection.readyState === 1) {
+                await mongoose.connection.close();
+                logger.info('MongoDB connection closed');
+            } else {
+                logger.info('MongoDB connection was already closed or not active.');
             }
     
             // بستن اتصال Prisma
             await this.#prisma.$disconnect();
-            console.log('Prisma ORM disconnected.'); // استفاده از console.log به جای logger
+            logger.info('Prisma ORM disconnected.');
     
-            // در آخر بستن اتصال mongoose
-            if (mongoose.connection.readyState === 1) {
-                // آخرین لاگ قبل از بستن مونگو
-                console.log('Closing MongoDB connection...'); // استفاده از console.log به جای logger
-                await mongoose.connection.close();
-                console.log('MongoDB connection closed'); // استفاده از console.log به جای logger
-            } else {
-                console.log('MongoDB connection was already closed or not active.');
-            }
+            // اگر Redis هم استفاده می‌شود، اتصال آن را ببندید (اگر نیاز است)
+            // مثلا:
+            // if (this.redisClient && this.redisClient.isOpen) {
+            //     await this.redisClient.quit();
+            //     logger.info('Redis connection closed');
+            // }
     
-            console.log('All database connections closed successfully');
+            // تأخیر کوتاه قبل از خاتمه فرآیند (اختیاری)
+            await new Promise(resolve => setTimeout(resolve, 500));
+    
+            logger.info('All database connections closed');
         } catch (error) {
-            console.error('Error closing database connections:', error?.message || error);
+            logger.error('Error closing database connections:', error?.message || error);
         }
     }
     

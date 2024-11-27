@@ -11,7 +11,7 @@ router.post("/auth/refresh-token", ClientAuthController.refreshToken);
 router.post("/auth/logout", ClientAuthController.logout);
 
 // Comprehensive PWA App Routes
-// router.get("/comprehensive-pwa", ComprehensivePwaAppController.index); // Assuming an index method exists
+router.get("/comprehensive-pwa", ComprehensivePwaAppController.index); // Assuming an index method exists
 
 // PWA Registration Routes
 // router.post("/registration/pwa", PwaRegistrationController.registrationPWA);

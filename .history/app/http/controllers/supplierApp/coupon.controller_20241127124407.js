@@ -1,6 +1,6 @@
 const createError = require("http-errors");
 const { StatusCodes: HttpStatus } = require("http-status-codes");
-const Controller = require("../controller");
+const Controller = require("../../controller");
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
@@ -1064,6 +1064,17 @@ class CouponsController extends Controller {
 
 
 
+  async #validateGarageAccess(userId) {
+    const user = await prisma.projectProfile.findUnique({
+      where: { id: userId },
+      include: { ownedGarage: true }
+    });
+
+    if (!user?.ownedGarage) {
+      throw createError(HttpStatus.UNAUTHORIZED, "این عملیات فقط برای صاحبین گاراژ مجاز است");
+    }
+    return user.ownedGarage.id;
+  }
 
   async #getClanCouponById(couponId, clanId) {
     const coupon = await prisma.clanCoupon.findUnique({

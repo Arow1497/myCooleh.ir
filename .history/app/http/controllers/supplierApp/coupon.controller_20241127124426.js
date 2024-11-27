@@ -1,6 +1,6 @@
 const createError = require("http-errors");
 const { StatusCodes: HttpStatus } = require("http-status-codes");
-const Controller = require("../controller");
+const Controller = require("../../controller");
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 

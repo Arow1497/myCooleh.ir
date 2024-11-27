@@ -109,45 +109,46 @@ const logSchema = new mongoose.Schema({
   metadata: Object,
   stack: String,
 }, { timestamps: true });
-
 class EnhancedMongoTransport extends Transport {
   constructor(opts) {
-      super(opts);
-      this.collection = mongoose.model('Log', opts.logSchema).collection;
-      this.levels = opts.levels || [];
-      this.fallbackLogger = console.log;
+    super(opts);
+    this.collection = mongoose.model('Log', opts.logSchema).collection;
+    this.levels = opts.levels || [];
   }
 
   async log(info, callback) {
-      try {
-          // بررسی وضعیت اتصال مونگو قبل از ثبت لاگ
-          if (!mongoose.connection.readyState) {
-              // استفاده از fallback logger و ذخیره لاگ در فایل یا کنسول
-              this.fallbackLogger(`${moment().format('YYYY-MM-DD HH:mm:ss.SSS')} [${info.level}]: ${info.message}`);
-              return callback();
-          }
-
-          // بررسی سطح لاگ
-          if (this.levels.length > 0 && !this.levels.includes(info.level)) {
-              return callback();
-          }
-
-          await this.collection.insertOne({
-              timestamp: moment().format('YYYY-MM-DD HH:mm:ss.SSS'),
-              level: info.level,
-              message: info.message,
-              context: info.context || {},
-              location: info.errorLocation,
-              metadata: info.metadata || {},
-              stack: info.stack,
-          });
-
-          callback();
-      } catch (err) {
-          // در صورت خطا، از لاگر جایگزین استفاده می‌کنیم
-          this.fallbackLogger(`${moment().format('YYYY-MM-DD HH:mm:ss.SSS')} [${info.level}]: ${info.message}`);
-          callback();
+    try {
+      // بررسی وضعیت اتصال MongoDB فقط زمانی که می‌خواهیم لاگ ثبت کنیم
+      if (mongoose.connection.readyState !== 1) {
+        // اگر اتصال فعال نیست، از ذخیره لاگ جلوگیری می‌کنیم و پیام مناسب در کنسول چاپ می‌کنیم
+        console.error('MongoDB connection is not active, falling back to console logging');
+        return callback(); // جلوگیری از ذخیره لاگ
       }
+
+      // بررسی سطح لاگ
+      if (this.levels.length > 0 && !this.levels.includes(info.level)) {
+        return callback();
+      }
+
+      // ذخیره لاگ در MongoDB
+      await this.collection.insertOne({
+        timestamp: moment().format('YYYY-MM-DD HH:mm:ss.SSS'),
+        level: info.level,
+        message: info.message,
+        context: info.context || {},
+        location: info.errorLocation,
+        metadata: info.metadata || {},
+        stack: info.stack,
+      });
+
+      callback();
+    } catch (err) {
+      // فقط در صورتی که اتصال MongoDB قطع شده باشد، این خطا را چاپ می‌کنیم
+      if (err instanceof mongoose.mongo.MongoNotConnectedError) {
+        console.error('Logging failed due to MongoDB connection issue:', err);
+      }
+      callback(err);
+    }
   }
 }
 

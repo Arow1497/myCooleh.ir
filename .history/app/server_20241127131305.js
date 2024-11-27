@@ -369,22 +369,22 @@ module.exports = class Application {
           next(err);
       });
       // Enhanced catch-all error handler
-      this.#app.use((err, req, res, next) => {
-        const statusCode = err.statusCode || 500;
-        logger.error(`Unhandled Error: ${err.message}`, {
-            stack: err.stack,
-            method: req.method,
-            url: req.originalUrl,
-            body: req.body,
-            query: req.query
-        });
+    //   this.#app.use((err, req, res, next) => {
+    //     const statusCode = err.statusCode || 500;
+    //     logger.error(`Unhandled Error: ${err.message}`, {
+    //         stack: err.stack,
+    //         method: req.method,
+    //         url: req.originalUrl,
+    //         body: req.body,
+    //         query: req.query
+    //     });
 
-        res.status(statusCode).json({
-            status: 'error',
-            message: err.message || 'Internal Server Error',
-            ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
-        });
-      });
+    //     res.status(statusCode).json({
+    //         status: 'error',
+    //         message: err.message || 'Internal Server Error',
+    //         ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+    //     });
+    //   });
       // Global error handler
       this.#app.use(errorHandler);
   }
@@ -423,82 +423,28 @@ module.exports = class Application {
 
     async closeConnections() {
         try {
-            // ابتدا یک لاگ ساده قبل از بستن اتصال‌ها
-            logger.info('Starting to close all database connections...');
-    
-            // بستن اتصال Redis (اگر استفاده می‌شود)
-            if (this.redisClient && this.redisClient.isOpen) {
-                await this.redisClient.quit();
-                console.log('Redis connection closed'); // استفاده از console.log به جای logger
-            }
-    
-            // بستن اتصال Prisma
-            await this.#prisma.$disconnect();
-            console.log('Prisma ORM disconnected.'); // استفاده از console.log به جای logger
-    
-            // در آخر بستن اتصال mongoose
-            if (mongoose.connection.readyState === 1) {
-                // آخرین لاگ قبل از بستن مونگو
-                console.log('Closing MongoDB connection...'); // استفاده از console.log به جای logger
-                await mongoose.connection.close();
-                console.log('MongoDB connection closed'); // استفاده از console.log به جای logger
-            } else {
-                console.log('MongoDB connection was already closed or not active.');
-            }
-    
-            console.log('All database connections closed successfully');
+            await Promise.all([
+                this.#prisma.$disconnect(),
+                mongoose.connection.close()
+            ]);
+            logger.info("All database connections closed");
         } catch (error) {
-            console.error('Error closing database connections:', error?.message || error);
+            logger.error("Error closing database connections:", error?.message);
         }
     }
-    
     initRedis(){
         require("./utils/initRedis");}
     
      // Optional: Add more detailed process management
      
-
-     handleProcessShutdown() {
+    handleProcessShutdown() {
         process.on("SIGINT", async () => {
-            console.log('SIGINT received. Shutting down gracefully...');
-            try {
-                await this.closeConnections();
-            } catch (error) {
-                console.error('Error during shutdown:', error);
-            }
+            await this.closeConnections();
             process.exit(0);
         });
-    
-        process.on('SIGTERM', async () => {
-            console.log('SIGTERM received. Shutting down gracefully...');
-            try {
-                await this.closeConnections();
-            } catch (error) {
-                console.error('Error during shutdown:', error);
-            }
-            process.exit(0);
-        });
-    
-        process.on('unhandledRejection', (reason, promise) => {
-            // Check for specific Mongoose/MongoDB related errors
-            if (
-                reason instanceof mongoose.Error.MongooseServerSelectionError ||
-                reason instanceof mongoose.Error.DisconnectedError ||
-                reason.name === 'MongoNotConnectedError' ||
-                reason.name === 'MongoExpiredSessionError'
-            ) {
-                console.error('MongoDB connection issue:', reason);
-                // Optionally exit the process
-                process.exit(1);
-            } else {
-                console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-            }
-        });
-    
-        process.on('uncaughtException', (error) => {
-            console.error('Uncaught Exception:', error);
-            // Exit the process
-            process.exit(1);
+
+        process.on('beforeExit', async () => {
+            await this.closeConnections();
         });
     }
 

@@ -1,6 +1,7 @@
 const express = require("express");
 const { default: mongoose } = require("mongoose");
 const path = require("path");
+const mongoose = require('mongoose');
 const { AllRoutes } = require("./routes/router");
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
@@ -423,35 +424,15 @@ module.exports = class Application {
 
     async closeConnections() {
         try {
-            // ابتدا یک لاگ ساده قبل از بستن اتصال‌ها
-            logger.info('Starting to close all database connections...');
-    
-            // بستن اتصال Redis (اگر استفاده می‌شود)
-            if (this.redisClient && this.redisClient.isOpen) {
-                await this.redisClient.quit();
-                console.log('Redis connection closed'); // استفاده از console.log به جای logger
-            }
-    
-            // بستن اتصال Prisma
-            await this.#prisma.$disconnect();
-            console.log('Prisma ORM disconnected.'); // استفاده از console.log به جای logger
-    
-            // در آخر بستن اتصال mongoose
-            if (mongoose.connection.readyState === 1) {
-                // آخرین لاگ قبل از بستن مونگو
-                console.log('Closing MongoDB connection...'); // استفاده از console.log به جای logger
-                await mongoose.connection.close();
-                console.log('MongoDB connection closed'); // استفاده از console.log به جای logger
-            } else {
-                console.log('MongoDB connection was already closed or not active.');
-            }
-    
-            console.log('All database connections closed successfully');
+            await Promise.all([
+                this.#prisma.$disconnect(),
+                mongoose.connection.close()
+            ]);
+            logger.info("All database connections closed");
         } catch (error) {
-            console.error('Error closing database connections:', error?.message || error);
+            logger.error("Error closing database connections:", error?.message);
         }
     }
-    
     initRedis(){
         require("./utils/initRedis");}
     

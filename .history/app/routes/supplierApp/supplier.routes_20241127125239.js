@@ -12,19 +12,21 @@ const { SupplierStoreRegistrationController } = require("../../http/controllers/
 
 // Supplier Store Coupons Routes
 router.post("/coupons", VerifyAccessToken, CouponsController.createCoupon);
-router.put("/coupons/:couponID", VerifyAccessToken, CouponsController.updateCoupon);
 router.delete("/coupons/:couponID", VerifyAccessToken, CouponsController.deleteCoupon);
-router.get("/coupons", VerifyAccessToken, CouponsController.listCoupons);
-router.get("/coupons/:couponID", VerifyAccessToken, CouponsController.getCouponDetails);
-router.get("/coupons/:couponID/comments", VerifyAccessToken, CouponsController.getCouponComments);
-router.post("/coupons/:couponID/comments", VerifyAccessToken, CouponsController.addComment);
-router.post("/coupons/:couponID/bookmark", VerifyAccessToken, CouponsController.toggleBookmark);
-router.post("/coupons/:couponID/like", VerifyAccessToken, CouponsController.toggleLike);
-router.post("/coupons/:couponID/dislike", VerifyAccessToken, CouponsController.toggleLike);
+router.put("/coupons/:couponID", VerifyAccessToken, CouponsController.updateCoupon);
+router.get("/coupons", VerifyAccessToken, CouponsController.);
+router.get("/coupons/list", VerifyAccessToken, CouponsController.getListOfCoupons);
+router.get("/coupons/:couponID", VerifyAccessToken, CouponsController.getOneCouponById);
+router.get("/coupons/:couponID/comments", VerifyAccessToken, CouponsController.getCommentsOfCoupon);
+router.post("/coupons/:couponID/comments", VerifyAccessToken, CouponsController.addCommentsForCoupon);
+router.post("/coupons/:couponID/bookmark", VerifyAccessToken, CouponsController.BookmarkCoupon);
+router.post("/coupons/:couponID/like", VerifyAccessToken, CouponsController.likeCoupon);
+router.post("/coupons/:couponID/dislike", VerifyAccessToken, CouponsController.dislikeCoupon);
 router.post("/coupons/:couponID/share", VerifyAccessToken, CouponsController.shareCoupon);
-// router.post("/coupons/:couponID/add-to-cooleh", VerifyAccessToken, CouponsController.addCouponByIdToCooleh);
-// router.post("/coupons/:couponID/pele", VerifyAccessToken, CouponsController.peleCouponById);
-// router.post("/coupons/:couponID/success-sell", VerifyAccessToken, CouponsController.successSellCouponById);
+router.post("/coupons/:couponID/add-to-cooleh", VerifyAccessToken, CouponsController.addCouponByIdToCooleh);
+router.post("/coupons/:couponID/pele", VerifyAccessToken, CouponsController.peleCouponById);
+router.post("/coupons/:couponID/success-sell", VerifyAccessToken, CouponsController.successSellCouponById);
+router.get("/coupons/:couponID/find", VerifyAccessToken, CouponsController.findCouponById);
 
 // Product Routes
 router.post("/products", VerifyAccessToken, ProductController.createProduct);
