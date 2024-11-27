@@ -19,7 +19,7 @@ const ffmpegStatic = require("ffmpeg-static");
 const { errorHandler } = require("./http/middlewares/errorHandling.middleware");
 const { securityMiddleware, commonValidationRules, bruteforce } = require("./http/middlewares/security.middleware");
 const { generalRateLimiter, checkSuspiciousActivity, sensitivePathLimiter, authRateLimiter } = require("./http/middlewares/rateLimiter.middleware");
-const { logger, EnhancedMongoTransport } = require("./utils/logger/winston");
+const { logger } = require("./utils/logger/winston");
 const { morganMiddleware } = require("./utils/logger/morgan");
 const cacheManager = require("./http/middlewares/cache.middleware");
 const actuator = require('express-actuator');
@@ -487,7 +487,7 @@ module.exports = class Application {
             await logger.error('Error during shutdown:', { error: error?.message || error });
         }
     }
-
+    
     initRedis(){
         require("./utils/initRedis");}
     

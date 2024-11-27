@@ -391,7 +391,7 @@ if (process.env.NODE_ENV !== 'production') {
   }));
 }
 
-module.exports = { logger, EnhancedMongoTransport};
+module.exports = { logger };
 /*
 برای اینکه بتوانید تعداد پست‌های ایجاد شده در ۱۴ روز گذشته را شمارش کنید، 
 باید لاگ‌هایتان را به گونه‌ای طراحی کنید که اطلاعات مورد نیاز شما

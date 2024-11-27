@@ -100,7 +100,6 @@ const detailedFormat = winston.format.combine(
   winston.format.metadata({ fillExcept: ['message', 'level', 'timestamp', 'stack', 'error', 'errorLocation', 'context'] }),
   errorFormat
 );
-
 const logSchema = new mongoose.Schema({
   timestamp: Date,
   level: String,
@@ -128,13 +127,10 @@ class EnhancedMongoTransport extends Transport {
           try {
               await this.collection.insertMany(pendingLogs);
               pendingLogs = [];
-              return true;
           } catch (error) {
               console.error('Error saving pending logs:', error);
-              return false;
           }
       }
-      return true;
   }
 
   // متد برای شروع فرآیند خاموش شدن
@@ -145,9 +141,9 @@ class EnhancedMongoTransport extends Transport {
   async log(info, callback) {
       try {
           const logEntry = {
-              timestamp: new Date(),
+              timestamp: moment().format('YYYY-MM-DD HH:mm:ss.SSS'),
               level: info.level,
-              message: typeof info.message === 'object' ? JSON.stringify(info.message) : info.message,
+              message: info.message,
               context: info.context || {},
               location: info.errorLocation,
               metadata: info.metadata || {},
@@ -175,12 +171,7 @@ class EnhancedMongoTransport extends Transport {
 
           callback();
       } catch (err) {
-          // در صورت خطا، لاگ را در حافظه نگه می‌داریم
-          try {
-              pendingLogs.push(logEntry);
-          } catch (e) {
-              console.error('Failed to store log in memory:', e);
-          }
+          pendingLogs.push(logEntry);
           callback();
       }
   }
@@ -391,7 +382,7 @@ if (process.env.NODE_ENV !== 'production') {
   }));
 }
 
-module.exports = { logger, EnhancedMongoTransport};
+module.exports = { logger };
 /*
 برای اینکه بتوانید تعداد پست‌های ایجاد شده در ۱۴ روز گذشته را شمارش کنید، 
 باید لاگ‌هایتان را به گونه‌ای طراحی کنید که اطلاعات مورد نیاز شما

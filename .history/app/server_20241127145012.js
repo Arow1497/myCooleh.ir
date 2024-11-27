@@ -19,7 +19,7 @@ const ffmpegStatic = require("ffmpeg-static");
 const { errorHandler } = require("./http/middlewares/errorHandling.middleware");
 const { securityMiddleware, commonValidationRules, bruteforce } = require("./http/middlewares/security.middleware");
 const { generalRateLimiter, checkSuspiciousActivity, sensitivePathLimiter, authRateLimiter } = require("./http/middlewares/rateLimiter.middleware");
-const { logger, EnhancedMongoTransport } = require("./utils/logger/winston");
+const { logger } = require("./utils/logger/winston");
 const { morganMiddleware } = require("./utils/logger/morgan");
 const cacheManager = require("./http/middlewares/cache.middleware");
 const actuator = require('express-actuator');
@@ -420,71 +420,32 @@ module.exports = class Application {
             logger.error("MariaDB connection error:", error?.message);
         }
     }
+
     async closeConnections() {
         try {
-            // شروع فرآیند خاموش شدن برای سیستم لاگینگ
-            logger.transports.forEach(transport => {
-                if (transport instanceof EnhancedMongoTransport) {
-                    transport.startShutdown();
-                }
-            });
-    
-            // ثبت آخرین لاگ‌ها
-            await logger.info('Starting to close all database connections...');
-    
-            let errors = [];
-    
-            // بستن اتصال Redis
-            try {
-                if (this.redisClient && this.redisClient.isOpen) {
-                    await this.redisClient.quit();
-                    await logger.info('Redis connection closed');
-                }
-            } catch (error) {
-                errors.push({ service: 'Redis', error: error?.message || error });
-            }
-    
+        // اگر اتصال mongoose هنوز فعال است، آن را ببندید
+        if (mongoose.connection.readyState === 1) {
+        await mongoose.connection.close();
+        logger.info('MongoDB connection closed');
+        } else {
+        logger.info('MongoDB connection was already closed or not active.');
+        }
+        
+        
             // بستن اتصال Prisma
-            try {
-                await this.#prisma.$disconnect();
-                await logger.info('Prisma ORM disconnected.');
-            } catch (error) {
-                errors.push({ service: 'Prisma', error: error?.message || error });
+            await this.#prisma.$disconnect();
+            logger.info('Prisma ORM disconnected.');
+        
+            // اگر Redis هم استفاده می‌شود، اتصال آن را ببندید (اگر نیاز است)
+            // مثلا:
+            if (this.redisClient && this.redisClient.isOpen) {
+                await this.redisClient.quit();
+                logger.info('Redis connection closed');
             }
-    
-            // ذخیره لاگ‌های معوق قبل از بستن اتصال مونگو
-            let logsSaved = true;
-            for (const transport of logger.transports) {
-                if (transport instanceof EnhancedMongoTransport) {
-                    logsSaved = await transport.savePendingLogs();
-                    if (!logsSaved) {
-                        errors.push({ service: 'Logger', error: 'Failed to save pending logs' });
-                    }
-                }
-            }
-    
-            // در نهایت بستن اتصال mongoose
-            try {
-                if (mongoose.connection.readyState === 1) {
-                    await logger.info('Closing MongoDB connection...');
-                    await mongoose.connection.close();
-                    await logger.info('MongoDB connection closed');
-                }
-            } catch (error) {
-                errors.push({ service: 'MongoDB', error: error?.message || error });
-            }
-    
-            // گزارش نتیجه نهایی
-            if (errors.length > 0) {
-                const errorMessage = errors.map(e => `${e.service}: ${e.error}`).join('; ');
-                throw new Error(`Failed to close some connections: ${errorMessage}`);
-            }
-    
-            await logger.info('All database connections closed successfully');
+        
+            logger.info('All database connections closed');
         } catch (error) {
-            // استفاده از console.error برای اطمینان از نمایش خطا
-            console.error('Error during shutdown:', error?.message || error);
-            await logger.error('Error during shutdown:', { error: error?.message || error });
+            logger.error('Error closing database connections:', error?.message || error);
         }
     }
 
