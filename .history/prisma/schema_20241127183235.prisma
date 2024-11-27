@@ -534,7 +534,9 @@ model ClanCommunicationThread {
 // دارای وضعیت (باز، بسته، در حال پیگیری)
 // قابلیت دسته‌بندی و تگ‌گذاری
 // ردیابی کامل‌تر فعالیت
+
 // مثال:
+
 // ClanCommunication: یک پیام درباره فروش قطعه
 // ClanCommunicationThread: تمام مذاکرات مرتبط با آن فروش از ابتدا تا انتها
   id                   String    @id @default(uuid())
