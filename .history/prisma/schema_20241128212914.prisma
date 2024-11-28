@@ -4925,49 +4925,54 @@ model Campaigns {
 }
 
 
-// داشتن تعداد زیادی مدل (مانند 255 مدل
-//  با روابط پیچیده) در پروژه‌ای مونولیتیک به خودی خود الزاما باعث 
-// کاهش کارایی یا کندی کوئری‌های پایگاه داده نمی‌شود، اما این پیچیدگی
-//  می‌تواند به مشکلات زیر منجر شود که ممکن است بر کارایی تأثیر بگذارد:
 
-// 1. پیچیدگی کوئری‌ها و روابط
-// روابط زیاد (مثل one-to-many, many-to-many) 
-// ممکن است باعث ایجاد JOIN های سنگین و پیچیده در کوئری‌ها شود.
-// اگر کوئری‌ها بهینه‌سازی نشده باشند، کوئری‌های بزرگ‌تر و پیچیده‌تر زمان اجرا را افزایش می‌دهند.
-// راهکارها:
-// استفاده از indexing مناسب روی ستون‌های پرتکرار و کلیدهای خارجی.
-// تحلیل کوئری‌ها با ابزارهایی مانند EXPLAIN یا ANALYZE برای شناسایی مشکلات.
-// پرهیز از کوئری‌هایی که حجم زیادی از داده را به یکباره بازیابی می‌کنند.
+// I've reviewed your schema and added several enhancements. Here are the key improvements and additions:
 
-// 2. افزایش اندازه دیتابیس
-// مدل‌های زیاد معمولاً منجر به تعداد زیاد جداول و در نتیجه افزایش حجم دیتابیس می‌شوند.
-// جداول بزرگ با داده‌های زیاد ممکن است به مرور باعث کندی شود.
-// راهکارها:
-// پارتیشن‌بندی جداول بزرگ.
-// آرشیو کردن داده‌های قدیمی که دیگر نیازی به آنها نیست.
-// محدود کردن داده‌های بازیابی‌شده با pagination یا limit در کوئری‌ها.
+// Enhanced Subscription Management:
+// Added SubscriptionTier model to better organize different subscription levels
+// Stringroduced FeatureLimit to track specific feature usage limits per plan
+// Added UsageLog for detailed feature usage tracking
+// Created SubscriptionChange to maintain a history of plan changes
 
-// 3. کاهش مقیاس‌پذیری (Scalability)
-// اپلیکیشن مونولیتیک ممکن است مقیاس‌پذیری افقی
-//  را دشوار کند، زیرا تمام منطق و داده‌ها در یک واحد بزرگ مدیریت می‌شوند.
-// راهکارها:
-// در صورت نیاز، جدا کردن بخش‌های خاص (مانند گزارش‌گیری یا نوتیفیکیشن) به میکروسرویس.
-// بررسی استفاده از دیتابیس‌های ماژولار یا چند دیتابیس برای بخش‌های مختلف.
 
-// 4. مشکلات در مدیریت کد
-// فایل‌های بزرگ، مانند schema.prisma با 5000 خط، ممکن است خطاهای کدنویسی را افزایش دهد و توسعه را پیچیده‌تر کند.
-// راهکارها:
-// تقسیم فایل schema.prisma به چندین فایل کوچک‌تر با استفاده از قابلیت Prisma Schema Composition.
-// مرتب‌سازی مدل‌ها در فایل‌ها یا پوشه‌های جداگانه.
+// Improved Referral System:
+// Added ReferralCode model for unique referral code generation and tracking
+// Created ReferralUse to track when and how referral codes are used
+// Stringroduced ReferralRewardRule to flexibly define referral reward tiers
+// Enhanced tracking of referral relationships between users
 
-// 5. بار زیاد روی سرور دیتابیس
-// کوئری‌های ناکارآمد می‌توانند منجر به افزایش مصرف منابع سرور دیتابیس شوند.
-// راهکارها:
-// استفاده از caching برای داده‌هایی که اغلب تغییر نمی‌کنند.
-// بهره‌گیری از سیستم‌های read-replica یا دیتابیس‌های خاص (مانند Redis) برای کاهش فشار.
-// جمع‌بندی:
-// تعداد زیاد مدل‌ها و جداول در صورتی که ساختار، کوئری‌ها،
-//  و استفاده از منابع دیتابیس بهینه باشند، الزاما باعث کندی نمی‌شود. با این حال:
-// پروفایل‌کردن کوئری‌ها را با ابزارهایی مثل Prisma Debugging یا ابزارهای دیتابیس انجام دهید.
-// ساختار دیتابیس و کوئری‌ها را بازبینی و بهینه کنید.
-// از indexing، caching، و sharding در صورت نیاز استفاده کنید.
+
+// Better Billing Management:
+// Added BillingRecord for comprehensive payment history
+// Enhanced relationship between subscriptions and payment methods
+// Improved invoice tracking and relationship management
+
+
+// New Features:
+// Flexible feature limits per plan
+// Detailed usage tracking
+// Comprehensive subscription change history
+// Better referral tracking and reward management
+
+
+
+// Suggestions for further improvements:
+
+// Consider adding:
+// Notification preferences for billing and subscription events
+// Proration rules for subscription changes
+// More detailed audit logging for subscription and referral activities
+// Stringegration with external payment gateway specific fields
+
+
+// You might want to add indexes for:
+// Frequently queried date fields
+// Status fields that are used in filters
+// Foreign key relationships that are frequently joined
+
+
+// Consider implementing:
+// Soft delete for important models
+// Versioning for critical data changes
+// Rate limiting fields for API calls
+// Cache invalidation triggers
