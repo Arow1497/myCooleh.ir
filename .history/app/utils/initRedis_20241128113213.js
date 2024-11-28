@@ -4,21 +4,26 @@ const retry = require("async-retry");
 
 async function createRedisClient() {
   const redisClient = redisDB.createClient({
-    // socket: {
-    //     host: process.env.REDIS_HOST,
-    //     port: process.env.REDIS_PORT,
-    //   },
-    //   password: process.env.REDIS_PASSWORD,
+    socket: {
+      host: process.env.REDIS_HOST || "localhost", // از متغیر محیطی استفاده کنید
+      port: process.env.REDIS_PORT || 6379, // از متغیر محیطی استفاده کنید
+      tls: process.env.REDIS_TLS === "true", // از متغیر محیطی استفاده کنید
+    },
+    password: process.env.REDIS_PASSWORD, // از متغیر محیطی استفاده کنید
     retry_strategy: function (options) {
-        if (options.error && options.error.code === "ECONNREFUSED") {
-            logger.error("The server refused the connection");
-            return new Error("The server refused the connection");
-        }
-        if (options.attempt > 3) { 
-            logger.error("Max retry attempts reached");
-            return undefined;
-        }
-        return Math.min(options.attempt * 100, 3000);
+      if (options.error && options.error.code === "ECONNREFUSED") {
+        logger.error("The server refused the connection");
+        return new Error("The server refused the connection");
+      }
+      if (options.total_retry_time > 1000 * 60 * 60) {
+        logger.error("Retry time exhausted");
+        return new Error("Retry time exhausted");
+      }
+      if (options.attempt > 10) {
+        logger.error("Max retry attempts reached");
+        return undefined;
+      }
+      return Math.min(options.attempt * 100, 3000); // Retrying after 100ms, 200ms, 300ms...
     },
   });
 
@@ -43,10 +48,11 @@ async function createRedisClient() {
     }
   );
 
-  return redisClient; 
+  return redisClient;
 }
 
 module.exports = { createRedisClient };
+
 
 
 /*

@@ -1,5 +1,5 @@
 const socketIO = require("socket.io");
-const { verifyTokenSocket } = require("../http/middlewares/verifyTokenSocket.middleware"); 
+const { verifyTokenSocket } = require("./middlewares/verifyTokenSocket"); // فرض بر وجود middleware احراز هویت
 const redisAdapter = require("socket.io-redis");
 
 function initialSocket(httpServer){

@@ -5,7 +5,6 @@ const { AllRoutes } = require("./routes/router");
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const cors = require("cors");
-const { createRedisClient } = require("./utils/initRedis");
 const helmet = require('helmet');
 const hpp = require('hpp');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -489,15 +488,8 @@ module.exports = class Application {
         }
     }
 
-    async initRedis(){ 
-        try {
-            const redisClient = await createRedisClient();
-            this.#app.set("redisClient", redisClient);
-        } catch (error) {
-            console.error("Error initializing Redis client:", error);
-            // handle error appropriately
-        }
-    }
+    initRedis(){
+        require("./utils/initRedis");}
     
      // process management
      handleProcessShutdown() {

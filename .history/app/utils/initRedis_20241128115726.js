@@ -4,11 +4,12 @@ const retry = require("async-retry");
 
 async function createRedisClient() {
   const redisClient = redisDB.createClient({
-    // socket: {
-    //     host: process.env.REDIS_HOST,
-    //     port: process.env.REDIS_PORT,
-    //   },
-    //   password: process.env.REDIS_PASSWORD,
+    socket: {
+        host: process.env.REDIS_HOST,
+        port: process.env.REDIS_PORT,
+        tls: process.env.REDIS_TLS === "true",
+      },
+      password: process.env.REDIS_PASSWORD,
     retry_strategy: function (options) {
         if (options.error && options.error.code === "ECONNREFUSED") {
             logger.error("The server refused the connection");

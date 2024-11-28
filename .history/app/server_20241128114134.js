@@ -489,14 +489,9 @@ module.exports = class Application {
         }
     }
 
-    async initRedis(){ 
-        try {
-            const redisClient = await createRedisClient();
-            this.#app.set("redisClient", redisClient);
-        } catch (error) {
-            console.error("Error initializing Redis client:", error);
-            // handle error appropriately
-        }
+    initRedis(){
+        const redisClient =  createRedisClient();
+    this.#app.set("redisClient", redisClient); 
     }
     
      // process management

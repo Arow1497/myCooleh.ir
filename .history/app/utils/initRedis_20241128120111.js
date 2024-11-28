@@ -1,6 +1,7 @@
 const redisDB = require("redis");
 const { logger } = require("../utils/logger/winston");
 const retry = require("async-retry");
+require('dotenv');
 
 async function createRedisClient() {
   const redisClient = redisDB.createClient({

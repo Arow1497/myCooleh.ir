@@ -1,14 +1,15 @@
 const redisDB = require("redis");
 const { logger } = require("../utils/logger/winston");
 const retry = require("async-retry");
+require('dotenv');
 
 async function createRedisClient() {
   const redisClient = redisDB.createClient({
-    // socket: {
-    //     host: process.env.REDIS_HOST,
-    //     port: process.env.REDIS_PORT,
-    //   },
-    //   password: process.env.REDIS_PASSWORD,
+    socket: {
+        host: process.env.REDIS_HOST,
+        port: process.env.REDIS_PORT,
+      },
+      password: process.env.REDIS_PASSWORD,
     retry_strategy: function (options) {
         if (options.error && options.error.code === "ECONNREFUSED") {
             logger.error("The server refused the connection");
