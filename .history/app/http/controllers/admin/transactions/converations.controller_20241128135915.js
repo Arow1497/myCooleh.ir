@@ -86,6 +86,62 @@ class ConversationController extends Controller {
         }
     }
 
+    async createClanGroupConversation(req, res, next) {
+        try {
+            const { clanId, name } = req.body;
+            const initiatorId = req.user.id;
+
+            // Check if clan exists and user is owner/admin
+            const clan = await prisma.clan.findUnique({
+                where: { id: clanId },
+                include: {
+                    memberships: true
+                }
+            });
+
+            if (!clan) {
+                throw createHttpError.NotFound('Clan not found');
+            }
+
+            const userMembership = clan.memberships.find(m => m.userId === initiatorId);
+            if (!userMembership || !['OWNER', 'ADMIN'].includes(userMembership.role)) {
+                throw createHttpError.Forbidden('Only clan owners and admins can create group conversations');
+            }
+
+            // Create group conversation
+            const conversation = await prisma.$transaction(async (prisma) => {
+                const newConversation = await prisma.conversation.create({
+                    data: {
+                        type: 'GROUP',
+                        name: name || `${clan.name} Group`
+                    }
+                });
+
+                // Add all clan members as participants
+                const participants = await Promise.all(
+                    clan.memberships.map(member =>
+                        prisma.conversationParticipant.create({
+                            data: {
+                                conversationId: newConversation.id,
+                                userId: member.userId,
+                                role: member.role === 'OWNER' ? 'OWNER' : 'MEMBER'
+                            }
+                        })
+                    )
+                );
+
+                return { ...newConversation, participants };
+            });
+
+            return this.success(res, {
+                statusCode: StatusCodes.CREATED,
+                data: conversation
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async sendMessage(req, res, next) {
         try {
             const { conversationId, content, type = 'TEXT', replyToId } = req.body;

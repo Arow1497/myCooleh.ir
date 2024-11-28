@@ -282,6 +282,7 @@ class ClanController {
         }
     }
 
+    
     async createJoinRequest(req, res) {
         try {
         const { clanId, message } = req.body;
