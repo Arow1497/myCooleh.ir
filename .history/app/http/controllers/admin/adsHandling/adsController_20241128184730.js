@@ -171,66 +171,6 @@ class PlatformAdsController extends Controller {
         return achievers;
     }
     
-
-    async #validateUserEligibility(userId) {
-        const user = await prisma.projectProfile.findUnique({
-            where: { id: userId },
-            include: {
-                thisMonthApprovedAds: true
-            }
-        });
-
-        if (!user) {
-            throw createError(HttpStatus.NOT_FOUND, 'User not found');
-        }
-
-        return {
-            isEligible: !!user.thisMonthApprovedAds,
-            user
-        };
-    }
-
-    async #validateBusinessEntity(garageId, supplierStoreId) {
-        if (garageId) {
-            const garage = await prisma.garage.findUnique({
-                where: { id: garageId }
-            });
-            if (!garage) {
-                throw createError(HttpStatus.NOT_FOUND, 'Garage not found');
-            }
-        }
-
-        if (supplierStoreId) {
-            const store = await prisma.supplierStore.findUnique({
-                where: { id: supplierStoreId }
-            });
-            if (!store) {
-                throw createError(HttpStatus.NOT_FOUND, 'Supplier store not found');
-            }
-        }
-    }
-
-    async #calculateAdPrice(type, placement, duration) {
-        const baseRates = {
-            STANDARD: 100,
-            PROMOTIONAL: 0,
-            FEATURED: 200,
-            SPONSORED: 150
-        };
-
-        const placementMultipliers = {
-            BANNER: 1.5,
-            SIDEBAR: 1.0,
-            FEATURED: 2.0,
-            POPUP: 1.8
-        };
-
-        const durationInDays = Math.ceil((duration.endDate - duration.startDate) / (1000 * 60 * 60 * 24));
-        const basePrice = baseRates[type];
-        const placementMultiplier = placementMultipliers[placement];
-
-        return basePrice * placementMultiplier * durationInDays;
-    }
     // Controller methods
     async approveUsersForAds(req, res, next) {
         try {
@@ -293,236 +233,72 @@ class PlatformAdsController extends Controller {
         }
     }
     
-    // Create Advertisement Handler
-    async createAdvertisement(req, res, next) {
+    async createAd(req, res, next) {
         try {
-            const userId = req.user.id;
-            const {
-                title,
-                description,
-                imageUrl,
-                linkUrl,
-                type = 'STANDARD',
-                garageId,
-                supplierStoreId,
-                startDate,
-                endDate,
-                targetAudience,
-                displaySettings,
-                placement,
-                location
-            } = req.body;
-
-            // Validate required fields
-            if (!title || !description || !startDate || !endDate) {
-                throw createError(HttpStatus.BAD_REQUEST, 'Missing required fields');
-            }
-
-            // Validate user eligibility
-            const { isEligible, user } = await this.#validateUserEligibility(userId);
-
-            // Validate business entity
-            await this.#validateBusinessEntity(garageId, supplierStoreId);
-
-            // Validate dates
-            const start = new Date(startDate);
-            const end = new Date(endDate);
+            const { userId, adType, content, duration } = req.body;
             
-            if (start >= end) {
-                throw createError(HttpStatus.BAD_REQUEST, 'End date must be after start date');
-            }
-
-            // Validate placement
-            await this.#validateAdPlacement(placement, location);
-
-            // Calculate price
-            const price = await this.#calculateAdPrice(type, placement, { startDate: start, endDate: end });
-
-            // Create advertisement
-            const advertisement = await prisma.advertisement.create({
-                data: {
-                    title,
-                    description,
-                    imageUrl,
-                    linkUrl,
-                    type,
-                    ownerId: userId,
-                    garageId,
-                    supplierStoreId,
-                    startDate: start,
-                    endDate: end,
-                    price,
-                    targetAudience,
-                    displaySettings,
-                    status: isEligible ? 'PENDING' : 'REJECTED',
-                    isPaid: type === 'PROMOTIONAL',
-                    paymentStatus: type === 'PROMOTIONAL' ? 'PAID' : 'PENDING'
-                }
-            });
-
-            // Create placement
-            await prisma.adPlacement.create({
-                data: {
-                    adId: advertisement.id,
-                    placementType: placement,
-                    location,
-                    startTime: start,
-                    endTime: end
-                }
-            });
-
-            // Create initial metrics record
-            await prisma.adMetrics.create({
-                data: {
-                    adId: advertisement.id,
-                    date: new Date()
-                }
-            });
-
-            // Create approval request
-            await prisma.adApproval.create({
-                data: {
-                    adId: advertisement.id,
-                    approvedById: userId,
-                    status: 'PENDING',
-                    notes: 'Initial advertisement submission',
-                    validUntil: end
-                }
-            });
-
-            // Fetch complete advertisement with relations
-            const completeAd = await prisma.advertisement.findUnique({
-                where: { id: advertisement.id },
-                include: {
-                    placements: true,
-                    metrics: true,
-                    approvals: true
-                }
-            });
-
-            return res.status(HttpStatus.CREATED).json({
-                status: HttpStatus.CREATED,
-                message: 'Advertisement created successfully',
-                data: completeAd
-            });
-
-        } catch (error) {
-            next(createError(error.status || HttpStatus.INTERNAL_SERVER_ERROR, error.message));
-        }
-    }
-
-    // Update Advertisement Handler
-    async updateAdvertisement(req, res, next) {
-        try {
-            const { adId } = req.params;
-            const userId = req.user.id;
-            const {
-                title,
-                description,
-                imageUrl,
-                linkUrl,
-                targetAudience,
-                displaySettings,
-                startDate,
-                endDate,
-                placementType,
-                location
-            } = req.body;
-
-            // Validate ad ownership
-            const existingAd = await this.#validateAdOwnership(adId, userId);
-
-            // Validate dates if provided
-            if (startDate && endDate) {
-                const start = new Date(startDate);
-                const end = new Date(endDate);
-                
-                if (start >= end) {
-                    throw createError(HttpStatus.BAD_REQUEST, 'End date must be after start date');
-                }
-            }
-
-            // Validate placement if provided
-            if (placementType && location) {
-                await this.#validateAdPlacement(placementType, location);
-            }
-
-            // Check if ad is in an updatable state
-            if (existingAd.status === 'EXPIRED') {
-                throw createError(HttpStatus.BAD_REQUEST, 'Cannot update expired advertisements');
-            }
-
-            // Prepare update data
-            const updateData = {
-                title: title || existingAd.title,
-                description: description || existingAd.description,
-                imageUrl: imageUrl || existingAd.imageUrl,
-                linkUrl: linkUrl || existingAd.linkUrl,
-                targetAudience: targetAudience || existingAd.targetAudience,
-                displaySettings: displaySettings || existingAd.displaySettings,
-                startDate: startDate ? new Date(startDate) : existingAd.startDate,
-                endDate: endDate ? new Date(endDate) : existingAd.endDate,
-                status: 'PENDING',
-                updatedAt: new Date()
-            };
-
-            // Update the advertisement
-            const updatedAd = await prisma.advertisement.update({
-                where: { id: adId },
-                data: updateData,
-                include: {
-                    placements: true,
-                    metrics: {
-                        take: 1,
-                        orderBy: {
-                            date: 'desc'
-                        }
+            // Check if user is approved for ads this month
+            const approvedUser = await prisma.approvedUserMapping.findFirst({
+                where: {
+                    userId,
+                    thisMonthApprovedAds: {
+                        month: new Date().getMonth() + 1,
+                        year: new Date().getFullYear()
                     }
+                },
+                include: {
+                    thisMonthApprovedAds: true
                 }
             });
-
-            // Update placement if provided
-            if (placementType && location) {
-                await prisma.adPlacement.upsert({
-                    where: {
-                        adId_location: {
-                            adId: adId,
-                            location: location
-                        }
-                    },
-                    update: {
-                        placementType,
-                        startTime: updateData.startDate,
-                        endTime: updateData.endDate
-                    },
-                    create: {
-                        adId,
-                        placementType,
-                        location,
-                        startTime: updateData.startDate,
-                        endTime: updateData.endDate
+            
+            if (!approvedUser && !req.body.isPaid) {
+                throw createError(HttpStatus.FORBIDDEN, 'User is not approved for free advertising this month');
+            }
+            
+            // Handle paid advertising
+            if (req.body.isPaid) {
+                // Implement payment processing logic here
+                // const payment = await this.paymentService.process(req.body.paymentDetails);
+    
+                // Create paid ad record
+                const ad = await prisma.advertisement.create({
+                    data: {
+                        userId,
+                        type: adType,
+                        content,
+                        isPaid: true,
+                        duration,
+                        startDate: new Date(),
+                        endDate: new Date(Date.now() + duration * 24 * 60 * 60 * 1000)
                     }
                 });
+                
+                return res.status(HttpStatus.CREATED).json({
+                    status: HttpStatus.CREATED,
+                    data: ad
+                });
             }
-
-            // Create an approval request
-            await prisma.adApproval.create({
+            
+            // Create free ad for approved user
+            const ad = await prisma.advertisement.create({
                 data: {
-                    adId,
-                    approvedById: userId,
-                    status: 'PENDING',
-                    notes: 'Advertisement updated - requires review',
-                    validUntil: updateData.endDate
+                    userId,
+                    type: adType,
+                    content,
+                    isPaid: false,
+                    duration: 30, // Free ads last for 30 days
+                    startDate: new Date(),
+                    endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
                 }
             });
-
-            return res.status(HttpStatus.OK).json({
-                status: HttpStatus.OK,
-                message: 'Advertisement updated successfully and sent for review',
-                data: updatedAd
+            
+            return res.status(HttpStatus.CREATED).json({
+                status: HttpStatus.CREATED,
+                data: ad
             });
+            
         } catch (error) {
-            next(createError(error.status || HttpStatus.INTERNAL_SERVER_ERROR, error.message));
+            next(createError(HttpStatus.INTERNAL_SERVER_ERROR, error.message));
         }
     }
 

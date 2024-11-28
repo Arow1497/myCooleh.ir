@@ -26,8 +26,7 @@ model User {
   products         Product[]
   basket           Basket[]  
   userRole         UserRole[]
-  adInteraction    AdInteraction?
-  adApproval       AdApproval?
+
 // Clan relations
   ownedClan         Clan?     @relation("clanOwner")
   joinRequests      ClanJoinRequest[]
@@ -42,8 +41,7 @@ model User {
   reputation        Float     @default(0)
   totalTransactions Int       @default(0)
   successRate       Float     @default(0)
-  approvedUserMapping  ApprovedUserMapping?
-
+  
 // Supplier-specific metrics
   supplierRating    Float?
   responseTime      Float?    // Average response time in hours
@@ -161,8 +159,6 @@ model ProjectProfile {
   inProgressProjectApprentice   ProjectsApprenticeWorkAt[]
   projectProvider               Project?   @relation("providerUser")
   projectRequester              Project?   @relation("requesterUser")
-
-  advertisement                  Advertisement[]
 
   publishedmetrics              Metric[]
 
@@ -2704,7 +2700,6 @@ model Garage {
   garageField          GarageField?
   mechanics            BusinessProfile[]    @relation("mechanics")
   apprentices          BusinessProfile[]    @relation("apprentices")  
-  advertisement                  Advertisement[]
 
   course               Course[]
 
@@ -3577,7 +3572,6 @@ model SupplierStore {
   serialNumber               String?
   profit                     String?
   field                      String
-  advertisement                  Advertisement[]
 
   // Garage PartOrder Collaboration
   garagePartOrder   GaragePartOrder[] 
@@ -4716,189 +4710,7 @@ model SellFromSupplier {
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////****END****///////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////
-// Advertisement related models
-model Advertisement {
-  id              String          @id @default(uuid())
-  title           String
-  description     String
-  imageUrl        String?
-  linkUrl         String?
-  
-  // Advertisement owner
-  ownerId         String
-  owner           ProjectProfile  @relation(fields: [ownerId], references: [id])
-  
-  // Business entity relations
-  garageId        String?
-  garage          Garage?        @relation(fields: [garageId], references: [id])
-  supplierStoreId String?
-  supplierStore   SupplierStore? @relation(fields: [supplierStoreId], references: [id])
-  
-  // Advertisement type and status
-  type            AdType         @default(STANDARD)
-  status          AdStatus       @default(PENDING)
-  isActive        Boolean        @default(true)
-  isPaid          Boolean        @default(false)
-  
-  // Timing
-  startDate       DateTime
-  endDate         DateTime
-  pausedAt        DateTime?
-  pauseReason     String?
-  
-  // Pricing and payment
-  price           Float
-  paymentStatus   PaymentStatus  @default(PENDING)
-  paymentId       String?
-  
-  // Content and display
-  targetAudience  Json?          // Targeting criteria
-  displaySettings Json?          // Display preferences
-  
-  // Metrics and tracking
-  viewCount       Int            @default(0)
-  clickCount      Int            @default(0)
-  conversionCount Int            @default(0)
-  
-  // Relations
-  placements      AdPlacement[]
-  metrics         AdMetrics[]
-  interactions    AdInteraction[]
-  approvals       AdApproval[]
-  
-  // Timestamps
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-}
 
-model AdPlacement {
-  id            String        @id @default(uuid())
-  adId          String
-  advertisement Advertisement @relation(fields: [adId], references: [id])
-  
-  placementType PlacementType
-  location      Location
-  startTime     DateTime
-  endTime       DateTime
-  
-  priority      Int          @default(0)
-  isActive      Boolean      @default(true)
-  
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  
-  @@unique([adId, location])
-}
-
-model AdMetrics {
-  id            String        @id @default(uuid())
-  adId          String
-  advertisement Advertisement @relation(fields: [adId], references: [id])
-  
-  date          DateTime
-  views         Int          @default(0)
-  clicks        Int          @default(0)
-  conversions   Int          @default(0)
-  ctr           Float        @default(0) // Click-through rate
-  
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  
-  @@unique([adId, date])
-}
-
-model AdInteraction {
-  id            String        @id @default(uuid())
-  adId          String
-  advertisement Advertisement @relation(fields: [adId], references: [id])
-  
-  userId        String       @unique
-  user          User         @relation(fields: [userId], references: [id])
-  
-  type          InteractionType
-  timestamp     DateTime
-  metadata      Json?        // Additional interaction data
-  
-  createdAt     DateTime     @default(now())
-}
-
-model AdApproval {
-  id            String        @id @default(uuid())
-  adId          String
-  advertisement Advertisement @relation(fields: [adId], references: [id])
-  
-  approvedById  String       @unique
-  approvedBy    User         @relation(fields: [approvedById], references: [id])
-  
-  status        ApprovalStatus @default(PENDING)
-  notes         String?
-  validUntil    DateTime
-  
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-}
-
-model ThisMonthApprovedUsersForAds {
-  id                  String    @id @default(cuid())
-  month               Int       @default(value: dbgenerated("EXTRACT(MONTH FROM CURRENT_TIMESTAMP)"))
-  year                Int       @default(value: dbgenerated("EXTRACT(YEAR FROM CURRENT_TIMESTAMP)"))
-  approvedAt          DateTime  @default(now())
-  totalApprovedUsers  Int
-  platformPermissions String?
-  advertisementTypes  String?
-  notes               String?
-  approvedUserMapping ApprovedUserMapping[]
-}
-
-model ApprovedUserMapping {
-  id                      String   @id @default(cuid())
-  thisMonthApprovedAdsId  String
-  userId                  String   @unique
-  user                    User     @relation(fields: [userId], references: [id])
-  thisMonthApprovedAds    ThisMonthApprovedUsersForAds @relation(fields: [thisMonthApprovedAdsId], references: [id])
-}
-
-// Enums for Advertisement system
-enum AdType {
-  STANDARD    // Regular paid advertisements
-  PROMOTIONAL // Free promotional ads for top performers
-  FEATURED    // Premium featured advertisements
-  SPONSORED   // Sponsored content advertisements
-}
-
-enum AdStatus {
-  PENDING
-  ACTIVE
-  PAUSED
-  EXPIRED
-  REJECTED
-}
-
-enum PlacementType {
-  BANNER
-  SIDEBAR
-  FEATURED
-  POPUP
-}
-
-enum Location {
-  HOME
-  SEARCH
-  PROFILE
-  MARKETPLACE
-}
-
-enum InteractionType {
-  VIEW
-  CLICK
-  CONVERSION
-}
-
-enum ApprovalStatus {
-  PENDING
-  APPROVED
-  REJECTED
-}
 model Sliders {
     id              String      @id @default(uuid())
     title    String
