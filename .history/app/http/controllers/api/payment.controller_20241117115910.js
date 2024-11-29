@@ -52,7 +52,6 @@ class PaymentController extends Controller {
         await redisClient.setEx(cacheKey, 300, JSON.stringify(basket)); // 5 دقیقه
         return basket;
     }
-///////////////////////////////////////////////////////////
 
     async PaymentGateway(req, res, next) {
         try {
