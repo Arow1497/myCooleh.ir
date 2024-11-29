@@ -152,14 +152,14 @@ class BaseCoworkService {
 }
 
 // ایجاد سرویس‌های مختلف با نمونه‌های متفاوت از کلاس پایه
-const coworkService = {
+const CoworkService = {
     apprentice: new BaseCoworkService('APPRENTICE'),
     dastyar: new BaseCoworkService('DASTYAR'),
     outsourcing: new BaseCoworkService('OUTSOURCING')
 };
 
 module.exports = {
-    coworkService
+    CoworkService
 };
 
 /*

@@ -5,49 +5,7 @@ const Controller = require('../../controller');
 const { StatusCodes } = require('http-status-codes');
 
 class TransactionController extends Controller {
-   
-  async createTransaction(req, res, next) {
-    try {
-        const { projectId, amount, depositAmount } = req.body;
-        const userId = req.user.id;
-
-        const project = await prisma.project.findUnique({
-            where: { id: projectId },
-            include: { garage: true, acceptedSuppleirStore: true }
-        });
-
-        if (!project) {
-            throw createHttpError.NotFound('Project not found');
-        }
-
-        if (project.status !== 'PENDING') {
-            throw createHttpError.BadRequest('Project is not in pending state');
-        }
-
-        const transaction = await prisma.transaction.create({
-            data: {
-                projectId,
-                amount,
-                status: 'PENDING',
-                depositAmount: depositAmount || null,
-                remainingAmount: depositAmount ? amount - depositAmount : amount
-            }
-        });
-
-        await prisma.project.update({
-            where: { id: projectId },
-            data: { status: 'IN_PROGRESS' }
-        });
-
-        return res.status(201).json({
-            statusCode: 201,
-            data: { transaction }
-        });
-    } catch (error) {
-        next(error);
-    }
-  }
-
+    
   async confirmPayment(req, res) {
     try {
       const { id } = req.params;
@@ -213,6 +171,48 @@ class TransactionController extends Controller {
       this.error(res, error);
     }
   }
+
+  async createTransaction(req, res, next) {
+    try {
+        const { projectId, amount, depositAmount } = req.body;
+        const userId = req.user.id;
+
+        const project = await prisma.project.findUnique({
+            where: { id: projectId },
+            include: { garage: true, acceptedSuppleirStore: true }
+        });
+
+        if (!project) {
+            throw createHttpError.NotFound('Project not found');
+        }
+
+        if (project.status !== 'PENDING') {
+            throw createHttpError.BadRequest('Project is not in pending state');
+        }
+
+        const transaction = await prisma.transaction.create({
+            data: {
+                projectId,
+                amount,
+                status: 'PENDING',
+                depositAmount: depositAmount || null,
+                remainingAmount: depositAmount ? amount - depositAmount : amount
+            }
+        });
+
+        await prisma.project.update({
+            where: { id: projectId },
+            data: { status: 'IN_PROGRESS' }
+        });
+
+        return res.status(201).json({
+            statusCode: 201,
+            data: { transaction }
+        });
+    } catch (error) {
+        next(error);
+    }
+}
 
 async confirmPaymentt(req, res, next) {
     try {
@@ -547,11 +547,3 @@ async cancelTransaction(req, res, next) {
 module.exports = {
     TransactionController: new TransactionController()
     };
-
-
-/*
-    داخل تب دستیار کاربر ها دسترسی دارند به اگهی های مکانیک شاگرد برونسپاری  
-و همچنین میتونند ببینن همکاری های در حال اجرا خودشون رو اما در تب های 
-ترنزاکشن و کامپلینت در واقع تاریخچه همکاری ها و همچنین سوابق شکایات هست
-انواع ترنزاکشن ها مکانیک شاگرد برونسپاری و پارت اوردر و کوپن و متریک
-*/

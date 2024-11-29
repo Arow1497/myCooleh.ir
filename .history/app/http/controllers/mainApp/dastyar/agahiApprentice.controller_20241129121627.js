@@ -2,7 +2,7 @@ const { StatusCodes: HttpStatus } = require("http-status-codes");
 const Controller = require("../../controller");
 const {apprenticeNoticeService} = require("../../../services/mainApp/dastyar/noticeServices/notice.service");
 const {conversationService} = require("../../../services/mainApp/dastyar/noticeServices/conversation.service");
-const {complaintServices} = require("../../../services/mainApp/dastyar/noticeServices/complaint.service");
+const {complaintService} = require("../../../services/mainApp/dastyar/noticeServices/complaint.service");
 const {transactionService} = require("../../../services/mainApp/dastyar/noticeServices/transaction.service");
 const {coworkService} = require("../../../services/mainApp/dastyar/noticeServices/coWork.service");const { deleteFilesInPublicForOrders } = require("../../../../utils/functions");
 
@@ -225,7 +225,7 @@ class ApprenticeshipNoticeController extends Controller {
     async addCoworkReqForNoticeApprentice(req, res, next) {
         try {
             // ثبت درخواست همکاری از طرف شاگرد
-            const noticeApprenticeAppReqs = await coworkService.apprentice.addCoworkRequest(
+            const noticeApprenticeAppReqs = await coworkService.addCoworkRequest(
                 req.user,
                 req.params.noticeApprenticeId,
                 req.params.apprenticeId
@@ -243,7 +243,7 @@ class ApprenticeshipNoticeController extends Controller {
         try {
             // نمایش درخواست ها امکان مشاهده پروفایل شخص و بررسی رزومه و درنهایت
             // انتخاب شخص برای همکاری
-            const requests = await coworkService.apprentice.showCoworkRequests(req.user.ownedGarage?.id);
+            const requests = await coworkService.showCoworkRequests(req.user.ownedGarage?.id);
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: { requests }
@@ -256,7 +256,7 @@ class ApprenticeshipNoticeController extends Controller {
     async addApprenticeToRequest(req, res, next) {
         try {
             // هندلر انتخاب و افزودن شاگرد به اگهی و پروژه توسط گاراژ
-            const result = await coworkService.apprentice.addCollaboratorToRequest(
+            const result = await coworkService.addApprenticeToRequest(
                 req.user,
                 req.params.apprenticeId,
                 req.params.noticeApprenticeId,
@@ -276,7 +276,7 @@ class ApprenticeshipNoticeController extends Controller {
 
     async deleteThisApprenticeFromNoticeApprentice(req, res, next) {
         try {
-            await coworkService.apprentice.removeCollaboratorFromRequest(
+            await coworkService.removeApprenticeFromRequest(
                 req.user.ownedGarage?.id,
                 req.params.noticeApprenticeId,
                 req.params.apprenticeId
@@ -295,7 +295,7 @@ class ApprenticeshipNoticeController extends Controller {
     async apprenticeRefusingFromThisNoticeApprenticeship(req, res, next) {
         try {
             //استعفای شاگرد از همکاری پس از پذیرشش توسط گاراژ
-            await coworkService.apprentice.collaboratorRefuseRequest(
+            await coworkService.apprenticeRefuseRequest(
                 req.params.noticeApprenticeId,
                 req.user.id
             );
@@ -314,7 +314,7 @@ class ApprenticeshipNoticeController extends Controller {
         try {
             //تایید با موفقیت انجام شدن پروژه و دریافت مطالبات از طرف شاگرد و گاراژ
             const role = req.user.apprenticeAt ? 'apprentice' : 'garageOwner';
-            await transactionService.apprentice.confirmTransactionCompletion(
+            await transactionService.confirmTransactionCompletion(
                 req.params.transactionId,
                 req.user.id,
                 role
@@ -333,7 +333,7 @@ class ApprenticeshipNoticeController extends Controller {
     async createComplaint(req, res, next) {
         try {
             // ثبت شکایت از انجام نشدن تعهدات مالی یا وظایف کاری توسط طرفین
-            await complaintServices.apprentice.createComplaint(
+            await complaintService.createComplaint(
                 req.params.transactionId,
                 req.user.id,
                 req.user.role,
@@ -354,7 +354,7 @@ class ApprenticeshipNoticeController extends Controller {
     async removeAndRegretComplaintByrequester(req, res, next) {
         try {
             // پشیمانی از شکایت و لغو شکایت توسط ایجاد کننده شکایت
-            await complaintServices.apprentice.removeComplaint(
+            await complaintService.removeComplaint(
                 req.params.complaintId,
                 req.user.id
             );
@@ -372,7 +372,7 @@ class ApprenticeshipNoticeController extends Controller {
     async respondToComplaint(req, res, next) {
         try {
             // عکس العمل و پاسخ و مستندات شخص مشتک علیه در جواب شاکی
-            const updatedComplaint = await complaintServices.apprentice.respondToComplaint(
+            const updatedComplaint = await complaintService.respondToComplaint(
                 req.params.complaintId,
                 req.user.id,
                 req.body,
@@ -393,7 +393,7 @@ class ApprenticeshipNoticeController extends Controller {
     async addReviewForNoticeApprentice(req, res, next) {
         try {
             // ثبت کامنت نظر امتیاز توسط طرفین همکاری به یکدیگر در این همکاری
-            await transactionService.apprentice.addReview(
+            await transactionService.addReview(
                 req.user,
                 req.params.noticeApprenticeId,
                 req.body

@@ -27,7 +27,7 @@ const COLLABORATION_CONFIG = {
     }
 };
 
-class BaseCoworkService {
+class BaseCollaborationService {
     constructor(collaborationType) {
         this.config = COLLABORATION_CONFIG[collaborationType];
         if (!this.config) {
@@ -35,7 +35,7 @@ class BaseCoworkService {
         }
     }
 
-    async addCoworkRequest(user, noticeId, collaboratorId) {
+    async addCollaborationRequest(user, noticeId, collaboratorId) {
         const config = this.config;
         const isCollaboratorRequest = !!user.apprenticeAt;
         const garageId = isCollaboratorRequest ? user.apprenticeAt?.id : user.ownedGarage?.id;
@@ -56,7 +56,7 @@ class BaseCoworkService {
         });
     }
 
-    async showCoworkRequests(ownedGarageId) {
+    async showCollaborationRequests(ownedGarageId) {
         const config = this.config;
         if (!ownedGarageId) {
             throw createError.Unauthorized("Only garage owners can view requests");
@@ -152,14 +152,14 @@ class BaseCoworkService {
 }
 
 // ایجاد سرویس‌های مختلف با نمونه‌های متفاوت از کلاس پایه
-const coworkService = {
-    apprentice: new BaseCoworkService('APPRENTICE'),
-    dastyar: new BaseCoworkService('DASTYAR'),
-    outsourcing: new BaseCoworkService('OUTSOURCING')
+const collaborationServices = {
+    apprentice: new BaseCollaborationService('APPRENTICE'),
+    dastyar: new BaseCollaborationService('DASTYAR'),
+    outsourcing: new BaseCollaborationService('OUTSOURCING')
 };
 
 module.exports = {
-    coworkService
+    collaborationServices
 };
 
 /*

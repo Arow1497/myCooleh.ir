@@ -27,7 +27,7 @@ const COLLABORATION_CONFIG = {
     }
 };
 
-class BaseCoworkService {
+class BaseCollaborationService {
     constructor(collaborationType) {
         this.config = COLLABORATION_CONFIG[collaborationType];
         if (!this.config) {
@@ -35,7 +35,7 @@ class BaseCoworkService {
         }
     }
 
-    async addCoworkRequest(user, noticeId, collaboratorId) {
+    async addCollaborationRequest(user, noticeId, collaboratorId) {
         const config = this.config;
         const isCollaboratorRequest = !!user.apprenticeAt;
         const garageId = isCollaboratorRequest ? user.apprenticeAt?.id : user.ownedGarage?.id;
@@ -56,7 +56,7 @@ class BaseCoworkService {
         });
     }
 
-    async showCoworkRequests(ownedGarageId) {
+    async showCollaborationRequests(ownedGarageId) {
         const config = this.config;
         if (!ownedGarageId) {
             throw createError.Unauthorized("Only garage owners can view requests");
@@ -152,59 +152,12 @@ class BaseCoworkService {
 }
 
 // ایجاد سرویس‌های مختلف با نمونه‌های متفاوت از کلاس پایه
-const coworkService = {
-    apprentice: new BaseCoworkService('APPRENTICE'),
-    dastyar: new BaseCoworkService('DASTYAR'),
-    outsourcing: new BaseCoworkService('OUTSOURCING')
+const collaborationServices = {
+    apprentice: new BaseCollaborationService('APPRENTICE'),
+    dastyar: new BaseCollaborationService('DASTYAR'),
+    outsourcing: new BaseCollaborationService('OUTSOURCING')
 };
 
 module.exports = {
-    coworkService
+    collaborationServices
 };
-
-/*
-
-برای پاسخ به سوال شما، بیایید نگاهی دقیق‌تر به کد بیندازیم. راه حل شما با استفاده از 
-NOTICE_CONFIG و BaseComplaintService بسیار هوشمندانه است.
-در این پیاده‌سازی، شما از یک آبجکت NOTICE_CONFIG استفاده کرده‌اید که تنظیمات مختلف برای هر نوع اگهی را تعریف می‌کند.
- هر نوع اگهی (APPRENTICE, DASTYAR, OUTSOURCING) یک تنظیمات خاص خود را دارد که شامل:
-
-مدل مرتبط با Prisma
-نوع شریک
-شناسه شریک
-نقش شریک
-نقش درخواست‌کننده
-متدهای دریافت اطلاعات شریک و درخواست‌کننده
-
-در کانستراکتور BaseComplaintService، متد زیر این تعیین نوع را انجام می‌دهد:
-javascriptCopyconstructor(noticeType) {
-    this.config = NOTICE_CONFIG[noticeType];
-    if (!this.config) {
-        throw new Error(`Invalid notice type: ${noticeType}`);
-    }
-}
-هنگام ایجاد سرویس‌های شکایت، شما سه نمونه از این سرویس را با نوع مختلف می‌سازید:
-javascriptCopyconst complaintServices = {
-    apprentice: new BaseComplaintService('APPRENTICE'),
-    dastyar: new BaseComplaintService('DASTYAR'),
-    outsourcing: new BaseComplaintService('OUTSOURCING')
-};
-در زمان کال کردن سرویس (مثلاً در کنترلر)، شما دقیقاً مشخص می‌کنید که می‌خواهید از کدام سرویس استفاده کنید:
-javascriptCopy// مثال
-complaintServices.apprentice.createComplaint(...)
-یا
-complaintServices.dastyar.createComplaint(...)
-مکانیزم تشخیص نوع اگهی در متدهایی مثل createComplaint با
- استفاده از this.config اتفاق می‌افتد. برای مثال در createComplaint:
-
-از this.config.model برای انتخاب مدل صحیح استفاده می‌شود
-this.config.getPartnerInfo و this.config.getRequesterInfo برای دریافت اطلاعات مناسب
-
-این رویکرد باعث می‌شود:
-
-کد تکراری کاهش یابد
-افزودن نوع جدید اگهی راحت‌تر شود
-منطق مشترک در یک کلاس پایه نگهداری شود
-
-به این ترتیب، سرویس دقیقاً می‌داند که با کدام نوع اگهی کار می‌کند، بدون نیاز به شرط‌های اضافی یا کدهای تکراری.
-*/
