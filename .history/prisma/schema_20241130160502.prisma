@@ -390,9 +390,9 @@ model ClanMembership {
   activityPoints      Int      @default(0)
   lastActiveAt        DateTime @default(now())
 
-  clanNoticeOutSourcingPublisher  ClanDastyarOutSourcingApprenticeCollaburation?  @relation("clanNoticeOutSourcingPublisher")
-  clanNoticeOutSourcingAcceptor   ClanDastyarOutSourcingApprenticeCollaburation?  @relation("clanNoticeOutSourcingAcceptor")
-  garageReqsForClanOutSourcingCoWork   ReqsForClanOutSourcingDastyarApprenticeCoWork?  @relation("ReqsForClanOutSourcingCoWorkPublisher")
+  clanNoticeOutSourcingPublisher  ClanDastyarOutSourcingCollaburation?  @relation("clanNoticeOutSourcingPublisher")
+  clanNoticeOutSourcingAcceptor   ClanDastyarOutSourcingCollaburation?  @relation("clanNoticeOutSourcingAcceptor")
+  garageReqsForClanOutSourcingCoWork   ReqsForClanOutSourcingDastyarCoWork?  @relation("ReqsForClanOutSourcingCoWorkPublisher")
 
   
   clanCommercePartOrderTrading  ClanCommercePartOrderTrading?
@@ -600,11 +600,12 @@ model ClanRanking {
   @@unique([clanId, season, weekNumber])
 }
 
-model ClanDastyarOutSourcingApprenticeCollaburation {
+model ClanDastyarOutSourcingCollaburation {
   id              String      @id @default(uuid())
   publisherId     String      @unique
   publisher       ClanMembership     @relation("clanNoticeOutSourcingPublisher",fields: [publisherId], references: [id])
   title           String
+  city            String
   status          CollaborationStatus  @default(PENDING)
   isAvailable     Boolean        @default(true)
   budget          Float
@@ -627,7 +628,7 @@ model ClanDastyarOutSourcingApprenticeCollaburation {
   
 
   // Related records
-  garageReqForProject  ReqsForClanOutSourcingDastyarApprenticeCoWork?
+  garageReqForProject  ReqsForClanOutSourcingDastyarCoWork?
   reviews              Review[]
 
   // other fields...
@@ -635,13 +636,13 @@ model ClanDastyarOutSourcingApprenticeCollaburation {
 }
 
 //........................ GarageReqsForOutSourcingCoWork model ..............................//
-model ReqsForClanOutSourcingDastyarApprenticeCoWork {
+model ReqsForClanOutSourcingDastyarCoWork {
   id              String      @id @default(uuid())
   publisherId     String      @unique
   publisher       ClanMembership     @relation("ReqsForClanOutSourcingCoWorkPublisher", fields: [publisherId], references: [id])
   requesterSuggestedPrice  Float
   clanNoticeOutSourcingId  String @unique
-  clanNoticeOutSourcing    ClanDastyarOutSourcingApprenticeCollaburation   @relation(fields: [clanNoticeOutSourcingId], references: [id])
+  clanNoticeOutSourcing    ClanDastyarOutSourcingCollaburation   @relation(fields: [clanNoticeOutSourcingId], references: [id])
 
   // Timestamps
   createdAt         DateTime          @default(now())
@@ -2491,7 +2492,7 @@ model Review {
   clanCommercePartOrderTrading           ClanCommercePartOrderTrading @relation(fields: [clanCommercePartOrderTradingId], references: [id])
   
   clanNoticeOutSourcingId         String      @unique
-  clanNoticeOutSourcing           ClanDastyarOutSourcingApprenticeCollaburation @relation(fields: [clanNoticeOutSourcingId], references: [id])
+  clanNoticeOutSourcing           ClanDastyarOutSourcingCollaburation @relation(fields: [clanNoticeOutSourcingId], references: [id])
   
   // Garage OutSourcing Collaboration
   noticeOutSourcingId    String            @unique
@@ -3151,7 +3152,7 @@ model Project {
   // SocialMedia Sharing Project-Resume Timeline FollowUp
   projectSMAttachments  ProjectSMAttachments[]   // Array of SMattachment URLs
   
-  clanNoticeOutSourcing  ClanDastyarOutSourcingApprenticeCollaburation?
+  clanNoticeOutSourcing  ClanDastyarOutSourcingCollaburation?
   // Conversation
   conversation         Conversation[]
 

@@ -390,9 +390,9 @@ model ClanMembership {
   activityPoints      Int      @default(0)
   lastActiveAt        DateTime @default(now())
 
-  clanNoticeOutSourcingPublisher  ClanDastyarOutSourcingApprenticeCollaburation?  @relation("clanNoticeOutSourcingPublisher")
-  clanNoticeOutSourcingAcceptor   ClanDastyarOutSourcingApprenticeCollaburation?  @relation("clanNoticeOutSourcingAcceptor")
-  garageReqsForClanOutSourcingCoWork   ReqsForClanOutSourcingDastyarApprenticeCoWork?  @relation("ReqsForClanOutSourcingCoWorkPublisher")
+  clanNoticeOutSourcingPublisher  ClanNoticeOutSourcing?  @relation("clanNoticeOutSourcingPublisher")
+  clanNoticeOutSourcingAcceptor   ClanNoticeOutSourcing?  @relation("clanNoticeOutSourcingAcceptor")
+  garageReqsForClanOutSourcingCoWork   GarageReqsForClanOutSourcingCoWork?  @relation("ReqsForClanOutSourcingCoWorkPublisher")
 
   
   clanCommercePartOrderTrading  ClanCommercePartOrderTrading?
@@ -600,11 +600,12 @@ model ClanRanking {
   @@unique([clanId, season, weekNumber])
 }
 
-model ClanDastyarOutSourcingApprenticeCollaburation {
+model ClanNoticeOutSourcing {
   id              String      @id @default(uuid())
   publisherId     String      @unique
   publisher       ClanMembership     @relation("clanNoticeOutSourcingPublisher",fields: [publisherId], references: [id])
   title           String
+  city            String
   status          CollaborationStatus  @default(PENDING)
   isAvailable     Boolean        @default(true)
   budget          Float
@@ -613,6 +614,7 @@ model ClanDastyarOutSourcingApprenticeCollaburation {
   startedAt       DateTime?
   completedAt     DateTime?
   requirements    Json?          // Detailed project requirements
+  attachments     Attachment[] 
   // Toye in agahi ha attachment chizi hast ke garage 
   // darkhast dahande be agahi ezafe mikone hala chizayi ke badan garage pazirande 
   // ham bekhad be proje attach kone toye conversation va message handle mishe
@@ -627,21 +629,23 @@ model ClanDastyarOutSourcingApprenticeCollaburation {
   
 
   // Related records
-  garageReqForProject  ReqsForClanOutSourcingDastyarApprenticeCoWork?
+  garageReqForProject  GarageReqsForClanOutSourcingCoWork?
+  milestones           Milestone[]
   reviews              Review[]
+  transactionsActivityLogs         TransactionsActivityLog[]
 
   // other fields...
 
 }
 
 //........................ GarageReqsForOutSourcingCoWork model ..............................//
-model ReqsForClanOutSourcingDastyarApprenticeCoWork {
+model GarageReqsForClanOutSourcingCoWork {
   id              String      @id @default(uuid())
   publisherId     String      @unique
   publisher       ClanMembership     @relation("ReqsForClanOutSourcingCoWorkPublisher", fields: [publisherId], references: [id])
   requesterSuggestedPrice  Float
   clanNoticeOutSourcingId  String @unique
-  clanNoticeOutSourcing    ClanDastyarOutSourcingApprenticeCollaburation   @relation(fields: [clanNoticeOutSourcingId], references: [id])
+  clanNoticeOutSourcing    ClanNoticeOutSourcing   @relation(fields: [clanNoticeOutSourcingId], references: [id])
 
   // Timestamps
   createdAt         DateTime          @default(now())
@@ -2490,9 +2494,6 @@ model Review {
   clanCommercePartOrderTradingId         String      @unique
   clanCommercePartOrderTrading           ClanCommercePartOrderTrading @relation(fields: [clanCommercePartOrderTradingId], references: [id])
   
-  clanNoticeOutSourcingId         String      @unique
-  clanNoticeOutSourcing           ClanDastyarOutSourcingApprenticeCollaburation @relation(fields: [clanNoticeOutSourcingId], references: [id])
-  
   // Garage OutSourcing Collaboration
   noticeOutSourcingId    String            @unique
   noticeOutSourcing    NoticeOutSourcing  @relation(fields: [noticeOutSourcingId], references: [id])
@@ -3151,7 +3152,7 @@ model Project {
   // SocialMedia Sharing Project-Resume Timeline FollowUp
   projectSMAttachments  ProjectSMAttachments[]   // Array of SMattachment URLs
   
-  clanNoticeOutSourcing  ClanDastyarOutSourcingApprenticeCollaburation?
+  clanNoticeOutSourcing  ClanNoticeOutSourcing?
   // Conversation
   conversation         Conversation[]
 
