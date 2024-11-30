@@ -605,7 +605,7 @@ model ClanDastyarOutSourcingApprenticeCollaburation {
   publisherId     String      @unique
   publisher       ClanMembership     @relation("clanNoticeOutSourcingPublisher",fields: [publisherId], references: [id])
   title           String
-  type            ClanCollaborationType
+  type            ClanCommunicationType
   status          CollaborationStatus  @default(PENDING)
   isAvailable     Boolean        @default(true)
   budget          Float
@@ -635,7 +635,7 @@ model ClanDastyarOutSourcingApprenticeCollaburation {
 
 }
 
-enum ClanCollaborationType {
+enum ClanCommunicationType {
 DASTYAR
 APPRENTICE
 OUTSOURCING
