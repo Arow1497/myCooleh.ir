@@ -369,6 +369,7 @@ class CouponsController extends Controller {
     return this.ok({ bookmarked: true });
   }
 
+
   async getSupplierStoreCoupons(req) {
     const userId = req.user.id;
     const supplierStoreId = await this.#validateSupplierStoreAccess(userId);
@@ -700,6 +701,7 @@ class CouponsController extends Controller {
       }
     });
   }
+
 
   // New Analytics and Reporting Methods
   async getSupplierAnalytics(req) {
@@ -1041,7 +1043,6 @@ class CouponsController extends Controller {
     });
   }
 
-  // Transaction Review Complaint Tracking
   async addReviewForMetric(req, res, next) {
     try {
         // ثبت کامنت نظر امتیاز توسط طرفین همکاری به یکدیگر در این همکاری
@@ -1059,86 +1060,6 @@ class CouponsController extends Controller {
     } catch (error) {
         next(error);
     }
-  }
-
-  async confirmTransactionCompletion(req, res, next) {
-      try {
-          //تایید با موفقیت انجام شدن پروژه و دریافت مطالبات از طرف شاگرد و گاراژ
-          const role = req.user.apprenticeAt ? 'apprentice' : 'garageOwner';
-          await transactionService.apprentice.confirmTransactionCompletion(
-              req.params.transactionId,
-              req.user.id,
-              role
-          );
-          return res.status(HttpStatus.OK).json({
-              statusCode: HttpStatus.OK,
-              data: {
-                  message: "این همکاری از سمت شما با موفقیت پایان یافت"
-              }
-          });
-      } catch (error) {
-          next(error);
-      }
-  }
-
-  async createComplaint(req, res, next) {
-      try {
-          // ثبت شکایت از انجام نشدن تعهدات مالی یا وظایف کاری توسط طرفین
-          await complaintServices.apprentice.createComplaint(
-              req.params.transactionId,
-              req.user.id,
-              req.user.role,
-              req.body,
-              req.files
-          );
-          return res.status(HttpStatus.OK).json({
-              statusCode: HttpStatus.OK,
-              data: {
-                  message: "شکایت شما از طرف همکاری ثبت شد برای بررسی و حصول نتیجه صبور باشید"
-              }
-          });
-      } catch (error) {
-          next(error);
-      }
-  }
-
-  async removeAndRegretComplaintByrequester(req, res, next) {
-      try {
-          // پشیمانی از شکایت و لغو شکایت توسط ایجاد کننده شکایت
-          await complaintServices.apprentice.removeComplaint(
-              req.params.complaintId,
-              req.user.id
-          );
-          return res.status(HttpStatus.OK).json({
-              statusCode: HttpStatus.OK,
-              data: {
-                  message: "شکایت شما با موفقیت لغو شد"
-              }
-          });
-      } catch (error) {
-          next(error);
-      }
-  }
-
-  async respondToComplaint(req, res, next) {
-      try {
-          // عکس العمل و پاسخ و مستندات شخص مشتک علیه در جواب شاکی
-          const updatedComplaint = await complaintServices.apprentice.respondToComplaint(
-              req.params.complaintId,
-              req.user.id,
-              req.body,
-              req.files
-          );
-          return res.status(HttpStatus.OK).json({
-              statusCode: HttpStatus.OK,
-              data: {
-                  message: "پاسخ شما به شکایت ثبت شد",
-                  complaint: updatedComplaint
-              }
-          });
-      } catch (error) {
-          next(error);
-      }
   }
 
   async createTransactionRoom(req, res, next) {
@@ -2030,57 +1951,12 @@ module.exports = {
   CouponsController: new CouponsController()
 };
 
-/*
-addCommentsForCoupon
-BookmarkCoupon
-likeCoupon
-dislikeCoupon
-shareCoupon
-addCouponByIdToCooleh
-peleCouponById
-successSellCouponById
-***********************
-روال ترنزاکشن در بخش کوپن:
-تامین کننده کوپن رو ثبت میکنه کوپن میتونه یک پک ۱۰ عددی از یک قلم باشه مثلا ۱۰ عدد کیت 
-دیسک و صفحه پژویی یا که نه میتونه لیستی از ۱۰ نوع ۲۰ نوع قلم جنس متفاوت باشه..
-تامین کننده میگه من روی فروش هر کدوم ازاین اقلام مثلا ۵ درصد سود میدم به گاراژ و قیمت روز قطعه رو هم 
-میزنه تا در زمان انتخاب گاراژ حساب کنه همین امروز مثلا سهمش چقدر میشه.. ولی پولی پرداخت نمکینه..
-از جهت لوجستیک و جابجایی اگر این اقلام توی یدکی بمونن در زمان تامین قطعه کیس تعیراتی سود این یک قلم
-میشه همون هزینه جابجاییش و دیگه فایده نداره پس باید این اقلام بعد از انخاب توسط گاراژ از طرف یدکی دست گاراژ
-امانت سپرده بشه.. یدکی تضمین هایی از گاراژ میگیره بابت این اجناس و پلتفرم هم اجازه دریافت بیش از 
-دو ۲ کوپن به گاراژ نمیده تا اجناس یدکی ها رو انبار نکنه و خداحافظ... بعد هر کیس تعمیراتی که شد قطعات اوردر رو 
-ثبت میکنه هر قطعه ای جز کوپن های موجود باشه خودش خودکار از کوپن اضافه میشه و اجناس هم در محل گاراژ هستن
-اینجوری روی هر فروش درصد میگیره اون گاراژ و منفعت یدکی هم تضمین میشه که فروش قطعاتش قطعی میشه..
-حالا هر وقت شد به قیمت روز... ضمنا هر یدکی میتونه کوپن هایی به گاراژ های مختلف بده و اجناسش
-همینجوری دست مکانیک ها باشه.. در ثبت کوپن تامین کننده گارانتی هر جنس رو و اینکه اطمینان های لازم
-رو با یک ویس روی هر قطعه اعلام میکنه و این ویس بعد تایید شدن اوردر با خود قطعه میاد برای مشتری..
-در آخر اگر فاصله گاراژ و یدکی نزدیک باشه میشه بجای سپردن به گاراژ در یدکی باقی بمونن اجناس...
-...گاراژ در زمان تعمیر یک کیس 
-در زمان تامین قطعه قطعاتی که توی لیست کوپن های خریداری شدش هست به اوردر اضافه میشه
-به ظور خودکار یعنی پلتفرم مکانیک رو موظف میکنه که به کوپن ها پایبند باشه...
-چون باید حتما اسم و نوع قطعه رو برای اوردر درخواست قطعه هم وارد کنه دیگه زیرآبی نمیتونه
-بره...
------------------------------------------------------------------------------------
-اما کوپن های داخل کلن تفاوتش اینه که یک اسکواد باهم میشینند یک لیست از اقلام بیشتر مورد استفاده تهیه میکنن
-بعد هر گاراژ تعداد قطعه ای از اون لیست که نیاز داره اضافه میکنه...در اخر این میشه یک لیست از اجناس با تعداد 
-مشخص که معلومه کدوم قطعه به چه تعداد سفارش کدوم گاراژ بوده بعد این اوردر رو ثبت میکنن..
-یدکی ها این لیست رو میبینن درخواست تامین میدن اونر کلن با مشورت بقیه یکیشونو انتخاب میکنه..
-سهم هر گاراژ باتوجه به تعداد سفارش هاش در مبلغ نهایی مشخص میشه هرکس دنگ خودش رو میده به اونر
-و اونر این پول رو میده به یدکی و جنس ها میاد توی یکی از گاراژ ها یا بین همه پخش میشه .. طبیعتا روال این معامله
-و این دیل چند روز طول میکشه...
------------------------------------------------------------------------------------
-اما نوع دیگه کوپن های مخصوص کلن ها اینکه تامین کننده های بزرگتر میان لیست بزرگتری از اجناس رو 
-برای یک اسکواد متشکل از چندین گاراژ پیشنهاد میدن و باز خرید اون لحظه انجام نمیشه بلکه باز قطعات یا سپرده
-میشن به این گاراژ ها یا اگه نزدیک بود توی خود تامین کننده...طبیعتا تضمین لازم از اون گاراژ ها گرفته میشه..
-البته چون چندتا گاراژ هستن امکان زیرابی کمتر میشه و اینکه سیستم ریویو و ثبت نظرات قوی برای کبن 
-ها هم داشته باش که تامین کننده نظر تامین کننده های قبلی که با اینها کار کردن ببینه و مطمین تر عمل کنه
 
-
-
-
-
-
-
-
-
-*/
+// addCommentsForCoupon
+// BookmarkCoupon
+// likeCoupon
+// dislikeCoupon
+// shareCoupon
+// addCouponByIdToCooleh
+// peleCouponById
+// successSellCouponById

@@ -334,9 +334,6 @@ model Clan {
   activeSuppliers     Int      @default(0)
   activeGarages       Int      @default(0)
   
-  // ClanCommercePartOrderTrading
-  clanCommercePartOrderTrading  ClanCommercePartOrderTrading[]  
-  
   clanCommunicationThread      ClanCommunicationThread?  
 
 // Relations
@@ -389,8 +386,6 @@ model ClanMembership {
   activityPoints      Int      @default(0)
   lastActiveAt        DateTime @default(now())
   
-  clanCommercePartOrderTrading  ClanCommercePartOrderTrading?
-
    // دسترسی‌های گفتگو
   canCreateChannels    Boolean @default(false)
   canPinMessages      Boolean @default(false)
@@ -421,62 +416,14 @@ enum CommunicationRole {
 }
 
 model ClanCommercePartOrderTrading{
-  id                     String      @id @default(uuid())
-  clanId                 String
-  clan                   Clan        @relation(fields: [clanId], references: [id])
-  partOrderId            String      @unique
-  partOrder              PartOrder   @relation(fields: [partOrderId], references: [id])
-  clanDealRepresentativeId String  @unique
-  clanDealRepresentative ClanMembership @relation(fields: [clanDealRepresentativeId], references: [id])
-  suplierStoreId         String
-  acceptorSuppleirStore  SupplierStore   @relation(fields: [suplierStoreId], references: [id])
-  title                  String
-  isAvailable            Boolean        @default(true)
-  city                   String
-  requirements           Json?          // Detailed project requirements
-  attachments            Attachment[] 
-  // Conversation
-  conversation           Conversation[]
-
- // Related records
-  reqForSupply           ClanCommercePartOrderTradingRequestedForSupply[]
-  milestones             Milestone[]
-  reviews                Review[]
-  transactionsActivityLogs         TransactionsActivityLog[]
-  bookmarks              Bookmark[]
-  share                  Share[]
-
-  dealStatus             CollaborationStatus  @default(PENDING)
-  dealStartedAt          DateTime?
-  dealEndedAt            DateTime?
-  dealAmount             Float?
-  dealCommission         Float?
-  dealRating             Float?
-  dealFeedback           String?
-  // dealDispute            Dispute?
-  // dealDisputeResolution  DisputeResolution?
-  // dealCommunications     ClanCommunication[]
-  // dealActivities         ClanActivity[]
-  createdAt              DateTime    @default(now())
-  updaedAt               DateTime    @updatedAt
-  claimedAt              DateTime?
-  expiresAt              DateTime?
-}
-
-model ClanCommercePartOrderTradingRequestedForSupply {
-  id                  String      @id @default(uuid())
-  supplierStoreId     String        
-  supplierStore       SupplierStore  @relation(fields: [supplierStoreId], references: [id])
-  attachment          Attachment[]
-  status              supplierPartOrderReqStatus @default(PENDING)
-  clanCommercePartOrderTradingId         String      @unique
-  clanCommercePartOrderTrading           ClanCommercePartOrderTrading @relation(fields: [clanCommercePartOrderTradingId], references: [id])
-  
-  // Timestamps
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-  acceptedAt        DateTime?
-  expiresAt         DateTime?    // تایمی تعیین میکنیم اگر بعد از اون تایم ایجاد نشه حذف شه
+  id            String    @id @default(uuid())
+  clanId        String
+  clan          Clan      @relation(fields: [clanId], references: [id])
+  partOrder     PartOrder
+  createdAt     DateTime    @default(now())
+  updaedAt      DateTime    @updatedAt
+  claimedAt     DateTime?
+  expiresAt     DateTime?
 }
 
 model ClanRanking {
@@ -1024,7 +971,6 @@ enum CollaboratorRole {
 
 enum BidStatus {
   PENDING
-  IN_PROGRESS
   ACCEPTED
   REJECTED
   WITHDRAWN
@@ -2340,9 +2286,6 @@ model Review {
   garagePartOrderId    String
   garagePartOrder     GaragePartOrder      @relation(fields: [garagePartOrderId], references: [id])
 
-  clanCommercePartOrderTradingId         String      @unique
-  clanCommercePartOrderTrading           ClanCommercePartOrderTrading @relation(fields: [clanCommercePartOrderTradingId], references: [id])
-  
   // Garage OutSourcing Collaboration
   noticeOutSourcingId    String            @unique
   noticeOutSourcing    NoticeOutSourcing  @relation(fields: [noticeOutSourcingId], references: [id])
@@ -2448,9 +2391,7 @@ model Bookmark {
   noticeOutSourcing          NoticeOutSourcing        @relation(fields: [noticeOutSourcingId], references: [id], onDelete: Cascade)  
   garagePartOrderId       String                @unique
   garagePartOrder         GaragePartOrder    @relation(fields: [garagePartOrderId], references: [id], onDelete: Cascade)  
-  clanCommercePartOrderTradingId         String      @unique
-  clanCommercePartOrderTrading           ClanCommercePartOrderTrading @relation(fields: [clanCommercePartOrderTradingId], references: [id])
-  
+
   productId                 String
   product                   Product   @relation("ProductBookmarks", fields: [productId], references: [id], onDelete: Cascade)
  
@@ -2499,9 +2440,7 @@ model Share {
   garagePartOrder         GaragePartOrder    @relation(fields: [garagePartOrderId], references: [id], onDelete: Cascade)  
   productId                 String
   product                   Product   @relation("ProductShares", fields: [productId], references: [id], onDelete: Cascade)
-  clanCommercePartOrderTradingId         String      @unique
-  clanCommercePartOrderTrading           ClanCommercePartOrderTrading @relation(fields: [clanCommercePartOrderTradingId], references: [id])
-  
+
   garageRequirementsRequestId        String
   garageRequirementsRequest          GarageRequirementsRequest        @relation("GarageRequirementMediaNShares", fields: [garageRequirementsRequestId], references: [id], onDelete: Cascade)  
   autoServicesRequirementsRequestId        String
@@ -3173,9 +3112,6 @@ model Conversation {
   garagePartOrderId    String
   garagePartOrder     GaragePartOrder      @relation(fields: [garagePartOrderId], references: [id])
   
-  clanCommercePartOrderTradingId         String      @unique
-  clanCommercePartOrderTrading           ClanCommercePartOrderTrading @relation(fields: [clanCommercePartOrderTradingId], references: [id])
-  
   // Garage OutSourcing Collaboration
   noticeOutSourcingId    String            @unique
   noticeOutSourcing    NoticeOutSourcing  @relation(fields: [noticeOutSourcingId], references: [id])
@@ -3337,12 +3273,6 @@ model Attachment {
   successfulSellCouponByGarage_MechanicId            String
   successfulSellCouponByGarage_Mechanic               SuccessfulSellCouponByGarage_Mechanic          @relation(fields: [successfulSellCouponByGarage_MechanicId], references: [id])
 
-  clanCommercePartOrderTradingId         String      @unique
-  clanCommercePartOrderTrading           ClanCommercePartOrderTrading @relation(fields: [clanCommercePartOrderTradingId], references: [id])
-  
-  clanTradingReqForSupplyId   String      @unique
-  clanTradingReqForSupply  ClanCommercePartOrderTradingRequestedForSupply  @relation(fields: [clanTradingReqForSupplyId], references: [id])
-  
   // Message relation
   messageId            String?
   message              Message?       @relation(fields: [messageId], references: [id])
@@ -3482,9 +3412,6 @@ model Milestone {
   garagePartOrderId    String
   garagePartOrder     GaragePartOrder      @relation(fields: [garagePartOrderId], references: [id])
   
-  clanCommercePartOrderTradingId         String      @unique
-  clanCommercePartOrderTrading           ClanCommercePartOrderTrading @relation(fields: [clanCommercePartOrderTradingId], references: [id])
-  
   // Garage OutSourcing Collaboration
   noticeOutSourcingId    String            @unique
   noticeOutSourcing    NoticeOutSourcing  @relation(fields: [noticeOutSourcingId], references: [id])
@@ -3550,8 +3477,6 @@ model TransactionsActivityLog {
   // Garage PartOrder Collaboration
   garagePartOrderId    String
   garagePartOrder     GaragePartOrder      @relation(fields: [garagePartOrderId], references: [id])
-  clanCommercePartOrderTradingId         String      @unique
-  clanCommercePartOrderTrading           ClanCommercePartOrderTrading @relation(fields: [clanCommercePartOrderTradingId], references: [id])
   
   // Metrics 
   metricId             String
@@ -3675,8 +3600,6 @@ model SupplierStore {
   // Garage PartOrder Collaboration
   garagePartOrder   GaragePartOrder[] 
 
-  clanCommercePartOrderTrading  ClanCommercePartOrderTrading[]
-
   // Accepted Projects For Supplying Part
   projects         Project[]
 
@@ -3692,7 +3615,7 @@ model SupplierStore {
 
   // Part Order Requests For Supplying
   reqForSupply        RequestedForSupply[]
-  clanPartOrderTradingReqForSupply ClanCommercePartOrderTradingRequestedForSupply[]
+
   // Relations for GaragePartOrder CoWork
   requestedGarage             PartOrderSupplyCollaborationHistory[] 
   
@@ -3759,8 +3682,7 @@ model GaragePartOrder {
   title                String
   isAvailable          Boolean        @default(true)
   city                 String
-  partOrderId            String      @unique
-  partOrder              PartOrder   @relation(fields: [partOrderId], references: [id])
+  parts                PartOrder?
   status               CollaborationStatus  @default(PENDING)
   budget               Float
   createdAt            DateTime       @default(now())
@@ -3833,7 +3755,9 @@ model PartOrderSupplyCollaborationHistory{
 //.............PartOrder model..........قطعات یدکی درخواست شده گاراژ............//
 model PartOrder {
   id                   String      @id @default(uuid())
- 
+  garagePartOrderId    String      @unique
+  garagePartOrder      GaragePartOrder      @relation(fields: [garagePartOrderId], references: [id])
+  
   // Part details
   partSpecifications   PartSpecification[]
   quantity          String
@@ -3841,10 +3765,8 @@ model PartOrder {
   urgencyLevel      Int               @default(1) // 1-5 scale
   notes             String?
 
-  // ClanCommercePartOrderTrading
-  clanCommercePartOrderTrading  ClanCommercePartOrderTrading?
-  garagePartOrder   GaragePartOrder?
-
+  clanCommercePartOrderTradingId   String   @unique
+  clanCommercePartOrderTrading  ClanCommercePartOrderTrading  @relation(fields: [clanCommercePartOrderTradingId], references: [id])
   // Optional specific requirements
   preferredBrands   String?
   maxPrice          Float?
