@@ -3896,7 +3896,6 @@ model PartSpecification {
   id             String           @id @default(uuid())
   name           String        // e.g., "Brake Caliper", "Brake Pad"
   quantity       Int
-  collaboratorPersentage    Float @default(0.1) // درصد حق همکاری (مثلا 10%)
   condition      PartCondition     @default(NEW)
   category       PartCategory
   brand          String?       // Brand name if specified
@@ -3904,6 +3903,7 @@ model PartSpecification {
   year           String?         // Year of compatibility
   details        Json?        // Additional specifications as JSON
   supplyPartId   String?
+  collaboratorPersentage    Float @default(0.1) // درصد حق همکاری (مثلا 10%)
   supplyPart     SupplyParts?   @relation(fields: [supplyPartId], references: [id])
   partOrderId    String?
   partOrder      PartOrder?     @relation(fields: [partOrderId], references: [id])
