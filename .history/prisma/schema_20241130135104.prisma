@@ -421,54 +421,47 @@ enum CommunicationRole {
   RESTRICTED
 }
 
-
-// ClanCommercePartOrderTrading - Main trading model
-model ClanCommercePartOrderTrading {
+model ClanCommercePartOrderTrading{
   id                     String      @id @default(uuid())
   clanId                 String
   clan                   Clan        @relation(fields: [clanId], references: [id])
-  clanDealRepresentativeId String    @unique
+  partOrderId            String      @unique
+  partOrder              PartOrder   @relation(fields: [partOrderId], references: [id])
+  clanDealRepresentativeId String  @unique
   clanDealRepresentative ClanMembership @relation(fields: [clanDealRepresentativeId], references: [id])
-  suplierStoreId         String?    
-  acceptorSuppleirStore  SupplierStore?   @relation(fields: [suplierStoreId], references: [id])
+  suplierStoreId         String
+  acceptorSuppleirStore  SupplierStore   @relation(fields: [suplierStoreId], references: [id])
   title                  String
-  description           String?     
   isAvailable            Boolean        @default(true)
   city                   String
-  requirements           Json?          
+  requirements           Json?          // Detailed project requirements
   attachments            Attachment[] 
-  
-  // Trading specific fields
-  totalQuantity         Int        @default(0)  
-  expectedDeliveryDate DateTime?
-  actualDeliveryDate   DateTime?
-  tradingStatus        TradingStatus @default(OPEN)
-  
-  // Part list created by representative
-  partsList            ClanCommercePartsList[]
-  
-  // Relations
-  garageOrders         ClanCommerceGarageOrder[]
-  conversation         Conversation[]
-  reqForSupply         ClanCommercePartOrderTradingRequestedForSupply[]
-  milestones           Milestone[]
-  reviews              Review[]
-  transactionsActivityLogs TransactionsActivityLog[]
-  bookmarks            Bookmark[]
-  share                Share[]
+  // Conversation
+  conversation           Conversation[]
 
-  // Deal status tracking
-  dealStatus            CollaborationStatus  @default(PENDING)
-  dealStartedAt         DateTime?
-  dealEndedAt           DateTime?
-  dealRating            Float?
-  dealFeedback          String?
-  
-  // Timestamps
-  createdAt             DateTime    @default(now())
-  updatedAt             DateTime    @updatedAt
-  claimedAt             DateTime?
-  expiresAt             DateTime?
+ // Related records
+  reqForSupply           ClanCommercePartOrderTradingRequestedForSupply[]
+  milestones             Milestone[]
+  reviews                Review[]
+  transactionsActivityLogs         TransactionsActivityLog[]
+  bookmarks              Bookmark[]
+  share                  Share[]
+
+  dealStatus             CollaborationStatus  @default(PENDING)
+  dealStartedAt          DateTime?
+  dealEndedAt            DateTime?
+  dealAmount             Float?
+  dealCommission         Float?
+  dealRating             Float?
+  dealFeedback           String?
+  // dealDispute            Dispute?
+  // dealDisputeResolution  DisputeResolution?
+  // dealCommunications     ClanCommunication[]
+  // dealActivities         ClanActivity[]
+  createdAt              DateTime    @default(now())
+  updaedAt               DateTime    @updatedAt
+  claimedAt              DateTime?
+  expiresAt              DateTime?
 }
 
 model ClanCommercePartOrderTradingRequestedForSupply {
@@ -485,93 +478,6 @@ model ClanCommercePartOrderTradingRequestedForSupply {
   updatedAt         DateTime          @updatedAt
   acceptedAt        DateTime?
   expiresAt         DateTime?    // تایمی تعیین میکنیم اگر بعد از اون تایم ایجاد نشه حذف شه
-}
-
-// ClanCommercePartsList - Parts list created by representative
-model ClanCommercePartsList {
-  id                     String      @id @default(uuid())
-  tradingId              String
-  trading               ClanCommercePartOrderTrading @relation(fields: [tradingId], references: [id])
-  
-  // Part details
-  partName              String
-  partNumber            String?
-  brand                 String?
-  condition             PartCondition @default(NEW)
-  description           String?
-  
-  // Garage orders for this part
-  garageQuantities      ClanCommerceGaragePartQuantity[]
-  
-  createdAt             DateTime    @default(now())
-  updatedAt             DateTime    @updatedAt
-}
-
-// ClanCommerceGarageOrder - Individual garage orders within trading
-model ClanCommerceGarageOrder {
-  id                     String      @id @default(uuid())
-  clanCommercePartOrderTradingId String
-  clanCommercePartOrderTrading ClanCommercePartOrderTrading @relation(fields: [clanCommercePartOrderTradingId], references: [id])
-  garageId              String     
-  garage                Garage     @relation(fields: [garageId], references: [id])
-  
-  // Order details
-  status               OrderStatus @default(PENDING)
-  
-  // Additional fields
-  notes                String?
-  deliveryAddress      String?
-  contactPerson        String?
-  contactPhone         String?
-  
-  // Part quantities
-  partQuantities       ClanCommerceGaragePartQuantity[]
-  
-  // Timestamps
-  createdAt            DateTime    @default(now())
-  updatedAt            DateTime    @updatedAt
-}
-
-// ClanCommerceGaragePartQuantity - Quantities requested by each garage for each part
-model ClanCommerceGaragePartQuantity {
-  id                  String    @id @default(uuid())
-  garageOrderId       String
-  garageOrder         ClanCommerceGarageOrder @relation(fields: [garageOrderId], references: [id])
-  partsListId         String
-  partsList           ClanCommercePartsList @relation(fields: [partsListId], references: [id])
-  
-  quantity            Int
-  notes               String?
-  
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
-
-  @@unique([garageOrderId, partsListId])
-}
-
-// Required enums
-enum OrderStatus {
-  PENDING
-  CONFIRMED
-  IN_PROGRESS
-  DELIVERED
-  CANCELLED
-  REJECTED
-}
-
-enum TradingStatus {
-  OPEN
-  SUPPLIER_SELECTED
-  IN_PROGRESS
-  COMPLETED
-  CANCELLED
-}
-
-enum PartCondition {
-  NEW
-  USED
-  REFURBISHED
-  AFTERMARKET
 }
 
 model ClanRanking {
@@ -2887,7 +2793,6 @@ model Garage {
   metrics              Metric[]
   clanCouponGarageSuccess  ClanCouponGarageSuccess[]
   clanCouponGarageAcceptor  ClanCouponGarageAcceptor[]
-  clanCommerceGarageOrder   ClanCommerceGarageOrder[]
 
  // روابط جدید
   acceptedCoupons      CouponGarageAcceptor[]
@@ -3936,7 +3841,7 @@ model PartOrder {
   notes             String?
 
   // ClanCommercePartOrderTrading
-  // clanCommercePartOrderTrading  ClanCommercePartOrderTrading?
+  clanCommercePartOrderTrading  ClanCommercePartOrderTrading?
   garagePartOrder   GaragePartOrder?
 
   // Optional specific requirements
@@ -4037,6 +3942,12 @@ enum PartCategory {
   OTHER
 }
 
+// Enum for part condition
+enum PartCondition {
+  NEW
+  USED
+  REFURBISHED
+}
 //........................ GarageAwaitList model ..............................//
 model GarageAwaitList {
   id                   String      @id @default(uuid())
