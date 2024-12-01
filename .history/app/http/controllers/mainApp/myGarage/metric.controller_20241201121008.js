@@ -1,10 +1,3 @@
-/*
-*            ____ForceMajeureMetrics متریک های فورس که مکانیک مشتری رو متقاعد به خرید کرده
-*           |
-*Metrics----|
-*           |____PostponedMetrics متریک های به تعویق افتاده که مشتری راضی به خرید نشده و تامین کننده خودش بازاریابی میکنه
-*            
-*/
 const createError = require("http-errors");
 const { StatusCodes: HttpStatus } = require("http-status-codes");
 const Controller = require("../../controller");
