@@ -24,8 +24,9 @@ class GaragePartOrdersController extends Controller {
 
 
      //Controllers
-   // 1. Car Insepction Sheet With Required Parts And Images For Sending To Client To Approval
-     async carInspection(req, res, next){
+
+     async carInsepctionSheetWithRequiredPartsAndImagesForSendingToClient(req, res, next){
+        // اسم کنترلر نباید اینقدر طولانی باشه اسم های کوتاه بزار با یک لاین توضیح
         try {
           
         } catch (error) {
@@ -33,8 +34,7 @@ class GaragePartOrdersController extends Controller {
         }
      }
 
-  // 2. Update Estimated Broken Sections With Required Parts For Client Approval By Garage
-    async updateInspection(req, res, next){
+    async updateEstimatedBrokenSectionsWithRequiredPartsForClientApprovalByGarage(req, res, next){
         try {
            
         } catch (error) {

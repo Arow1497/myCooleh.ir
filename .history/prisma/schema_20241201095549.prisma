@@ -3124,7 +3124,6 @@ model Project {
   garage               Garage      @relation(fields: [garageId], references: [id])
   relatedAwaitListReqId String     @unique
   relatedAwaitListReq  GarageAwaitList  @relation(fields: [relatedAwaitListReqId], references: [id])
-  projectEarlyInspection  ProjectEarlyInspectionList[] // چندین رکورد از این مدل بیانگر هر قطعه یا ایراد در لیست اینسپشن هست
   suplierStoreId       String      @unique
   acceptedSuppleirStore SupplierStore   @relation(fields: [suplierStoreId], references: [id])
   partSupplyStatus     PartSupplyStatus   @default(NOTADD)
@@ -3180,42 +3179,6 @@ model Project {
   milestones           Milestone[]
   reviews              Review[]
   transactionsActivityLogs         TransactionsActivityLog[]
-}
-
-//........................ GarageAwaitList model ..............................//
-model GarageAwaitList {
-  id                   String      @id @default(uuid())
-  garageId             String
-  hostGarage           Garage   @relation(fields: [garageId], references: [id])
-  clientId             String
-  client               Client   @relation(fields: [clientId], references: [id])
-  acceptancestatus     AcceptanceStatus
-  acceptanceReportSheetUrl   String?
-  carPlateNumber       String
-  carMillage           String
-  carModel             String
-  carChassisNumber     String?
-  requirements         Json?          // Detailed project requirements
-  attachment           Attachment[] // توضیحات مشتری از ایراد ها با عکس و وویس 
-  relatedProject       Project?
-  createdAt            DateTime       @default(now())
-  updatedAt            DateTime       @updatedAt
-}
-
-//........................ ProjectEarlyInspectionList model .........برای هر مورد ایسپشن یک رکورد از این مدل.....................//
-//این لیست اینسپن ایرادات و قطعات هست که مشتری از بین اینها انتخاب میکنه
-// و میرند برای تامین قطعه
-model ProjectEarlyInspectionList {
-  id                   String      @id @default(uuid())
-  relatedProjectId     String
-  relatedProject       Project     @relation(fields: [relatedProjectId], references: [id], onDelete: Cascade)
-  title                String      // سرتیتر ایراد
-  description          String     // توضیحات ایراد و مشکلاتی که ایجاد میکنه
-  partName             String    // اسم قطعه یدکی مورد نیاز این ایراد
-  requirements         Json?          // Detailed project requirements
-  attachment           Attachment[] // چون برای هر قطعه یک رکورد از این مدل ثبت میشخ پس مشخصه کدوم تصویر یا وویس متعلق به چه قطعه هست
-  createdAt            DateTime       @default(now())
-  updatedAt            DateTime       @updatedAt
 }
 
 model ProjectsMechanicWorkAt {
@@ -3527,10 +3490,6 @@ model Attachment {
  // Coupons 
   couponId             String
   coupon               Coupons          @relation(fields: [couponId], references: [id])
-
-// ProjectEarlyInspectionList
-  projectEarlyInspectionListId    String   @unique
-  projectEarlyInspectionList      ProjectEarlyInspectionList   @relation(fields: [projectEarlyInspectionListId], references: [id])
 
 // SuccessfulSellCouponByGarage_Mechanic 
   successfulSellCouponByGarage_MechanicId            String
@@ -4138,6 +4097,26 @@ enum PartCategory {
   FLUID
   BODY
   OTHER
+}
+
+//........................ GarageAwaitList model ..............................//
+model GarageAwaitList {
+  id                   String      @id @default(uuid())
+  garageId             String
+  hostGarage           Garage   @relation(fields: [garageId], references: [id])
+  clientId             String
+  client               Client   @relation(fields: [clientId], references: [id])
+  acceptancestatus     AcceptanceStatus
+  acceptanceReportSheetUrl   String?
+  carPlateNumber       String
+  carMillage           String
+  carModel             String
+  carChassisNumber     String?
+  requirements         Json?          // Detailed project requirements
+  attachment           Attachment[] // توضیحات مشتری از ایراد ها با عکس و وویس 
+  relatedProject       Project?
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
 }
 
 //........................ GarageOilServiceProjects model ..............................//

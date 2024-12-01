@@ -3202,18 +3202,13 @@ model GarageAwaitList {
   updatedAt            DateTime       @updatedAt
 }
 
-//........................ ProjectEarlyInspectionList model .........برای هر مورد ایسپشن یک رکورد از این مدل.....................//
-//این لیست اینسپن ایرادات و قطعات هست که مشتری از بین اینها انتخاب میکنه
-// و میرند برای تامین قطعه
+//........................ GarageAwaitList model .........برای هر مورد ایسپشن یک رکورد از این مدل.....................//
 model ProjectEarlyInspectionList {
   id                   String      @id @default(uuid())
   relatedProjectId     String
   relatedProject       Project     @relation(fields: [relatedProjectId], references: [id], onDelete: Cascade)
-  title                String      // سرتیتر ایراد
-  description          String     // توضیحات ایراد و مشکلاتی که ایجاد میکنه
-  partName             String    // اسم قطعه یدکی مورد نیاز این ایراد
   requirements         Json?          // Detailed project requirements
-  attachment           Attachment[] // چون برای هر قطعه یک رکورد از این مدل ثبت میشخ پس مشخصه کدوم تصویر یا وویس متعلق به چه قطعه هست
+   attachment           Attachment[] // چون برای هر قطعه یک رکورد از این مدل ثبت میشخ پس مشخصه کدوم تصویر یا وویس متعلق به چه قطعه هست
   createdAt            DateTime       @default(now())
   updatedAt            DateTime       @updatedAt
 }

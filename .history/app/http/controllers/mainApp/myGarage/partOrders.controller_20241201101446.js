@@ -1,12 +1,16 @@
 /*
 *1.carInspectionSheetWithImagesForSendingToClient:
 * بررسی و اینسپکشن مکانیک (از مشکلات مورد نظر و بخش های مربوطه نه اینسپکشن کلی خودرو اون برای 
-*  بخش متریک هست) و ثبت موارد ایراد و قطعات خراب همراه باتصویر و وویس و اسم قطعه یدکی موردنیاز که در مدل 
+*  بخش متریک هست) و ثبت موارد ایراد و قطعات خراب همراه با تصویر و وویس که در مدل 
 * ProjectEarlyInspectionList ثبت میشن
-* مکانیک اول این لیست ایرادات رو که همراه هست با لیست قطعات مورد نیاز برای مشتری میفرسته بعد
-*  مشتری مواردی از اون لیست انتخاب میکنه و مراحل بعد برای ثبت پارت اوردر
-______________________________________________________________________________
-* 2.  گاهی اوقات یک لیستی از معایب و قطعاتی که نیاز هست تهیه میشه و کلاینت موادی رو تایید میده
+* مکانیک اول این لیست ایرادات رو برای مشتری میفرسته بعد لیست بعدی قطعات مورد نیاز
+* بعد مشتری مواردی از اون لیست انتخاب میکنه و مراحل بعد برای ثبت پارت اوردر
+____________________________________________________________________________
+* 2. addEstimatedBrokenSectionsWithRequiredPartsForClientApprovalByGarage
+* توی این مرحله مکانیک برای ایراد های یافت شده در اینسپکشن یعنی بخش اول قطعات مورد
+*نیاز ثبت میکنه یعنی لیستی از قطعاتی که باید تهیه بشند ثبت میکنه و یا این لیست رو بروزرسانی میکنه 
+_______________________________________________________________________________
+* 3.  گاهی اوقات یک لیستی از معایب و قطعاتی که نیاز هست تهیه میشه و کلاینت موادی رو تایید میده
 * بعد توی کار میرن میبینن ایراد های جدیدی مشخص میشه اونموقع یکبار دیگه این رو یه 
 * آپدیت میزنن و مشتری باز باید تایید کنه یا خیر
 */
@@ -24,8 +28,8 @@ class GaragePartOrdersController extends Controller {
 
 
      //Controllers
-   // 1. Car Insepction Sheet With Required Parts And Images For Sending To Client To Approval
-     async carInspection(req, res, next){
+
+     async carInspectionSheetWithImagesForSendingToClient(req, res, next){
         try {
           
         } catch (error) {
@@ -33,8 +37,15 @@ class GaragePartOrdersController extends Controller {
         }
      }
 
-  // 2. Update Estimated Broken Sections With Required Parts For Client Approval By Garage
-    async updateInspection(req, res, next){
+     async addEstimatedBrokenSectionsWithRequiredPartsForClientApprovalByGarage(req, res, next){
+        try {
+
+        } catch (error) {
+            
+        }
+    }
+
+    async updateEstimatedBrokenSectionsWithRequiredPartsForClientApprovalByGarage(req, res, next){
         try {
            
         } catch (error) {

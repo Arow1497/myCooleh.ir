@@ -3205,6 +3205,7 @@ model GarageAwaitList {
 //........................ ProjectEarlyInspectionList model .........برای هر مورد ایسپشن یک رکورد از این مدل.....................//
 //این لیست اینسپن ایرادات و قطعات هست که مشتری از بین اینها انتخاب میکنه
 // و میرند برای تامین قطعه
+
 model ProjectEarlyInspectionList {
   id                   String      @id @default(uuid())
   relatedProjectId     String
