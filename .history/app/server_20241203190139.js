@@ -7,7 +7,6 @@ const swaggerJsDoc = require("swagger-jsdoc");
 const cors = require("cors");
 const { createRedisClient } = require("./utils/initRedis");
 const helmet = require('helmet');
-const apprenticeshipSwagger = require("./routes/admin/swagger/Main/apprenticeship.swagger")
 const hpp = require('hpp');
 const mongoSanitize = require('express-mongo-sanitize');
 const xssClean = require('xss-clean');
@@ -258,44 +257,38 @@ module.exports = class Application {
         });
     }
 
-    
-setupSwagger() {
-    const swaggerOptions = {
-        swaggerDefinition: {
-            openapi: "3.0.0",
-            info: {
-                title: "Cooleh-Project",
-                version: "1.0.0",
-                description: "This is Cooleh-Project project swagger UI and documentation"
-            },
-            servers: [
-                { url: "http://localhost:7000" },
-                { url: "http://localhost:4000" }
-            ],
-            components: {
-                securitySchemes: {
-                    BearerAuth: {
-                        type: "http",
-                        scheme: "bearer",
-                        bearerFormat: "JWT"
+    setupSwagger() {
+        const swaggerOptions = {
+            swaggerDefinition: {
+                openapi: "3.0.0",
+                info: {
+                    title: "Cooleh-Project",
+                    version: "1.0.0",
+                    description: "This is Cooleh-Project project swagger ui and documentation"
+                },
+                servers: [
+                    { url: "http://localhost:7000" },
+                    { url: "http://localhost:4000" }
+                ],
+                components: {
+                    securitySchemes: {
+                        BearerAuth: {
+                            type: "http",
+                            scheme: "bearer",
+                            bearerFormat: "JWT"
+                        }
                     }
-                }
+                },
+                security: [{ BearerAuth: [] }]
             },
-            security: [{ BearerAuth: [] }],
-            paths: {
-                ...apprenticeshipSwagger.paths, // اضافه کردن مسیرهای مربوط به فایل Apprenticeship
-            }
-        },
-        // حذف نیاز به اسکن مسیرهای دیگر در صورت استفاده از فایل خاص
-        apis: []
-    };
+            apis: ["./app/routes/**/*.js"]
+        };
 
-    this.#app.use(
-        "/api-doc",
-        swaggerUI.serve,
-        swaggerUI.setup(swaggerJsDoc(swaggerOptions), { explorer: true })
-    );
-}
+        this.#app.use("/api-doc", 
+            swaggerUI.serve, 
+            swaggerUI.setup(swaggerJsDoc(swaggerOptions), { explorer: true })
+        );
+    }
 
     setupCache() {
         const cacheOptions = {

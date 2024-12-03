@@ -1,4 +1,4 @@
-const { TransactionController } = require("../../http/controllers/mainApp/transactions/transaction.controller");
+const { TransactionController } = require("../../http/controllers/admin/transactions/transactionController");
 
 const router = require("express").Router();
 
