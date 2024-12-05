@@ -1,3 +1,10 @@
+/*
+* نکته بسیار مهم در کد نویسی تمیز اینه که اسم کنترلر ها نباید طولانی باشه 
+* اسم های کوتاه بزار با یک لاین کامنت مثلا:
+* 1. Car Inspection Sheet With Required Parts And Images For Sending To Client To Approval
+* async carInspection(req, res, next){
+*/    
+
 const { StatusCodes: HttpStatus } = require("http-status-codes");
 const Controller = require("../../controller");
 const {apprenticeNoticeService} = require("../../../services/mainApp/dastyar/noticeServices/notice.service");
@@ -8,9 +15,7 @@ const {coworkService} = require("../../../services/mainApp/dastyar/noticeService
 
 class ApprenticeshipNoticeController extends Controller {
 
-    /********************************************************
-     * 1. Creating New Apprentice Notice
-     *******************************************************/
+    // 1. Creating New Apprentice Notice
     async create(req, res, next) {
         try {
             const result = await apprenticeNoticeService.createNewRequest(
@@ -34,10 +39,7 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    /********************************************************
-     * 2. Showing List Of All Approved Apprentice Notices In User Feed
-     *******************************************************/
-    async getAll(req, res, next) {
+    async getAllNoticeApprentice(req, res, next) {
         try {
             const notices = await apprenticeNoticeService.getAllNoticeApprentice(req.query.city);
             return res.status(HttpStatus.OK).json({
@@ -49,10 +51,7 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
-     * 3. Showing This Specific Apprentice Notice From Feed
-     ******************************************************/
-    async getOne(req, res, next) {
+    async getOneNoticeApprenticeById(req, res, next) {
         try {
             const notice = await apprenticeNoticeService.getOneNoticeApprenticeById(req.params.noticeApprenticeId);
             return res.status(HttpStatus.OK).json({
@@ -64,10 +63,7 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
-     * 4. Removing This Specific Apprentice Notice By It's Publisher
-     ******************************************************/
-    async remove(req, res, next) {
+    async removeNoticeApprenticeById(req, res, next) {
         try {
             await apprenticeNoticeService.removeNoticeApprenticeById(req.params.noticeApprenticeId, req.user.id);
             return res.status(HttpStatus.OK).json({
@@ -79,10 +75,7 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
-     * 5. Edit and Update This Specific Apprentice Notice By It's Publisher
-     ******************************************************/
-    async edit(req, res, next) {
+    async editNoticeApprenticesById(req, res, next) {
         try {
             const updatedNotice = await apprenticeNoticeService.editNoticeApprenticesById(
                 req.params.noticeApprenticeId,
@@ -103,9 +96,6 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
-     * 6. Bookmark This Specific Apprentice Notice By User
-     ******************************************************/
     async toggleBookmark(req, res, next) {
         try {
             const isAdded = await apprenticeNoticeService.toggleBookmark(
@@ -125,10 +115,7 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
-     * 7. History Of All Completed Garage's Recorded Apprentice Notices
-     ******************************************************/
-    async getAllToGarage(req, res, next) {
+    async getAllGarageNoticeApprentices(req, res, next) {
         try {
             // همهی اگهی های شاگرد منتج به همکاری شده گاراژ تاریخچه اش چون اونهایی که 
             //منتج به همکاری نشند بعد مدتی از دیتابیس حذف میشن
@@ -154,10 +141,7 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
-     * 8. History Of All Completed Apprentice's Recorded Apprentice Notices
-     ******************************************************/
-    async getAllToItself(req, res, next) {
+    async getAllNoticeApprenticesToItself(req, res, next) {
         try { // همه ی پروژه های تعریف شده از نوع شاگرد که این شخص به عنوان شاگرد درش همکاری داشته
             const { requests, total } = await apprenticeNoticeService.getAllNoticeApprenticesToItself(
                 req.user.id,
@@ -182,10 +166,7 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
-     * 9. Show All Of In-Progress Apprentice's Approved Apprentice Notices
-     ******************************************************/
-    async getActiveToItSelf(req, res, next) {
+    async getApprenticeAllActiveApprenticeNoticeApps(req, res, next) {
         try {
             // همکاری های درخواست شاگرد جاری و فعال شخص به عنوان شاگرد
             const { activeNotices, total } = await apprenticeNoticeService.getApprenticeAllActiveNotices(
@@ -210,10 +191,7 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-     /*******************************************************
-     * 10. Show All Of In-Progress Garage's Approved Apprentice Notices
-     ******************************************************/
-    async getActiveToGarage(req, res, next) {
+    async getGarageAllActiveApprenticeNoticeApps(req, res, next) {
         try {
             // همکاری های درخواست شاگرد جاری و فعال شخص به عنوان گاراژ
             const { activeNotices, total } = await apprenticeNoticeService.getGarageAllActiveNotices(
@@ -238,10 +216,7 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-     /*******************************************************
-     * 11. Sharing This Specific Apprentice Notice By User
-     ******************************************************/
-    async share(req, res, next) {
+    async shareNoticeApprentice(req, res, next) {
         try {
             const share = await apprenticeNoticeService.shareNoticeApprentice(
                 req.params.noticeApprenticeId,
@@ -256,10 +231,7 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
-     * 12. Adding CoWorking Request To This Specific Apprentice Notice By Garages Or Apprentices
-     ******************************************************/
-    async addCollaborationRequest(req, res, next) {
+    async addCoworkReqForNoticeApprentice(req, res, next) {
         try {
             // ثبت درخواست همکاری از طرف شاگرد
             const noticeApprenticeAppReqs = await coworkService.apprentice.addCoworkRequest(
@@ -276,10 +248,7 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
-     * 13. Show All Of CoWorking Requests To This Specific Apprentice Notice To It's Publisher
-     ******************************************************/
-    async showCollabRequests(req, res, next) {
+    async showCoworkRequestsForRequesterGarage(req, res, next) {
         try {
             // نمایش درخواست ها امکان مشاهده پروفایل شخص و بررسی رزومه و درنهایت
             // انتخاب شخص برای همکاری
@@ -293,10 +262,7 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
-     * 14. Choosing This Apprentice As Collaborator By Apprentice Notice's Publisher
-     ******************************************************/
-    async addCollaborator(req, res, next) {
+    async addApprenticeToRequest(req, res, next) {
         try {
             // هندلر انتخاب و افزودن شاگرد به اگهی و پروژه توسط گاراژ
             const result = await coworkService.apprentice.addCollaboratorToRequest(
@@ -317,10 +283,7 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
-     * 15. Removing This Apprentice From CoWorking By Apprentice Notice's Publisher
-     ******************************************************/
-    async deleteCollaborator(req, res, next) {
+    async deleteThisApprenticeFromNoticeApprentice(req, res, next) {
         try {
             await coworkService.apprentice.removeCollaboratorFromRequest(
                 req.user.ownedGarage?.id,
@@ -338,10 +301,7 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
-     * 16. Apprentice Refusing From This Collaboration
-     ******************************************************/
-    async refusing(req, res, next) {
+    async apprenticeRefusingFromThisNoticeApprenticeship(req, res, next) {
         try {
             //استعفای شاگرد از همکاری پس از پذیرشش توسط گاراژ
             await coworkService.apprentice.collaboratorRefuseRequest(
@@ -359,10 +319,7 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
-     * 17. Two-Side Confirming For Completion Of This Collaboration
-     ******************************************************/
-    async confirmTransaction(req, res, next) {
+    async confirmTransactionCompletion(req, res, next) {
         try {
             //تایید با موفقیت انجام شدن پروژه و دریافت مطالبات از طرف شاگرد و گاراژ
             const role = req.user.apprenticeAt ? 'apprentice' : 'garageOwner';
@@ -382,9 +339,6 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
-     * 18. Create A Complaining Request From Each Side Of This Collaboration
-     ******************************************************/
     async createComplaint(req, res, next) {
         try {
             // ثبت شکایت از انجام نشدن تعهدات مالی یا وظایف کاری توسط طرفین
@@ -406,10 +360,7 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
-     * 19. Regret And Remove A Complaint Request By It's Publisher
-     ******************************************************/
-    async regretComplaint(req, res, next) {
+    async removeAndRegretComplaintByrequester(req, res, next) {
         try {
             // پشیمانی از شکایت و لغو شکایت توسط ایجاد کننده شکایت
             await complaintServices.apprentice.removeComplaint(
@@ -427,9 +378,6 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
-     * 20. Responding To A Complaint By It's Target
-     ******************************************************/
     async respondToComplaint(req, res, next) {
         try {
             // عکس العمل و پاسخ و مستندات شخص مشتک علیه در جواب شاکی
@@ -451,10 +399,7 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
-     * 21. Add Rating And Comment For This Collaboration By Two Side Of It
-     ******************************************************/
-    async addReview(req, res, next) {
+    async addReviewForNoticeApprentice(req, res, next) {
         try {
             // ثبت کامنت نظر امتیاز توسط طرفین همکاری به یکدیگر در این همکاری
             await transactionService.apprentice.addReview(
@@ -473,9 +418,6 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
-     * 22. Create A Conversation Space For This Collaboration By Two Side Of It
-     ******************************************************/
     async createTransactionRoom(req, res, next) {
         try {
             // ایجاد اتاق دایرکت مسج برای ارتباط طرفین همکاری با یکدیگر
@@ -495,9 +437,6 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
-     * 23. Sending Message
-     ******************************************************/
     async sendMessage(req, res, next) {
         try {
             const message = await conversationService.sendMessage(
@@ -518,9 +457,6 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-     /*******************************************************
-     * 24. Get All Messages
-     ******************************************************/
     async getMessages(req, res, next) {
         try {
             const { messages, totalMessages } = await conversationService.getMessages(
@@ -546,9 +482,6 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-     /*******************************************************
-     * 25. Get All Of User Converations
-     ******************************************************/
     async getUserConversations(req, res, next) {
         try {
             const { conversations, totalConversations } = await conversationService.getUserConversations(
@@ -574,9 +507,6 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-     /*******************************************************
-     * 26. Mark This Messages As Read
-     ******************************************************/
     async markMessagesAsRead(req, res, next) {
         try {
             const { count } = await conversationService.markMessagesAsRead(
@@ -597,9 +527,6 @@ class ApprenticeshipNoticeController extends Controller {
         }
     }
 
-     /*******************************************************
-     * 27. Get This Conversation Details
-     ******************************************************/
     async getConversationDetails(req, res, next) {
         try {
             const conversationDetails = await conversationService.getConversationDetails(

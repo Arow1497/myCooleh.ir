@@ -64,7 +64,7 @@ class BaseNoticeService {
         }
         return garageId;
     }
-/******************************************************************/
+
     async createNewRequest(user, body, params, files) {
         const garageId = await this.validateGarageOwnership(user);
         
@@ -73,16 +73,13 @@ class BaseNoticeService {
             body.fileUploadPath,
             process.env[this.config.defaultFileId]
         );
-        const [title, city, budget, expertices] = body;
+
         const result = await prisma.$transaction(async (prisma) => {
             const notice = await this.model.create({
                 data: {
                     ...body,
-                    title,
-                    city,
-                    budget,
-                    expertices,
                     publisher: { connect: { id: user.id } },
+                    requesterGarage: { connect: { id: garageId } },
                     project: { connect: { id: params.projectId } },
                     attachments: { create: attachments }
                 },

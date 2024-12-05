@@ -1,3 +1,10 @@
+/*
+* نکته بسیار مهم در کد نویسی تمیز اینه که اسم کنترلر ها نباید طولانی باشه 
+* اسم های کوتاه بزار با یک لاین کامنت مثلا:
+* 1. Car Inspection Sheet With Required Parts And Images For Sending To Client To Approval
+* async carInspection(req, res, next){
+*/    
+
 const { StatusCodes: HttpStatus } = require("http-status-codes");
 const Controller = require("../../controller");
 const {apprenticeNoticeService} = require("../../../services/mainApp/dastyar/noticeServices/notice.service");

@@ -73,7 +73,7 @@ class BaseNoticeService {
             body.fileUploadPath,
             process.env[this.config.defaultFileId]
         );
-        const [title, city, budget, expertices] = body;
+        const [title, city, budget] = body;
         const result = await prisma.$transaction(async (prisma) => {
             const notice = await this.model.create({
                 data: {
@@ -81,7 +81,6 @@ class BaseNoticeService {
                     title,
                     city,
                     budget,
-                    expertices,
                     publisher: { connect: { id: user.id } },
                     project: { connect: { id: params.projectId } },
                     attachments: { create: attachments }

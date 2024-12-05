@@ -2645,8 +2645,8 @@ model Share {
   noticePartP        NoticePartProviding     @relation("PartPNShares",fields: [noticePartPId], references: [id], onDelete: Cascade)
   noticeShopSupplierId        String
   noticeShopSupplier          NoticeShopSupplier        @relation("ShopSupplierNShares", fields: [noticeShopSupplierId], references: [id], onDelete: Cascade)  
-  noticeApprenticeshipId        String
-  noticeApprenticeship          NoticeApprenticeship        @relation(fields: [noticeApprenticeshipId], references: [id], onDelete: Cascade)  
+  noticeApperenticeId        String
+  noticeApprentice          NoticeApprenticeship        @relation(fields: [noticeApperenticeId], references: [id], onDelete: Cascade)  
   noticeDastyarId        String
   noticeDastyar          NoticeDastyar        @relation(fields: [noticeDastyarId], references: [id], onDelete: Cascade)  
   noticeOutSourcingId        String             @unique
@@ -4473,7 +4473,6 @@ model NoticeApprenticeship {
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   startedAt       DateTime?
-  expertices      Expertices
   completedAt     DateTime?
   requirements    Json?          // Detailed project requirements
   attachments     Attachment[] // Toye in agahi ha attachment chizi hast ke garage 

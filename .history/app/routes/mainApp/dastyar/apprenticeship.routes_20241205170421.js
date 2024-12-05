@@ -21,49 +21,49 @@ router.put('/:noticeApprenticeId', ApprenticeshipNoticeController.edit);
 router.post('/:noticeApprenticeId/bookmark', ApprenticeshipNoticeController.toggleBookmark);
 
 // Get all garage notices
-router.get('/garage', ApprenticeshipNoticeController.getAllToGarage);
+router.get('/garage', ApprenticeshipNoticeController.getAllGarageNoticeApprentices);
 
 // Get all notices to itself
-router.get('/to-itself', ApprenticeshipNoticeController.getAllToItself);
+router.get('/to-itself', ApprenticeshipNoticeController.getAllNoticeApprenticesToItself);
 
 // Get all active apprentice notices for an apprentice
-router.get('/apprentice/active', ApprenticeshipNoticeController.getActiveToItSelf);
+router.get('/apprentice/active', ApprenticeshipNoticeController.getApprenticeAllActiveApprenticeNoticeApps);
 
 // Get all active apprentice notices for a garage
-router.get('/garage/active', ApprenticeshipNoticeController.getActiveToGarage);
+router.get('/garage/active', ApprenticeshipNoticeController.getGarageAllActiveApprenticeNoticeApps);
 
 // Share a notice
-router.post('/:noticeApprenticeId/share', ApprenticeshipNoticeController.share);
+router.post('/:noticeApprenticeId/share', ApprenticeshipNoticeController.shareNoticeApprentice);
 
 // Add cowork request for a notice
-router.post('/:noticeApprenticeId/cowork/:apprenticeId', ApprenticeshipNoticeController.addCollaborationRequest);
+router.post('/:noticeApprenticeId/cowork/:apprenticeId', ApprenticeshipNoticeController.addCoworkReqForNoticeApprentice);
 
 // Show cowork requests for a requester garage
-router.get('/cowork/requests', ApprenticeshipNoticeController.showCollabRequests);
+router.get('/cowork/requests', ApprenticeshipNoticeController.showCoworkRequestsForRequesterGarage);
 
 // Add apprentice to a request
-router.post('/cowork/:apprenticeId/:noticeApprenticeId', ApprenticeshipNoticeController.addCollaborator);
+router.post('/cowork/:apprenticeId/:noticeApprenticeId', ApprenticeshipNoticeController.addApprenticeToRequest);
 
 // Delete an apprentice from a notice
-router.delete('/cowork/:noticeApprenticeId/:apprenticeId', ApprenticeshipNoticeController.deleteCollaborator);
+router.delete('/cowork/:noticeApprenticeId/:apprenticeId', ApprenticeshipNoticeController.deleteThisApprenticeFromNoticeApprentice);
 
 // Apprentice refusing from a notice
-router.post('/:noticeApprenticeId/refuse', ApprenticeshipNoticeController.refusing);
+router.post('/:noticeApprenticeId/refuse', ApprenticeshipNoticeController.apprenticeRefusingFromThisNoticeApprenticeship);
 
 // Confirm transaction completion
-router.post('/transaction/:transactionId/confirm', ApprenticeshipNoticeController.confirmTransaction);
+router.post('/transaction/:transactionId/confirm', ApprenticeshipNoticeController.confirmTransactionCompletion);
 
 // Create a complaint
 router.post('/transaction/:transactionId/complaint', ApprenticeshipNoticeController.createComplaint);
 
 // Remove and regret a complaint by requester
-router.delete('/complaint/:complaintId', ApprenticeshipNoticeController.regretComplaint);
+router.delete('/complaint/:complaintId', ApprenticeshipNoticeController.removeAndRegretComplaintByrequester);
 
 // Respond to a complaint
 router.post('/complaint/:complaintId/respond', ApprenticeshipNoticeController.respondToComplaint);
 
 // Add review for a notice
-router.post('/:noticeApprenticeId/review', ApprenticeshipNoticeController.addReview);
+router.post('/:noticeApprenticeId/review', ApprenticeshipNoticeController.addReviewForNoticeApprentice);
 
 // Create a transaction room
 router.post('/transaction/:transactionId/room', ApprenticeshipNoticeController.createTransactionRoom);

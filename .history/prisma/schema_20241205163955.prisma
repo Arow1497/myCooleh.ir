@@ -2632,6 +2632,7 @@ model Bookmark {
 //........................ Share model ..............................//
 model Share {
   id            String      @id @default(cuid())
+  
   // Relations
   user          SocialProfile        @relation("UserShares", fields: [userId], references: [id], onDelete: Cascade)
   userId        String
@@ -2645,8 +2646,8 @@ model Share {
   noticePartP        NoticePartProviding     @relation("PartPNShares",fields: [noticePartPId], references: [id], onDelete: Cascade)
   noticeShopSupplierId        String
   noticeShopSupplier          NoticeShopSupplier        @relation("ShopSupplierNShares", fields: [noticeShopSupplierId], references: [id], onDelete: Cascade)  
-  noticeApprenticeshipId        String
-  noticeApprenticeship          NoticeApprenticeship        @relation(fields: [noticeApprenticeshipId], references: [id], onDelete: Cascade)  
+  noticeApperenticeId        String
+  noticeApprentice          NoticeApprenticeship        @relation(fields: [noticeApperenticeId], references: [id], onDelete: Cascade)  
   noticeDastyarId        String
   noticeDastyar          NoticeDastyar        @relation(fields: [noticeDastyarId], references: [id], onDelete: Cascade)  
   noticeOutSourcingId        String             @unique
@@ -2662,9 +2663,11 @@ model Share {
   garageRequirementsRequest          GarageRequirementsRequest        @relation("GarageRequirementMediaNShares", fields: [garageRequirementsRequestId], references: [id], onDelete: Cascade)  
   autoServicesRequirementsRequestId        String
   autoServicesRequirementsRequest          AutoServicesRequirementsRequest        @relation("AutoServicesRequirementMediaNShares", fields: [autoServicesRequirementsRequestId], references: [id], onDelete: Cascade)  
+
 // Metrics 
   metricId             String
   metric               Metric       @relation("MetricShares", fields: [metricId], references: [id])
+
 // Coupons 
   couponId             String
   coupon               Coupons          @relation(fields: [couponId], references: [id])
@@ -4370,10 +4373,10 @@ model NoticeOutSourcing {
   project              Project       @relation(fields: [projectId], references: [id])
   
  // ما فیلد های requesterGarage و acceptorGarage رو حذف کردیم
-// چون منطقی نبود وقتی پابلیشر مشخصه و همچنین با مدل پروژه هم ریلیشن داریم
-// افزایش ریلیشن ها باعث کاهش کارامدی دیبی میشه٫٫ وقتی میخوای 
-// مثلا لیست اگهی های شاگرد یک گاراژ رو دراری کویری میزنی تمام پروژه هاش 
-// اونایی که فیلد اگهی شاگرد دارند همه اگهی ها رو نمایش میدی
+  // چون منطقی نبود وقتی پابلیشر مشخصه و همچنین با مدل پروژه هم ریلیشن داریم
+  // افزایش ریلیشن ها باعث کاهش کارامدی دیبی میشه٫٫ وقتی میخوای 
+  // مثلا لیست اگهی های شاگرد یک گاراژ رو دراری کویری میزنی تمام پروژه هاش 
+  // اونایی که فیلد اگهی شاگرد دارند همه اگهی ها رو نمایش میدی
 
   // Conversation
   conversation         Conversation[]
@@ -4473,7 +4476,6 @@ model NoticeApprenticeship {
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   startedAt       DateTime?
-  expertices      Expertices
   completedAt     DateTime?
   requirements    Json?          // Detailed project requirements
   attachments     Attachment[] // Toye in agahi ha attachment chizi hast ke garage 
