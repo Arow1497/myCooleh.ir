@@ -31,7 +31,9 @@ const noticeSchema = {
             'BODYREPAIR','PDRDENT').required().messages({
             'any.only': 'سطح تخصصی معتبر نیست'
         }),
-        requirements: Joi.array().items(Joi.string()).optional(),
+        requirements: Joi.array().items(Joi.string()).min(1).optional().messages({
+            'array.min': 'حداقل یک نیازمندی باید مشخص شود'
+        }),
         city: Joi.string().required().messages({
             'string.empty': 'شهر نمیتواند خالی باشد'
         }),
