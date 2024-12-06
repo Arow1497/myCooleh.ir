@@ -88,47 +88,47 @@ class UserAuthService {
         let isNewUser = false;
         if (!user) {
         // ایجاد کاربر جدید همراه با تنظیمات نوتیفیکیشن در یک تراکنش
-        const result = await prisma.$transaction(async (prismaTx) => {
-            // ایجاد یا به‌روزرسانی کاربر
-            const newUser = await this.createOrUpdateUser(mobile, prismaTx);
-            // ایجاد تنظیمات نوتیفیکیشن برای کاربر جدید
-            // await prismaTx.userNotificationSettings.create({
-            //     data: {
-            //         userId: newUser.id, // از newUser.id استفاده می‌کنیم
-            //         emailNotifications: true,
-            //         pushNotifications: true,
-            //         smsNotifications: true,
-            //         marketingEmails: true,
-            //         deviceTokens: []
-            //     }
-            // });
-            // بررسی یا ایجاد دسته‌بندی نوتیفیکیشن
-            // const category = await prismaTx.notificationCategory.upsert({
-            //     where: { category: 'GENERAL' },
-            //     update: {},
-            //     create: { category: 'GENERAL' }
-            // });
-            // ایجاد نوتیفیکیشن خوشامدگویی
-            // await prismaTx.notification.create({
-            //     data: {
-            //         userId: newUser.id, // از شناسه کاربر جدید استفاده می‌کنیم
-            //         type: 'SYSTEM',
-            //         title: 'خوش آمدید به سامانه',
-            //         message: `${mobile} عزیز، به سامانه ما خوش آمدید. امیدواریم تجربه خوبی داشته باشید.`,
-            //         priority: 'NORMAL',
-            //         status: 'PENDING',
-            //         metadata: {
-            //             userMobile: mobile,
-            //             registrationIP: ip,
-            //             isFirstLogin: true
-            //         },
-            //         source: 'AUTH_SERVICE',
-            //         categoryId: category.id // استفاده از دسته‌بندی موجود
-            //     }
-            // });
+        // const result = await prisma.$transaction(async (prismaTx) => {
+        //     // ایجاد یا به‌روزرسانی کاربر
+        //     const newUser = await this.createOrUpdateUser(mobile, prismaTx);
+        //     // ایجاد تنظیمات نوتیفیکیشن برای کاربر جدید
+        //     await prismaTx.userNotificationSettings.create({
+        //         data: {
+        //             userId: newUser.id, // از newUser.id استفاده می‌کنیم
+        //             emailNotifications: true,
+        //             pushNotifications: true,
+        //             smsNotifications: true,
+        //             marketingEmails: true,
+        //             deviceTokens: []
+        //         }
+        //     });
+        //     // بررسی یا ایجاد دسته‌بندی نوتیفیکیشن
+        //     const category = await prismaTx.notificationCategory.upsert({
+        //         where: { category: 'GENERAL' },
+        //         update: {},
+        //         create: { category: 'GENERAL' }
+        //     });
+        //     // ایجاد نوتیفیکیشن خوشامدگویی
+        //     await prismaTx.notification.create({
+        //         data: {
+        //             userId: newUser.id, // از شناسه کاربر جدید استفاده می‌کنیم
+        //             type: 'SYSTEM',
+        //             title: 'خوش آمدید به سامانه',
+        //             message: `${mobile} عزیز، به سامانه ما خوش آمدید. امیدواریم تجربه خوبی داشته باشید.`,
+        //             priority: 'NORMAL',
+        //             status: 'PENDING',
+        //             metadata: {
+        //                 userMobile: mobile,
+        //                 registrationIP: ip,
+        //                 isFirstLogin: true
+        //             },
+        //             source: 'AUTH_SERVICE',
+        //             categoryId: category.id // استفاده از دسته‌بندی موجود
+        //         }
+        //     });
     
-            return newUser; // بازگرداندن کاربر جدید
-        });
+        //     return newUser; // بازگرداندن کاربر جدید
+        // });
     
         user = result;
         isNewUser = true;

@@ -2,9 +2,9 @@ const createError = require("http-errors");
 const { StatusCodes: HttpStatus } = require("http-status-codes");
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const {AttachmentProcessor} = require('../../../generalServices/attachmentProcess');
+const {MediaProcessor} = require('../../../generalServices/attachmentProcess');
 const noticeSchema = require("../../../../validators/MainApp/transactionNotices.scheema");
-const processor = new AttachmentProcessor();
+const processor = new MediaProcessor();
 
 // Configuration for different notice types
 const NOTICE_TYPES = {
@@ -73,17 +73,16 @@ class BaseNoticeService {
             body.fileUploadPath,
             process.env[this.config.defaultFileId]
         );
-        const {title, description, city, budget, expertices} = body;
+        const [title, description, city, budget, expertices] = body;
         const result = await prisma.$transaction(async (prisma) => {
             const notice = await this.model.create({
                 data: {
+                    ...body,
                     title,
                     description,
                     city,
                     budget,
                     expertices,
-                    status: 'PENDING',
-                    isAvailable: true,
                     publisher: { connect: { id: user.id } },
                     project: { connect: { id: params.projectId } },
                     attachments: { create: attachments }

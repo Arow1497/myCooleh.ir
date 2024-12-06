@@ -11,7 +11,7 @@ module.exports = {
     }
   ],
   paths: {
-    "/apprenticeship/create/{projectID}": {
+    "/apprenticeship/create": {
       post: {
         summary: "Create a new notice",
         tags: ["ApprenticeNotice"],

@@ -4467,7 +4467,7 @@ model NoticeApprenticeship {
   apprenticeId    String?
   apprentice      ProjectProfile?     @relation("noticeApprenticeApprentice", fields: [apprenticeId], references: [id])
   title           String
-  description     String
+  descriptrion    String
   city            String
   status          CollaborationStatus  @default(PENDING)
   isAvailable          Boolean        @default(true)

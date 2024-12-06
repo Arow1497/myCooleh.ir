@@ -11,30 +11,13 @@ module.exports = {
     }
   ],
   paths: {
-    "/apprenticeship/create/{projectID}": {
+    "/apprenticeship/create": {
       post: {
         summary: "Create a new notice",
-        tags: ["ApprenticeNotice"],
-         operationId: "createNewNoticeApprentice",
+        operationId: "createNewNoticeApprentice",
         requestBody: {
           required: true,
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  title: { type: "string" },
-                  description: { type: "string" },
-                  city: { type: "string" },
-                  budget: {type: "object", properties: { amount: { type: "number", description: "مبلغ", example: 1000 },
-                  type: { type: "string", enum: ['hourly', 'daily', 'monthly'], description: "نوع پرداخت", example: "hourly" } } },
-                  expertices: { type: "string", enum: ['JOLOBANDI', 'ELECTRITIAN', 'ENGINEGEARBOX', 'OILAUTOSERVICE',
-                    'BODYREPAIR', 'PDRDENT'] },
-                  requirements: { type: "array", items: { type: "string" }, example: ["مورد1", "مورد2", "مورد3"] }
-                },
-                required: ["title", "description", "city", "budget", "expertices"]
-              }
-            },
+          content: [{
             "application/x-www-form-urlencoded": {
               schema: {
                 type: "object",
@@ -52,7 +35,36 @@ module.exports = {
               }
             }
           },
+          {
+            "application/json": {
+    schema: {
+      type: "object",
+      properties: {
+        title: {type: "string"},
+        description: { type: "string"},
+        city: {type: "string"},
+        budget: {
+          type: "object",
+          properties: {
+            amount: {type: "number", description: "مبلغ", example: 1000},type: { type: "string",
+              enum: ["hourly", "daily", "monthly"],
+              description: "نوع پرداخت",
+              example: "hourly"},
+            },
+          },
+        expertices:{
+          type: "string",
+          enum: ["JOLOBANDI", "ELECTRITIAN", "ENGINEGEARBOX", "OILAUTOSERVICE", "BODYREPAIR", "PDRDENT"]},
+        requirements:{
+          type: "array",
+          items:{
+            type: "string",
+          example: ["مورد1", "مورد2", "مورد3"]},
+          },
         },
+    },
+        },
+      }],
         responses: {
           201: {
             description: "Notice created successfully",
@@ -78,11 +90,11 @@ module.exports = {
         }
       }
     },
+  },
     "/apprenticeship/": {
       get: {
         summary: "Get all notices",
-        tags: ["ApprenticeNotice"],
-         operationId: "getAllNoticeApprentice",
+        operationId: "getAllNoticeApprentice",
         responses: {
           200: {
             description: "Notices retrieved successfully",
@@ -109,8 +121,7 @@ module.exports = {
     "/apprenticeship/{noticeApprenticeId}": {
       get: {
         summary: "Get a notice by ID",
-        tags: ["ApprenticeNotice"],
-         operationId: "getOneNoticeApprenticeById",
+        operationId: "getOneNoticeApprenticeById",
         parameters: [
           {
             name: "noticeApprenticeId",
@@ -143,8 +154,7 @@ module.exports = {
       },
       delete: {
         summary: "Remove a notice by ID",
-        tags: ["ApprenticeNotice"],
-         operationId: "removeNoticeApprenticeById",
+        operationId: "removeNoticeApprenticeById",
         parameters: [
           {
             name: "noticeApprenticeId",
@@ -177,8 +187,7 @@ module.exports = {
       },
       put: {
         summary: "Edit a notice by ID",
-        tags: ["ApprenticeNotice"],
-         operationId: "editNoticeApprenticesById",
+        operationId: "editNoticeApprenticesById",
         parameters: [
           {
             name: "noticeApprenticeId",
@@ -245,8 +254,7 @@ module.exports = {
     "/apprenticeship/{noticeApprenticeId}/bookmark": {
       post: {
         summary: "Toggle bookmark for a notice",
-        tags: ["ApprenticeNotice"],
-         operationId: "toggleBookmark",
+        operationId: "toggleBookmark",
         parameters: [
           {
             name: "noticeApprenticeId",
@@ -281,8 +289,7 @@ module.exports = {
     "/apprenticeship/garage": {
       get: {
         summary: "Get all garage notices",
-        tags: ["ApprenticeNotice"],
-         operationId: "getAllGarageNoticeApprentices",
+        operationId: "getAllGarageNoticeApprentices",
         responses: {
           200: {
             description: "Garage notices retrieved successfully",
@@ -318,8 +325,7 @@ module.exports = {
     "/apprenticeship/to-itself": {
       get: {
         summary: "Get all notices to itself",
-        tags: ["ApprenticeNotice"],
-         operationId: "getAllNoticeApprenticesToItself",
+        operationId: "getAllNoticeApprenticesToItself",
         responses: {
           200: {
             description: "Notices to itself retrieved successfully",
@@ -355,8 +361,7 @@ module.exports = {
     "/apprenticeship/apprentice/active": {
       get: {
         summary: "Get all active apprentice notices for an apprentice",
-        tags: ["ApprenticeNotice"],
-         operationId: "getApprenticeAllActiveApprenticeNoticeApps",
+        operationId: "getApprenticeAllActiveApprenticeNoticeApps",
         responses: {
           200: {
             description: "Active apprentice notices retrieved successfully",
@@ -392,8 +397,7 @@ module.exports = {
     "/apprenticeship/garage/active": {
       get: {
         summary: "Get all active apprentice notices for a garage",
-        tags: ["ApprenticeNotice"],
-         operationId: "getGarageAllActiveApprenticeNoticeApps",
+        operationId: "getGarageAllActiveApprenticeNoticeApps",
         responses: {
           200: {
             description: "Active garage notices retrieved successfully",
@@ -423,8 +427,7 @@ module.exports = {
     "/apprenticeship/{noticeApprenticeId}/share": {
       post: {
         summary: "Share a notice",
-        tags: ["ApprenticeNotice"],
-         operationId: "shareNoticeApprentice",
+        operationId: "shareNoticeApprentice",
         parameters: [
           {
             name: "noticeApprenticeId",
@@ -459,8 +462,7 @@ module.exports = {
     "/apprenticeship/{noticeApprenticeId}/cowork/{apprenticeId}": {
       post: {
         summary: "Add cowork request for a notice",
-        tags: ["ApprenticeNotice"],
-         operationId: "addCoworkReqForNoticeApprentice",
+        operationId: "addCoworkReqForNoticeApprentice",
         parameters: [
           {
             name: "noticeApprenticeId",
@@ -524,8 +526,7 @@ module.exports = {
     "/apprenticeship/cowork/requests": {
       get: {
         summary: "Show cowork requests for a requester garage",
-        tags: ["ApprenticeNotice"],
-         operationId: "showCoworkRequestsForRequesterGarage",
+        operationId: "showCoworkRequestsForRequesterGarage",
         responses: {
           200: {
             description: "Cowork requests retrieved successfully",
@@ -552,8 +553,7 @@ module.exports = {
     "/apprenticeship/cowork/{apprenticeId}/{noticeApprenticeId}": {
       post: {
         summary: "Add apprentice to a request",
-        tags: ["ApprenticeNotice"],
-         operationId: "addApprenticeToRequest",
+        operationId: "addApprenticeToRequest",
         parameters: [
           {
             name: "apprenticeId",
@@ -609,8 +609,7 @@ module.exports = {
     "/apprenticeship/cowork/{noticeApprenticeId}/{apprenticeId}": {
       delete: {
         summary: "Delete an apprentice from a notice",
-        tags: ["ApprenticeNotice"],
-         operationId: "deleteThisApprenticeFromNoticeApprentice",
+        operationId: "deleteThisApprenticeFromNoticeApprentice",
         parameters: [
           {
             name: "noticeApprenticeId",
@@ -651,8 +650,7 @@ module.exports = {
     "/apprenticeship/{noticeApprenticeId}/refuse": {
       post: {
         summary: "Apprentice refusing from a notice",
-        tags: ["ApprenticeNotice"],
-         operationId: "apprenticeRefusingFromThisNoticeApprenticeship",
+        operationId: "apprenticeRefusingFromThisNoticeApprenticeship",
         parameters: [
           {
             name: "noticeApprenticeId",
@@ -687,8 +685,7 @@ module.exports = {
     "/apprenticeship/transaction/{transactionId}/confirm": {
       post: {
         summary: "Confirm transaction completion",
-        tags: ["ApprenticeNotice"],
-         operationId: "confirmTransactionCompletion",
+        operationId: "confirmTransactionCompletion",
         parameters: [
           {
             name: "transactionId",
@@ -723,8 +720,7 @@ module.exports = {
     "/apprenticeship/transaction/{transactionId}/complaint": {
       post: {
         summary: "Create a complaint",
-        tags: ["ApprenticeNotice"],
-         operationId: "createComplaint",
+        operationId: "createComplaint",
         parameters: [
           {
             name: "transactionId",
@@ -784,8 +780,7 @@ module.exports = {
     "/apprenticeship/complaint/{complaintId}": {
       delete: {
         summary: "Remove and regret a complaint by requester",
-        tags: ["ApprenticeNotice"],
-         operationId: "removeAndRegretComplaintByrequester",
+        operationId: "removeAndRegretComplaintByrequester",
         parameters: [
           {
             name: "complaintId",
@@ -820,8 +815,7 @@ module.exports = {
     "/apprenticeship/complaint/{complaintId}/respond": {
       post: {
         summary: "Respond to a complaint",
-        tags: ["ApprenticeNotice"],
-         operationId: "respondToComplaint",
+        operationId: "respondToComplaint",
         parameters: [
           {
             name: "complaintId",
@@ -871,8 +865,7 @@ module.exports = {
     "/apprenticeship/{noticeApprenticeId}/review": {
       post: {
         summary: "Add review for a notice",
-        tags: ["ApprenticeNotice"],
-         operationId: "addReviewForNoticeApprentice",
+        operationId: "addReviewForNoticeApprentice",
         parameters: [
           {
             name: "noticeApprenticeId",
@@ -930,8 +923,7 @@ module.exports = {
     "/apprenticeship/transaction/{transactionId}/room": {
       post: {
         summary: "Create a transaction room",
-        tags: ["ApprenticeNotice"],
-         operationId: "createTransactionRoom",
+        operationId: "createTransactionRoom",
         parameters: [
           {
             name: "transactionId",
@@ -967,8 +959,7 @@ module.exports = {
     "/apprenticeship/conversation/{conversationId}/message": {
       post: {
         summary: "Send a message",
-        tags: ["ApprenticeNotice"],
-         operationId: "sendMessage",
+        operationId: "sendMessage",
         parameters: [
           {
             name: "conversationId",
@@ -1027,8 +1018,7 @@ module.exports = {
     "/apprenticeship/conversation/{conversationId}/messages": {
       get: {
         summary: "Get messages",
-        tags: ["ApprenticeNotice"],
-         operationId: "getMessages",
+        operationId: "getMessages",
         parameters: [
           {
             name: "conversationId",
@@ -1072,8 +1062,7 @@ module.exports = {
     "/apprenticeship/conversations": {
       get: {
         summary: "Get user conversations",
-        tags: ["ApprenticeNotice"],
-         operationId: "getUserConversations",
+        operationId: "getUserConversations",
         responses: {
           200: {
             description: "Conversations retrieved successfully",
@@ -1109,8 +1098,7 @@ module.exports = {
     "/apprenticeship/conversation/{conversationId}/mark-read": {
       post: {
         summary: "Mark messages as read",
-        tags: ["ApprenticeNotice"],
-         operationId: "markMessagesAsRead",
+        operationId: "markMessagesAsRead",
         parameters: [
           {
             name: "conversationId",
@@ -1146,8 +1134,7 @@ module.exports = {
     "/apprenticeship/conversation/{conversationId}/details": {
       get: {
         summary: "Get conversation details",
-        tags: ["ApprenticeNotice"],
-         operationId: "getConversationDetails",
+        operationId: "getConversationDetails",
         parameters: [
           {
             name: "conversationId",

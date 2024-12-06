@@ -82,8 +82,6 @@ class BaseNoticeService {
                     city,
                     budget,
                     expertices,
-                    status: 'PENDING',
-                    isAvailable: true,
                     publisher: { connect: { id: user.id } },
                     project: { connect: { id: params.projectId } },
                     attachments: { create: attachments }

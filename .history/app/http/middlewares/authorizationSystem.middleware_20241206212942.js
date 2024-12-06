@@ -145,16 +145,16 @@ let redisClient;
                 select: {
                     id: true,
                     mobile: true,
-                    // ownedSupplierStore: {
-                    //     select: {
-                    //         id: true,
-                    //     },
-                    //     },
-                    //     ownedGarage: {
-                    //         select: {
-                    //             id: true,
-                    //         },
-                    // },
+                    ownedSupplierStore: {
+                        select: {
+                            id: true,
+                        },
+                        },
+                        ownedGarage: {
+                            select: {
+                                id: true,
+                            },
+                    },
                 },
                 });
 

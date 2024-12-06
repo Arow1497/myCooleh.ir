@@ -73,17 +73,16 @@ class BaseNoticeService {
             body.fileUploadPath,
             process.env[this.config.defaultFileId]
         );
-        const {title, description, city, budget, expertices} = body;
+        const [title, description, city, budget, expertices] = body;
         const result = await prisma.$transaction(async (prisma) => {
             const notice = await this.model.create({
                 data: {
+                    ...body,
                     title,
                     description,
                     city,
                     budget,
                     expertices,
-                    status: 'PENDING',
-                    isAvailable: true,
                     publisher: { connect: { id: user.id } },
                     project: { connect: { id: params.projectId } },
                     attachments: { create: attachments }
