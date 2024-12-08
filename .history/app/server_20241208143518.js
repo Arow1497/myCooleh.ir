@@ -33,7 +33,6 @@ const { PrismaClient,
       PrismaClientUnknownRequestError
   }
 } = require('@prisma/client');
-const glob  = require('glob')
 
 require("dotenv").config();
 
@@ -258,15 +257,7 @@ module.exports = class Application {
         });
     }
 
-    
-     setupSwagger() {
-        const swaggerFiles = glob.sync(path.join(__dirname, "./routes/admin/swagger/**/*.js"));
-    
-        const swaggerPaths = swaggerFiles.reduce((acc, file) => {
-            const swaggerDoc = require(file);
-            return { ...acc, ...swaggerDoc.paths };
-        }, {});
-    
+    setupSwagger() {
         const swaggerOptions = {
             swaggerDefinition: {
                 openapi: "3.0.0",
@@ -289,11 +280,19 @@ module.exports = class Application {
                     }
                 },
                 security: [{ BearerAuth: [] }],
-                paths: swaggerPaths // مسیرهای ترکیب‌شده
+                paths: {}
             },
             apis: []
         };
-    
+
+        const swaggerDir = path.join(__dirname, 'routes', 'admin', 'swagger', 'Main');
+        const swaggerFiles = require('fs').readdirSync(swaggerDir).filter(file => file.endsWith('.swagger.js'));
+
+        swaggerFiles.forEach(file => {
+            const swaggerFile = require(path.join(swaggerDir, file));
+            Object.assign(swaggerOptions.swaggerDefinition.paths, swaggerFile.paths);
+        });
+
         this.#app.use(
             "/api-doc",
             swaggerUI.serve,
@@ -443,9 +442,9 @@ module.exports = class Application {
     
             // ثبت آخرین لاگ‌ها
             await logger.info('Starting to close all database connections...');
-    
+
             let errors = [];
-    
+
             // بستن اتصال Redis
             try {
                 if (this.redisClient && this.redisClient.isOpen) {
@@ -455,7 +454,7 @@ module.exports = class Application {
             } catch (error) {
                 errors.push({ service: 'Redis', error: error?.message || error });
             }
-    
+
             // بستن اتصال Prisma
             try {
                 await this.#prisma.$disconnect();
@@ -463,7 +462,7 @@ module.exports = class Application {
             } catch (error) {
                 errors.push({ service: 'Prisma', error: error?.message || error });
             }
-    
+
             // ذخیره لاگ‌های معوق قبل از بستن اتصال مونگو
             let logsSaved = true;
             for (const transport of logger.transports) {
@@ -474,7 +473,7 @@ module.exports = class Application {
                     }
                 }
             }
-    
+
             // در نهایت بستن اتصال mongoose
             try {
                 if (mongoose.connection.readyState === 1) {
@@ -485,13 +484,13 @@ module.exports = class Application {
             } catch (error) {
                 errors.push({ service: 'MongoDB', error: error?.message || error });
             }
-    
+
             // گزارش نتیجه نهایی
             if (errors.length > 0) {
                 const errorMessage = errors.map(e => `${e.service}: ${e.error}`).join('; ');
                 throw new Error(`Failed to close some connections: ${errorMessage}`);
             }
-    
+
             await logger.info('All database connections closed successfully');
         } catch (error) {
             // استفاده از console.error برای اطمینان از نمایش خطا
@@ -521,7 +520,7 @@ module.exports = class Application {
             }
             process.exit(0);
         });
-    
+
         process.on('SIGTERM', async () => {
             console.log('SIGTERM received. Shutting down gracefully...');
             try {
@@ -531,7 +530,7 @@ module.exports = class Application {
             }
             process.exit(0);
         });
-    
+
         process.on('unhandledRejection', (reason, promise) => {
             // Check for specific Mongoose/MongoDB related errors
             if (
@@ -547,7 +546,7 @@ module.exports = class Application {
                 console.error('Unhandled Rejection at:', promise, 'reason:', reason);
             }
         });
-    
+
         process.on('uncaughtException', (error) => {
             console.error('Uncaught Exception:', error);
             // Exit the process

@@ -7,6 +7,9 @@ const swaggerJsDoc = require("swagger-jsdoc");
 const cors = require("cors");
 const { createRedisClient } = require("./utils/initRedis");
 const helmet = require('helmet');
+const apprenticeshipSwagger = require("./routes/admin/swagger/Main/apprenticeship.swagger")
+const mechanicRegistrationSwaggger = require("./routes/admin/swagger/Main/mechanic_apprentice_registration.swagger")
+const userAuthSwagger = require("./routes/admin/swagger/Main/userAuth.swagger")
 const hpp = require('hpp');
 const mongoSanitize = require('express-mongo-sanitize');
 const xssClean = require('xss-clean');
@@ -294,7 +297,7 @@ module.exports = class Application {
             apis: []
         };
     
-        this.#app.use(
+        app.use(
             "/api-doc",
             swaggerUI.serve,
             swaggerUI.setup(swaggerJsDoc(swaggerOptions), { explorer: true })

@@ -7,6 +7,9 @@ const swaggerJsDoc = require("swagger-jsdoc");
 const cors = require("cors");
 const { createRedisClient } = require("./utils/initRedis");
 const helmet = require('helmet');
+const apprenticeshipSwagger = require("./routes/admin/swagger/Main/apprenticeship.swagger")
+const mechanicRegistrationSwaggger = require("./routes/admin/swagger/Main/mechanic_apprentice_registration.swagger")
+const userAuthSwagger = require("./routes/admin/swagger/Main/userAuth.swagger")
 const hpp = require('hpp');
 const mongoSanitize = require('express-mongo-sanitize');
 const xssClean = require('xss-clean');
@@ -33,7 +36,6 @@ const { PrismaClient,
       PrismaClientUnknownRequestError
   }
 } = require('@prisma/client');
-const glob  = require('glob')
 
 require("dotenv").config();
 
@@ -259,47 +261,41 @@ module.exports = class Application {
     }
 
     
-     setupSwagger() {
-        const swaggerFiles = glob.sync(path.join(__dirname, "./routes/admin/swagger/**/*.js"));
-    
-        const swaggerPaths = swaggerFiles.reduce((acc, file) => {
-            const swaggerDoc = require(file);
-            return { ...acc, ...swaggerDoc.paths };
-        }, {});
-    
-        const swaggerOptions = {
-            swaggerDefinition: {
-                openapi: "3.0.0",
-                info: {
-                    title: "Cooleh-Project",
-                    version: "1.0.0",
-                    description: "This is Cooleh-Project project swagger UI and documentation"
-                },
-                servers: [
-                    { url: "http://localhost:7000" },
-                    { url: "http://localhost:4000" }
-                ],
-                components: {
-                    securitySchemes: {
-                        BearerAuth: {
-                            type: "http",
-                            scheme: "bearer",
-                            bearerFormat: "JWT"
-                        }
-                    }
-                },
-                security: [{ BearerAuth: [] }],
-                paths: swaggerPaths // مسیرهای ترکیب‌شده
+setupSwagger() {
+    const swaggerOptions = {
+        swaggerDefinition: {
+            openapi: "3.0.0",
+            info: {
+                title: "Cooleh-Project",
+                version: "1.0.0",
+                description: "This is Cooleh-Project project swagger UI and documentation"
             },
-            apis: []
-        };
-    
-        this.#app.use(
-            "/api-doc",
-            swaggerUI.serve,
-            swaggerUI.setup(swaggerJsDoc(swaggerOptions), { explorer: true })
-        );
-    }
+            servers: [
+                { url: "http://localhost:7000" },
+                { url: "http://localhost:4000" }
+            ],
+            components: {
+                securitySchemes: {
+                    BearerAuth: {
+                        type: "http",
+                        scheme: "bearer",
+                        bearerFormat: "JWT"
+                    }
+                }
+            },
+            security: [{ BearerAuth: [] }],
+            paths: ["./routes/**/*.js"],
+        },
+        // حذف نیاز به اسکن مسیرهای دیگر در صورت استفاده از فایل خاص
+        apis: []
+    };
+
+    this.#app.use(
+        "/api-doc",
+        swaggerUI.serve,
+        swaggerUI.setup(swaggerJsDoc(swaggerOptions), { explorer: true })
+    );
+}
 
     setupCache() {
         const cacheOptions = {
