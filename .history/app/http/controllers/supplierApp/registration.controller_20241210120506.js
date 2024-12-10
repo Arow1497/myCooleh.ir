@@ -176,6 +176,15 @@ async supplierRegistration(req, res, next) {
 }
 
 
+  async freelancerSupplierRegistration (req, res, next){
+    try {
+      
+    } catch (error) {
+      
+    }
+    
+  }
+
   async updateSupplierStoreById (req, res, next){
   try {
     

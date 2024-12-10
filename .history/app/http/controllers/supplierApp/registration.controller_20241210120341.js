@@ -111,7 +111,8 @@ async supplierRegistration(req, res, next) {
             city: supplierStoreCity,
             address: supplierStoreAddress,
             lat_lng: supplierStoreLat_Lng,
-            field: field === 'parts' ? 'PARTS' : 'OIL',
+            field: field === 'parts' ? '  PARTS' : 'OIL',
+            supplierStoreField,
             sign,
             ownerId: newUser.businessProfile.id,
           },
@@ -175,6 +176,15 @@ async supplierRegistration(req, res, next) {
   }
 }
 
+
+  async freelancerSupplierRegistration (req, res, next){
+    try {
+      
+    } catch (error) {
+      
+    }
+    
+  }
 
   async updateSupplierStoreById (req, res, next){
   try {

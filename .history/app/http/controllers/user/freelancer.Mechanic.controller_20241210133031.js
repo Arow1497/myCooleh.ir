@@ -154,7 +154,7 @@ class MechanicRegistrationController extends Controller {
            }
      
            // 2. ایجاد کاربر
-           const newUser = await prisma.user.update({
+           const newUser = await prisma.user.create({
              data: {
                mobile,
                password: hashedPassword,

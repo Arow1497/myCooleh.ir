@@ -10,7 +10,7 @@ function RandomNumberGenerator(){
     return Math.floor((Math.random() * 90000) + 10000)
 }
 
-        function refferalAndSerialNumGenerator(){
+        function serialNumGenerator(){
            const generateRandomString = (length) => {
             return crypto.randomBytes(length).toString("hex");
            };
@@ -203,7 +203,7 @@ function RandomNumberGenerator(){
 
     module.exports = {
         RandomNumberGenerator,
-        refferalAndSerialNumGenerator,
+        serialNumGenerator,
         getTime,
         deleteFileInPublic,
         copyObjet,

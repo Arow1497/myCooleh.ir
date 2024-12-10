@@ -3860,7 +3860,7 @@ model SupplierStore {
   address                    Address?
   serialNumber               String?
   profit                     Int    @default(0)
-  field                      SupplierStoreField
+  field                      String
   advertisement              Advertisement[]
 
   // Garage PartOrder Collaboration
@@ -3907,11 +3907,6 @@ model SupplierStore {
   referredById     String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
-}
-
-enum SupplierStoreField {
-  PARTS
-  OIL
 }
 
  //................. SupplierStore model ......مدل موجودی انبار........................//

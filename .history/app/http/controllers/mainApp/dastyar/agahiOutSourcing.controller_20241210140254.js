@@ -23,7 +23,7 @@ class OutSourcingNoticeController extends Controller {
     /********************************************************
      * 1. Creating New OutSourcing Notice
      *******************************************************/
-    async create(req, res, next) {
+    async createNewNoticeOutSourcing(req, res, next) {
         try {
             const result = await outsourcingNoticeService.createNewNoticeOutSourcing(
                 req.user,
@@ -49,7 +49,7 @@ class OutSourcingNoticeController extends Controller {
     /********************************************************
      * 2. Showing List Of All Approved OutSourcing Notices In User Feed
      *******************************************************/
-    async getAll(req, res, next) {
+    async getAllNoticeOutSourcing(req, res, next) {
         try {
             const notices = await outsourcingNoticeService.getAllNoticeOutSourcing(req.query.city);
             return res.status(HttpStatus.OK).json({
@@ -64,7 +64,7 @@ class OutSourcingNoticeController extends Controller {
     /*******************************************************
      * 3. Showing This Specific OutSourcing Notice From Feed
      ******************************************************/
-    async getOne(req, res, next) {
+    async getOneNoticeOutSourcingById(req, res, next) {
         try {
             const notice = await outsourcingNoticeService.getOneNoticeOutSourcingById(req.params.noticeOutSourcingId);
             return res.status(HttpStatus.OK).json({
@@ -79,7 +79,7 @@ class OutSourcingNoticeController extends Controller {
     /*******************************************************
      * 4. Removing This Specific OutSourcing Notice By It's Publisher
      ******************************************************/
-    async remove(req, res, next) {
+    async removeNoticeOutSourcingById(req, res, next) {
         try {
             await outsourcingNoticeService.removeNoticeOutSourcingById(req.params.noticeOutSourcingId, req.user.id);
             return res.status(HttpStatus.OK).json({
@@ -94,7 +94,7 @@ class OutSourcingNoticeController extends Controller {
     /*******************************************************
      * 5. Edit and Update This Specific OutSourcing Notice By It's Publisher
      ******************************************************/
-    async edit(req, res, next) {
+    async editNoticeOutSourcingsById(req, res, next) {
         try {
             const updatedNotice = await outsourcingNoticeService.editNoticeOutSourcingsById(
                 req.params.noticeOutSourcingId,
@@ -140,7 +140,7 @@ class OutSourcingNoticeController extends Controller {
     /*******************************************************
      * 7. History Of All Completed Garage's Recorded OutSourcing Notices
      ******************************************************/
-    async getAllToGarage(req, res, next) {
+    async getAllGarageNoticeOutSourcings(req, res, next) {
         try {
             const { notices, total } = await outsourcingNoticeService.getAllGarageNoticeOutSourcings(
                 req.user,
@@ -167,7 +167,7 @@ class OutSourcingNoticeController extends Controller {
     /*******************************************************
      * 8. History Of All Completed RequesterGarage's Recorded OutSourcing Notices
      ******************************************************/
-    async getAllToItself(req, res, next) {
+    async getAllNoticeOutSourcingsToItself(req, res, next) {
         try {
             const { requests, total } = await outsourcingNoticeService.getAllNoticeOutSourcingsToItself(
                 req.user.id,
@@ -195,7 +195,7 @@ class OutSourcingNoticeController extends Controller {
     /*******************************************************
      * 9. Show All Of In-Progress RequesterGarage's Approved OutSourcing Notices
      ******************************************************/
-    async getActiveToItSelf(req, res, next) {
+    async getAcceptorGarageAllActiveOutSourcingNotice(req, res, next) {
         try {
             const { activeNotices, total } = await outsourcingNoticeService.getAcceptorGarageAllActiveNotices(
                 req.user.id,
@@ -222,7 +222,7 @@ class OutSourcingNoticeController extends Controller {
     /*******************************************************
      * 10. Show All Of In-Progress Garage's Approved OutSourcing Notices
      ******************************************************/
-    async getActiveToGarage(req, res, next) {
+    async getGarageAllActiveOutSourcingNoticeApps(req, res, next) {
         try {
             const { activeNotices, total } = await outsourcingNoticeService.getGarageAllActiveNotices(
                 req.user,
@@ -249,7 +249,7 @@ class OutSourcingNoticeController extends Controller {
     /*******************************************************
      * 11. Sharing This Specific OutSourcing Notice By User
      ******************************************************/
-    async share(req, res, next) {
+    async shareNoticeOutSourcing(req, res, next) {
         try {
             const share = await outsourcingNoticeService.shareNoticeOutSourcing(
                 req.params.noticeOutSourcingId,
@@ -267,7 +267,7 @@ class OutSourcingNoticeController extends Controller {
     /*******************************************************
      * 12. Adding CoWorking Request To This Specific OutSourcing Notice By Garages Or Mechanic
      ******************************************************/
-    async addCollaborationRequest(req, res, next) {
+    async addCoworkReqForNoticeOutSourcing(req, res, next) {
         try {
             const noticeOutSourcingAppReqs = await coworkService.outsourcing.addCoworkRequest(
                 req.user,
@@ -286,7 +286,7 @@ class OutSourcingNoticeController extends Controller {
     /*******************************************************
      * 13. Show All Of CoWorking Requests To This Specific OutSourcing Notice To It's Publisher
      ******************************************************/
-    async showCollabRequests(req, res, next) {
+    async showCoworkRequestsForRequesterGarage(req, res, next) {
         try {
             const requests = await coworkService.outsourcing.showCoworkRequests(req.user.ownedGarage?.id);
             return res.status(HttpStatus.OK).json({
@@ -301,7 +301,7 @@ class OutSourcingNoticeController extends Controller {
     /*******************************************************
      * 14. Choosing This RequesterGarage As Collaborator By OutSourcing Notice's Publisher
      ******************************************************/
-    async addCollaborator(req, res, next) {
+    async addAcceptorGarageToRequest(req, res, next) {
         try {
             const result = await coworkService.outsourcing.addCollaboratorToRequest(
                 req.user,
@@ -324,7 +324,7 @@ class OutSourcingNoticeController extends Controller {
     /*******************************************************
      * 15. Removing This RequesterGarage From CoWorking By OutSourcing Notice's Publisher
      ******************************************************/
-    async deleteCollaborator(req, res, next) {
+    async deleteThisAcceptorGarageFromNoticeOutSourcing(req, res, next) {
         try {
             await coworkService.outsourcing.removeCollaboratorFromRequest(
                 req.user.ownedGarage?.id,
@@ -345,7 +345,7 @@ class OutSourcingNoticeController extends Controller {
     /*******************************************************
      * 16. RequesterGarage Refusing From This Collaboration
      ******************************************************/
-    async refusing(req, res, next) {
+    async acceptorGarageRefusingFromThisNoticeOutSourcingship(req, res, next) {
         try {
             await coworkService.outsourcing.collaboratorRefuseRequest(
                 req.params.noticeOutSourcingId,
@@ -365,7 +365,7 @@ class OutSourcingNoticeController extends Controller {
     /*******************************************************
      * 17. Two-Side Confirming For Completion Of This Collaboration
      ******************************************************/
-    async confirmTransaction(req, res, next) {
+    async confirmTransactionCompletion(req, res, next) {
         try {
             const role = req.user.acceptorGarageAt ? 'acceptorGarage' : 'garageOwner';
             await transactionService.outsourcing.confirmTransactionCompletion(
@@ -410,7 +410,7 @@ class OutSourcingNoticeController extends Controller {
     /*******************************************************
      * 19. Regret And Remove A Complaint Request By It's Publisher
      ******************************************************/
-    async regretComplaint(req, res, next) {
+    async removeAndRegretComplaintByrequester(req, res, next) {
         try {
             await complaintService.outsourcing.removeComplaint(
                 req.params.complaintId,
@@ -453,7 +453,7 @@ class OutSourcingNoticeController extends Controller {
     /*******************************************************
      * 21. Add Rating And Comment For This Collaboration By Two Side Of It
      ******************************************************/
-    async addReview(req, res, next) {
+    async addReviewForNoticeOutSourcing(req, res, next) {
         try {
             await transactionService.outsourcing.addReview(
                 req.user,

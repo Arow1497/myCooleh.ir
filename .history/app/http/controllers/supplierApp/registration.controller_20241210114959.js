@@ -6,7 +6,7 @@ const Controller = require("../controller");
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const { garagesSchema } = require("../../validators/MainApp/garages.schema");
-const { serialNumGenerator, refferalNumGenerator, refferalAndSerialNumGenerator } = require("../../../utils/functions");
+const { serialNumGenerator, refferalNumGenerator } = require("../../../utils/functions");
 
 class SupplierStoreRegistrationController extends Controller{
 // Private helper methods
@@ -47,10 +47,9 @@ async supplierRegistration(req, res, next) {
   try {
     const {
       firstName, lastName, nationalIdNumber, city, province, location,
-      supplierStoreName, supplierStoreCity, supplierStoreAddress, supplierStoreLat_Lng,
-      sign,
-      supplierType, //  نوع تامین‌کننده (store یا freelancer)
-      field // رسته فعالیت تامین‌کننده (parts یا oil)
+      supplierStoreName, supplierStoreSerialNumber, supplierStoreCity, supplierStoreAddress, supplierStoreLat_Lng,
+      expertices, supplierStoreMainField, supplierStoreField, sign,
+      supplierType //  نوع تامین‌کننده (store یا freelancer)
     } = req.body;
     const mobile = req.user.mobile;
     // ایجاد یک تراکنش برای اطمینان از یکپارچگی ثبت‌نام
@@ -84,7 +83,6 @@ async supplierRegistration(req, res, next) {
               expertices: "SUPPLIER",
               referralCodes: refferalNumGenerator(),
               bussinesRole: supplierType === 'freelancer' ? 'FREELANCER_SUPPLIER' : 'SUPPLIER' , //  تعیین اینکه آیا تامین‌کننده آزاد است یا خیر
-            
             },
           },
           userRole: {
@@ -106,12 +104,13 @@ async supplierRegistration(req, res, next) {
       if (supplierType === 'store' && supplierStoreName) {
         newSupplierStore = await prisma.supplierStore.create({
           data: {
-            name: supplierStoreName,
-            serialNumber: refferalAndSerialNumGenerator(),
+            supplierStore_name: supplierStoreName,
+            supplierStoreSerialNumber,
             city: supplierStoreCity,
             address: supplierStoreAddress,
             lat_lng: supplierStoreLat_Lng,
-            field: field === 'parts' ? 'PARTS' : 'OIL',
+            supplierStoreMainField,
+            supplierStoreField,
             sign,
             ownerId: newUser.businessProfile.id,
           },
@@ -175,6 +174,15 @@ async supplierRegistration(req, res, next) {
   }
 }
 
+
+  async freelancerSupplierRegistration (req, res, next){
+    try {
+      
+    } catch (error) {
+      
+    }
+    
+  }
 
   async updateSupplierStoreById (req, res, next){
   try {

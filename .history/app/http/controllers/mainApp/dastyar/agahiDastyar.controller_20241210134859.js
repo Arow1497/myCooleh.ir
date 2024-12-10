@@ -1,31 +1,26 @@
 /*
-*اگهی های همکاری برونسپاری از این نظر بسیار مهم هستن که در واقع دارند مشتری فعال رو به گاراژ متصل میکنند
-*به اینصورت که گاراژ و مکانیک نقصی در بدنه یا فنی یک ماشین شناسایی میکنن که در تخصصشون نیست و بعد ازینکه
-*کار تعمیراتی خودشون رو انجام دادن این مشتری رو وصل میکنن به گاراژ های دیگه و سهمی برمیدارن..
-*پلتفرم باید اپروو کنه که ایا این مشتری رفته پیش اون گاراژ یا نه ازینجا که اون پروژه اونطرف تعریف میشه
-*میتونه هر خدماتی باشه صافکاری دیتیلینگ برق و باطری همه چی تعویض روغن چیزی که توی این نوع 
-*اگهی ها مهم هست چون مشتری باید مراجعه کنع به گاراژ پدیرنده مسافت هست که باید مسافت کم باشه بین دو گاراژ 
-*یعنی میدلور موارد نزدیک باید روی این اگهی باشه
-*/
-
+* نکته بسیار مهم در کد نویسی تمیز اینه که اسم کنترلر ها نباید طولانی باشه 
+* اسم های کوتاه بزار با یک لاین کامنت مثلا:
+* 1. Car Inspection Sheet With Required Parts And Images For Sending To Client To Approval
+* async carInspection(req, res, next){
+*/    
 const { StatusCodes: HttpStatus } = require("http-status-codes");
 const Controller = require("../../controller");
-const {outsourcingNoticeService} = require("../../../services/mainApp/dastyar/noticeServices/notice.service")
+const {dastyarNoticeService} = require("../../../services/mainApp/dastyar/noticeServices/notice.service");
 const {conversationService} = require("../../../services/mainApp/dastyar/noticeServices/conversation.service");
 const {complaintService} = require("../../../services/mainApp/dastyar/noticeServices/complaint.service");
 const {transactionService} = require("../../../services/mainApp/dastyar/noticeServices/transaction.service");
 const {coworkService} = require("../../../services/mainApp/dastyar/noticeServices/coWork.service");
 const { deleteFilesInPublicForOrders } = require("../../../../utils/functions");
 
-
-class OutSourcingNoticeController extends Controller {
+class DivarNoticeController extends Controller {
 
     /********************************************************
-     * 1. Creating New OutSourcing Notice
+     * 1. Creating New Dastyar Notice
      *******************************************************/
     async create(req, res, next) {
         try {
-            const result = await outsourcingNoticeService.createNewNoticeOutSourcing(
+            const result = await dastyarNoticeService.createNewNoticeDastyar(
                 req.user,
                 req.body,
                 req.params,
@@ -35,7 +30,7 @@ class OutSourcingNoticeController extends Controller {
             return res.status(HttpStatus.CREATED).json({
                 statusCode: HttpStatus.CREATED,
                 data: {
-                    message: "آگهی درخواست همکاری با گاراژهای دیگر با موفقیت ثبت شد",
+                    message: "آگهی درخواست مکانیک با موفقیت ثبت شد",
                     notice: result.notice,
                     share: result.share
                 }
@@ -46,12 +41,13 @@ class OutSourcingNoticeController extends Controller {
         }
     }
 
+
     /********************************************************
-     * 2. Showing List Of All Approved OutSourcing Notices In User Feed
+     * 2. Showing List Of All Approved Dastyar Notices In User Feed
      *******************************************************/
     async getAll(req, res, next) {
         try {
-            const notices = await outsourcingNoticeService.getAllNoticeOutSourcing(req.query.city);
+            const notices = await dastyarNoticeService.getAllNoticeDastyar(req.query.city);
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: { notices }
@@ -62,11 +58,11 @@ class OutSourcingNoticeController extends Controller {
     }
 
     /*******************************************************
-     * 3. Showing This Specific OutSourcing Notice From Feed
+     * 3. Showing This Specific Dastyar Notice From Feed
      ******************************************************/
     async getOne(req, res, next) {
         try {
-            const notice = await outsourcingNoticeService.getOneNoticeOutSourcingById(req.params.noticeOutSourcingId);
+            const notice = await dastyarNoticeService.getOneNoticeDastyarById(req.params.noticeDastyarId);
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: { notice }
@@ -76,12 +72,12 @@ class OutSourcingNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
-     * 4. Removing This Specific OutSourcing Notice By It's Publisher
+     /*******************************************************
+     * 4. Removing This Specific Dastyar Notice By It's Publisher
      ******************************************************/
     async remove(req, res, next) {
         try {
-            await outsourcingNoticeService.removeNoticeOutSourcingById(req.params.noticeOutSourcingId, req.user.id);
+            await dastyarNoticeService.removeNoticeDastyarById(req.params.noticeDastyarId, req.user.id);
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: { message: "آگهی با موفقیت حذف شد" }
@@ -92,12 +88,12 @@ class OutSourcingNoticeController extends Controller {
     }
 
     /*******************************************************
-     * 5. Edit and Update This Specific OutSourcing Notice By It's Publisher
+     * 5. Edit and Update This Specific Dastyar Notice By It's Publisher
      ******************************************************/
     async edit(req, res, next) {
         try {
-            const updatedNotice = await outsourcingNoticeService.editNoticeOutSourcingsById(
-                req.params.noticeOutSourcingId,
+            const updatedNotice = await dastyarNoticeService.editNoticeDastyarsById(
+                req.params.noticeDastyarId,
                 req.user.id,
                 req.body,
                 req.files
@@ -116,12 +112,12 @@ class OutSourcingNoticeController extends Controller {
     }
 
     /*******************************************************
-     * 6. Bookmark This Specific OutSourcing Notice By User
+     * 6. Bookmark This Specific Datyar Notice By User
      ******************************************************/
     async toggleBookmark(req, res, next) {
         try {
-            const isAdded = await outsourcingNoticeService.toggleBookmark(
-                req.params.noticeOutSourcingId,
+            const isAdded = await dastyarNoticeService.toggleBookmark(
+                req.params.noticeDastyarId,
                 req.user.id
             );
             return res.status(HttpStatus.OK).json({
@@ -138,11 +134,11 @@ class OutSourcingNoticeController extends Controller {
     }
 
     /*******************************************************
-     * 7. History Of All Completed Garage's Recorded OutSourcing Notices
+     * 7. History Of All Completed Garage's Recorded Dastyar Notices
      ******************************************************/
     async getAllToGarage(req, res, next) {
         try {
-            const { notices, total } = await outsourcingNoticeService.getAllGarageNoticeOutSourcings(
+            const { notices, total } = await dastyarNoticeService.getAllGarageNotices(
                 req.user,
                 req.query.page,
                 req.query.limit
@@ -165,11 +161,11 @@ class OutSourcingNoticeController extends Controller {
     }
 
     /*******************************************************
-     * 8. History Of All Completed RequesterGarage's Recorded OutSourcing Notices
+     * 8. History Of All Completed Mechanic's Recorded Datyar Notices
      ******************************************************/
     async getAllToItself(req, res, next) {
         try {
-            const { requests, total } = await outsourcingNoticeService.getAllNoticeOutSourcingsToItself(
+            const { requests, total } = await dastyarNoticeService.getAllNoticeDastyarsToItself(
                 req.user.id,
                 req.query.page,
                 req.query.limit,
@@ -193,11 +189,11 @@ class OutSourcingNoticeController extends Controller {
     }
 
     /*******************************************************
-     * 9. Show All Of In-Progress RequesterGarage's Approved OutSourcing Notices
+     * 9. Show All Of In-Progress Mechanic's Approved Dastyar Notices
      ******************************************************/
     async getActiveToItSelf(req, res, next) {
         try {
-            const { activeNotices, total } = await outsourcingNoticeService.getAcceptorGarageAllActiveNotices(
+            const { activeNotices, total } = await dastyarNoticeService.getMechanicAllActiveNotices(
                 req.user.id,
                 req.query.page,
                 req.query.limit
@@ -220,11 +216,11 @@ class OutSourcingNoticeController extends Controller {
     }
 
     /*******************************************************
-     * 10. Show All Of In-Progress Garage's Approved OutSourcing Notices
+     * 10. Show All Of In-Progress Garage's Approved Dastyar Notices
      ******************************************************/
     async getActiveToGarage(req, res, next) {
         try {
-            const { activeNotices, total } = await outsourcingNoticeService.getGarageAllActiveNotices(
+            const { activeNotices, total } = await dastyarNoticeService.getGarageAllActiveNotices(
                 req.user,
                 req.query.page,
                 req.query.limit
@@ -247,12 +243,12 @@ class OutSourcingNoticeController extends Controller {
     }
 
     /*******************************************************
-     * 11. Sharing This Specific OutSourcing Notice By User
+     * 11. Sharing This Specific Dastyar Notice By User
      ******************************************************/
     async share(req, res, next) {
         try {
-            const share = await outsourcingNoticeService.shareNoticeOutSourcing(
-                req.params.noticeOutSourcingId,
+            const share = await dastyarNoticeService.shareNoticeDastyar(
+                req.params.noticeDastyarId,
                 req.user
             );
             return res.status(HttpStatus.OK).json({
@@ -265,18 +261,18 @@ class OutSourcingNoticeController extends Controller {
     }
 
     /*******************************************************
-     * 12. Adding CoWorking Request To This Specific OutSourcing Notice By Garages Or Mechanic
+     * 12. Adding CoWorking Request To This Specific Dastyar Notice By Garages Or Mechanic
      ******************************************************/
     async addCollaborationRequest(req, res, next) {
         try {
-            const noticeOutSourcingAppReqs = await coworkService.outsourcing.addCoworkRequest(
+            const noticeDastyarAppReqs = await coworkService.dastyar.addCoworkRequest(
                 req.user,
-                req.params.noticeOutSourcingId,
-                req.params.acceptorGarageId
+                req.params.noticeDastyarId,
+                req.params.mechanicId
             );
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
-                data: { noticeOutSourcingAppReqs }
+                data: { noticeDastyarAppReqs }
             });
         } catch (error) {
             next(error);
@@ -284,11 +280,11 @@ class OutSourcingNoticeController extends Controller {
     }
 
     /*******************************************************
-     * 13. Show All Of CoWorking Requests To This Specific OutSourcing Notice To It's Publisher
+     * 13. Show All Of CoWorking Requests To This Specific Dastyar Notice To It's Publisher
      ******************************************************/
     async showCollabRequests(req, res, next) {
         try {
-            const requests = await coworkService.outsourcing.showCoworkRequests(req.user.ownedGarage?.id);
+            const requests = await coworkService.dastyar.showCoworkRequests(req.user.ownedGarage?.id);
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: { requests }
@@ -298,21 +294,21 @@ class OutSourcingNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
-     * 14. Choosing This RequesterGarage As Collaborator By OutSourcing Notice's Publisher
+     /*******************************************************
+     * 14. Choosing This Mechanic As Collaborator By Dastyar Notice's Publisher
      ******************************************************/
     async addCollaborator(req, res, next) {
         try {
-            const result = await coworkService.outsourcing.addCollaboratorToRequest(
+            const result = await coworkService.dastyar.addCollaboratorToRequest(
                 req.user,
-                req.params.acceptorGarageId,
-                req.params.noticeOutSourcingId,
+                req.params.mechanicId,
+                req.params.noticeDastyarId,
                 req.body
             );
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: {
-                    message: "گاراژ موردنظر به پروژه افزوده شد",
+                    message: "مکانیک موردنظر به پروژه افزوده شد",
                     result
                 }
             });
@@ -322,19 +318,19 @@ class OutSourcingNoticeController extends Controller {
     }
 
     /*******************************************************
-     * 15. Removing This RequesterGarage From CoWorking By OutSourcing Notice's Publisher
+     * 15. Removing This Mechanic From CoWorking By Dastyar Notice's Publisher
      ******************************************************/
     async deleteCollaborator(req, res, next) {
         try {
-            await coworkService.outsourcing.removeCollaboratorFromRequest(
+            await coworkService.dastyar.removeCollaboratorFromRequest(
                 req.user.ownedGarage?.id,
-                req.params.noticeOutSourcingId,
-                req.params.acceptorGarageId
+                req.params.noticeDastyarId,
+                req.params.mechanicId
             );
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: {
-                    message: "گاراژ موردنظر از پروژه حذف شد"
+                    message: "مکانیک موردنظر از پروژه حذف شد"
                 }
             });
         } catch (error) {
@@ -343,12 +339,12 @@ class OutSourcingNoticeController extends Controller {
     }
 
     /*******************************************************
-     * 16. RequesterGarage Refusing From This Collaboration
+     * 16. Mechanic Refusing From This Collaboration
      ******************************************************/
     async refusing(req, res, next) {
         try {
-            await coworkService.outsourcing.collaboratorRefuseRequest(
-                req.params.noticeOutSourcingId,
+            await coworkService.dastyar.collaboratorRefuseRequest(
+                req.params.noticeDastyarId,
                 req.user.id
             );
             return res.status(HttpStatus.OK).json({
@@ -365,10 +361,10 @@ class OutSourcingNoticeController extends Controller {
     /*******************************************************
      * 17. Two-Side Confirming For Completion Of This Collaboration
      ******************************************************/
-    async confirmTransaction(req, res, next) {
+    async confirmTransactionCompletion(req, res, next) {
         try {
-            const role = req.user.acceptorGarageAt ? 'acceptorGarage' : 'garageOwner';
-            await transactionService.outsourcing.confirmTransactionCompletion(
+            const role = req.user.mechanicAt ? 'mechanic' : 'garageOwner';
+            await transactionService.dastyar.confirmTransactionCompletion(
                 req.params.transactionId,
                 req.user.id,
                 role
@@ -389,7 +385,7 @@ class OutSourcingNoticeController extends Controller {
      ******************************************************/
     async createComplaint(req, res, next) {
         try {
-            await complaintService.outsourcing.createComplaint(
+            await complaintService.dastyar.createComplaint(
                 req.params.transactionId,
                 req.user.id,
                 req.user.role,
@@ -407,12 +403,12 @@ class OutSourcingNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
+     /*******************************************************
      * 19. Regret And Remove A Complaint Request By It's Publisher
      ******************************************************/
     async regretComplaint(req, res, next) {
         try {
-            await complaintService.outsourcing.removeComplaint(
+            await complaintService.dastyar.removeComplaint(
                 req.params.complaintId,
                 req.user.id
             );
@@ -432,7 +428,7 @@ class OutSourcingNoticeController extends Controller {
      ******************************************************/
     async respondToComplaint(req, res, next) {
         try {
-            const updatedComplaint = await complaintService.outsourcing.respondToComplaint(
+            const updatedComplaint = await complaintService.dastyar.respondToComplaint(
                 req.params.complaintId,
                 req.user.id,
                 req.body,
@@ -450,14 +446,14 @@ class OutSourcingNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
+     /*******************************************************
      * 21. Add Rating And Comment For This Collaboration By Two Side Of It
      ******************************************************/
     async addReview(req, res, next) {
         try {
-            await transactionService.outsourcing.addReview(
+            await transactionService.dastyar.addReview(
                 req.user,
-                req.params.noticeOutSourcingId,
+                req.params.noticeDastyarId,
                 req.body
             );
             return res.status(HttpStatus.OK).json({
@@ -471,7 +467,7 @@ class OutSourcingNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
+     /*******************************************************
      * 22. Create A Conversation Space For This Collaboration By Two Side Of It
      ******************************************************/
     async createTransactionRoom(req, res, next) {
@@ -571,7 +567,7 @@ class OutSourcingNoticeController extends Controller {
         }
     }
 
-    /*******************************************************
+     /*******************************************************
      * 26. Mark This Messages As Read
      ******************************************************/
     async markMessagesAsRead(req, res, next) {
@@ -616,5 +612,5 @@ class OutSourcingNoticeController extends Controller {
 }
 
 module.exports = {
-    OutSourcingNoticeController: new OutSourcingNoticeController()
+    DivarNoticeController: new DivarNoticeController()
 };

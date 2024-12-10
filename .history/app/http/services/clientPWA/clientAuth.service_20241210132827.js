@@ -4,17 +4,10 @@ const { PrismaClient } = require("@prisma/client");
 const crypto = require('crypto');
 const prisma = new PrismaClient();
 const {logger} = require("../../../utils/logger/winston.js")
+const {redisClient} = require("../../../utils/initRedis.js");
 const { SignAccessToken, SignRefreshToken, VerifyRefreshToken } = require("../../middlewares/authorizationSystem.middleware.js");
-const {createRedisClient} = require("../../../utils/initRedis.js");
 
-// Ensure redisClient is properly initialized
-let redisClient;
-(async () => {
-    redisClient = await createRedisClient();
-    
-})();
-
-class UserAuthService {
+class ClientAuthService {
  
     generateHMAC(data) {
         const secret = process.env.HMAC_SECRET;
@@ -84,17 +77,17 @@ class UserAuthService {
             throw createHttpError.Unauthorized("کد ارسال شده صحیح نمی‌باشد");
         }
     
-        let user = await this.getUserFromCache(mobile);
-        let isNewUser = false;
-        if (!user) {
+        let client = await this.getClientFromCache(mobile);
+        let isNewClient = false;
+        if (!client) {
         // ایجاد کاربر جدید همراه با تنظیمات نوتیفیکیشن در یک تراکنش
         const result = await prisma.$transaction(async (prismaTx) => {
             // ایجاد یا به‌روزرسانی کاربر
-            const newUser = await this.createOrUpdateUser(mobile, prismaTx);
+            const newClient = await this.createOrUpdateClient(mobile, prismaTx);
             // ایجاد تنظیمات نوتیفیکیشن برای کاربر جدید
-            await prismaTx.userNotificationSettings.create({
+            await prismaTx.clientNotificationSettings.create({
                 data: {
-                    userId: newUser.id, // از newUser.id استفاده می‌کنیم
+                    clientId: newClient.id, // از newClient.id استفاده می‌کنیم
                     emailNotifications: true,
                     pushNotifications: true,
                     smsNotifications: true,
@@ -103,22 +96,22 @@ class UserAuthService {
                 }
             });
             // بررسی یا ایجاد دسته‌بندی نوتیفیکیشن
-            // const category = await prismaTx.notificationCategory.upsert({
-            //     where: { category: 'GENERAL' },
-            //     update: {},
-            //     create: { category: 'GENERAL' }
-            // });
+            const category = await prismaTx.notificationCategory.upsert({
+                where: { category: 'GENERAL' },
+                update: {},
+                create: { category: 'GENERAL' }
+            });
             // ایجاد نوتیفیکیشن خوشامدگویی
             await prismaTx.notification.create({
                 data: {
-                    userId: newUser.id, // از شناسه کاربر جدید استفاده می‌کنیم
+                    clientId: newClient.id, // از شناسه کاربر جدید استفاده می‌کنیم
                     type: 'SYSTEM',
                     title: 'خوش آمدید به سامانه',
                     message: `${mobile} عزیز، به سامانه ما خوش آمدید. امیدواریم تجربه خوبی داشته باشید.`,
                     priority: 'NORMAL',
                     status: 'PENDING',
                     metadata: {
-                        userMobile: mobile,
+                        clientMobile: mobile,
                         registrationIP: ip,
                         isFirstLogin: true
                     },
@@ -127,27 +120,27 @@ class UserAuthService {
                 }
             });
     
-            return newUser; // بازگرداندن کاربر جدید
+            return newClient; // بازگرداندن کاربر جدید
         });
     
-        user = result;
-        isNewUser = true;
+        client = result;
+        isNewClient = true;
     }
 
         const tokenData = {
-            userId: user.id,
+            clientId: client.id,
             timestamp: Date.now()
         };
         const hmac = this.generateHMAC(JSON.stringify(tokenData));
-        const accessToken = await SignAccessToken(user.id, hmac);
-        const refreshToken = await SignRefreshToken(user.id, hmac);
+        const accessToken = await SignAccessToken(client.id, hmac);
+        const refreshToken = await SignRefreshToken(client.id, hmac);
     
         logger.info('Successful Login', {
-            userId: user.id,
+            clientId: client.id,
             mobile,
             ip,
             timestamp: new Date(),
-            isNewUser
+            isNewClient
         });
     
         await redisClient.del(`otp:${mobile}`);
@@ -156,17 +149,17 @@ class UserAuthService {
         return { accessToken, refreshToken };
     }
 
-    async createOrUpdateUser(mobile) {
-        let user = await this.getUserFromCache(mobile);
-        if (!user) {
-            user = await prisma.user.findUnique({
+    async createOrUpdateClient(mobile) {
+        let client = await this.getClientFromCache(mobile);
+        if (!client) {
+            client = await prisma.client.findUnique({
                 where: { mobile },
                 select: {
                     id: true,
                     mobile: true,
                     isActive: true,
                     isSystemAdmin: true,
-                    userProfile: {
+                    clientProfile: {
                         select: {
                             first_name: true,
                             last_name: true,
@@ -177,35 +170,33 @@ class UserAuthService {
                 }
             });
     
-            if (!user) {
+            if (!client) {
                 // تراکنش فانکشنال برای ایجاد کاربر و پروفایل کاربر
-                user = await prisma.$transaction(async (prismaTx) => {
-                    const newUser = await prismaTx.user.create({
-                        data: { mobile,
-                            subscriptionStatus: 'JUSTAUTH',
-                         }
+                client = await prisma.$transaction(async (prismaTx) => {
+                    const newClient = await prismaTx.client.create({
+                        data: { mobile }
                     });
     
-                    await prismaTx.userProfile.create({
+                    await prismaTx.clientProfile.create({
                         data: {
-                            userId: newUser.id
+                            clientId: newClient.id
                         }
                     });
     
-                    return newUser; // بازگشت کاربر جدید
+                    return newClient; // بازگشت کاربر جدید
                 });
             }
     
             // تنظیم TTL کش بر اساس نوع کاربر
-            const cacheTime = user.isSystemAdmin ? 1800 : 3600;
-            await this.cacheUserWithTTL(user, cacheTime);
+            const cacheTime = client.isSystemAdmin ? 1800 : 3600;
+            await this.cacheClientWithTTL(client, cacheTime);
         }
-        return user;
+        return client;
     }
 
-    async generateTokens(userId, hmac) {
-        const accessToken = await SignAccessToken(userId, hmac);
-        const refreshToken = await SignRefreshToken(userId, hmac);
+    async generateTokens(clientId, hmac) {
+        const accessToken = await SignAccessToken(clientId, hmac);
+        const refreshToken = await SignRefreshToken(clientId, hmac);
         return { accessToken, refreshToken };
     }
 
@@ -228,34 +219,34 @@ class UserAuthService {
         }
     }
 
-    async cacheUser(user) {
+    async cacheClient(client) {
         try {
             const ttl = 3600;
-            await redisClient.SETEX(`user:${user.mobile}`, ttl, JSON.stringify(user));
+            await redisClient.SETEX(`client:${client.mobile}`, ttl, JSON.stringify(client));
         } catch (error) {
-            logger.error("Error caching user data:", error);
+            logger.error("Error caching client data:", error);
         }
     }
 
-    async getUserFromCache(mobile) {
+    async getClientFromCache(mobile) {
         try {
-            const cachedUser = await redisClient.get(`user:${mobile}`);
-            return cachedUser ? JSON.parse(cachedUser) : null;
+            const cachedClient = await redisClient.get(`client:${mobile}`);
+            return cachedClient ? JSON.parse(cachedClient) : null;
         } catch (error) {
-            logger.error("Error retrieving user from cache:", error);
+            logger.error("Error retrieving client from cache:", error);
             return null;
         }
     }
 
-    async cacheUserWithTTL(user, ttl) {
+    async cacheClientWithTTL(client, ttl) {
         try {
-            const cacheKey = `user:${user.mobile}`;
-            const userData = {
-                ...user,
+            const cacheKey = `client:${client.mobile}`;
+            const clientData = {
+                ...client,
                 cached_at: Date.now()
             };
-            await redisClient.SETEX(cacheKey, ttl, JSON.stringify(userData));
-            await redisClient.SADD('active_user_caches', cacheKey);
+            await redisClient.SETEX(cacheKey, ttl, JSON.stringify(clientData));
+            await redisClient.SADD('active_client_caches', cacheKey);
         } catch (error) {
             logger.error('Cache Error', { error: error.message });
         }
@@ -263,11 +254,11 @@ class UserAuthService {
 
     async cleanupExpiredCaches() {
         try {
-            const cacheKeys = await redisClient.SMEMBERS('active_user_caches');
+            const cacheKeys = await redisClient.SMEMBERS('active_client_caches');
             for (const key of cacheKeys) {
                 const exists = await redisClient.EXISTS(key);
                 if (!exists) {
-                    await redisClient.SREM('active_user_caches', key);
+                    await redisClient.SREM('active_client_caches', key);
                 }
             }
         } catch (error) {
@@ -275,15 +266,15 @@ class UserAuthService {
         }
     }
 
-    async invalidateAllUserTokens(userId) {
+    async invalidateAllClientTokens(clientId) {
         try {
-            const pattern = `user_tokens:${userId}:*`;
+            const pattern = `client_tokens:${clientId}:*`;
             const keys = await redisClient.keys(pattern);
             if (keys.length > 0) {
                 await redisClient.del(keys);
             }
         } catch (error) {
-            logger.error("Error invalidating user tokens:", error);
+            logger.error("Error invalidating client tokens:", error);
         }
     }
 
@@ -300,27 +291,27 @@ class UserAuthService {
         }
     }
 
-    async refreshUserToken(refreshToken) {
+    async refreshClientToken(refreshToken) {
         const isBlacklisted = await this.isTokenBlacklisted(refreshToken);
         if (isBlacklisted) throw createHttpError.Unauthorized("توکن معتبر نمی‌باشد.");
 
         const mobile = await VerifyRefreshToken(refreshToken);
-        let user = await this.getUserFromCache(mobile);
+        let client = await this.getClientFromCache(mobile);
         
-        if (!user) {
-            user = await prisma.user.findUnique({ where: { mobile } });
-            if (user) {
-                await this.cacheUser(user);
+        if (!client) {
+            client = await prisma.client.findUnique({ where: { mobile } });
+            if (client) {
+                await this.cacheClient(client);
             }
         }
 
-        const accessToken = await SignAccessToken(user.id);
-        const newRefreshToken = await SignRefreshToken(user.id);
+        const accessToken = await SignAccessToken(client.id);
+        const newRefreshToken = await SignRefreshToken(client.id);
 
         return { accessToken, refreshToken: newRefreshToken };
     }
 
-    async logoutUser(refreshToken) {
+    async logoutClient(refreshToken) {
         if (!refreshToken) throw createHttpError.BadRequest("توکن ورود لازم است");
         await this.addToBlacklist(refreshToken);
         return true;
@@ -338,7 +329,7 @@ class UserAuthService {
         }
     }
 
-    async completeUserProfile(userId, profileData) {
+    async completeClientProfile(clientId, profileData) {
         const {
             first_name,
             last_name,
@@ -349,18 +340,18 @@ class UserAuthService {
             expertices
         } = profileData;
 
-        const existingProfile = await prisma.userProfile.findUnique({
-            where: { userId }
+        const existingProfile = await prisma.clientProfile.findUnique({
+            where: { clientId }
         });
 
         if (existingProfile) {
             throw createHttpError.BadRequest("پروفایل قبلاً تکمیل شده است");
         }
 
-        const [userProfile, businessProfile] = await prisma.$transaction([
-            prisma.userProfile.create({
+        const [clientProfile, businessProfile] = await prisma.$transaction([
+            prisma.clientProfile.create({
                 data: {
-                    userId,
+                    clientId,
                     first_name,
                     last_name,
                     nationalIdNumber,
@@ -370,224 +361,98 @@ class UserAuthService {
             }),
             prisma.businessProfile.create({
                 data: {
-                    userId,
+                    clientId,
                     bussinesRole,
                     expertices
                 }
             })
         ]);
 
-        await this.cacheUser({
-            ...userProfile,
+        await this.cacheClient({
+            ...clientProfile,
             businessProfile
         });
 
-        return { userProfile, businessProfile };
+        return { clientProfile, businessProfile };
     }
 
-    async updateUserMobile(userId, newMobile, code) {
+    async updateClientMobile(clientId, newMobile, code) {
         const storedOtp = await redisClient.get(`otp:${newMobile}`);
         if (!storedOtp || storedOtp !== code) {
             throw createHttpError.Unauthorized("کد تایید نامعتبر است");
         }
 
-        const existingUser = await prisma.user.findUnique({
+        const existingClient = await prisma.client.findUnique({
             where: { mobile: newMobile }
         });
 
-        if (existingUser) {
+        if (existingClient) {
             throw createHttpError.Conflict("این شماره موبایل قبلاً ثبت شده است");
         }
 
-        const updatedUser = await prisma.user.update({
-            where: { id: userId },
+        const updatedClient = await prisma.client.update({
+            where: { id: clientId },
             data: { mobile: newMobile }
         });
 
-        await this.cacheUser(updatedUser);
+        await this.cacheClient(updatedClient);
         await redisClient.del(`otp:${newMobile}`);
 
-        return updatedUser;
+        return updatedClient;
     }
 
-    async deactivateUserAccount(userId) {
-        const user = await prisma.user.update({
-            where: { id: userId },
+    async deactivateClientAccount(clientId) {
+        const client = await prisma.client.update({
+            where: { id: clientId },
             data: { 
                 isActive: false,
                 deactivatedAt: new Date()
             }
         });
 
-        await this.invalidateAllUserTokens(userId);
-        await redisClient.del(`user:${user.mobile}`);
+        await this.invalidateAllClientTokens(clientId);
+        await redisClient.del(`client:${client.mobile}`);
 
-        return user;
+        return client;
     }
 
-    async reactivateUserAccount(mobile, code) {
+    async reactivateClientAccount(mobile, code) {
         const storedOtp = await redisClient.get(`otp:${mobile}`);
         if (!storedOtp || storedOtp !== code) {
             throw createHttpError.Unauthorized("کد تایید نامعتبر است");
         }
 
-        const user = await prisma.user.findUnique({
+        const client = await prisma.client.findUnique({
             where: { mobile }
         });
 
-        if (!user || user.isActive) {
+        if (!client || client.isActive) {
             throw createHttpError.BadRequest("حساب کاربری یافت نشد یا در حال حاضر فعال است");
         }
 
-        const updatedUser = await prisma.user.update({
-            where: { id: user.id },
+        const updatedClient = await prisma.client.update({
+            where: { id: client.id },
             data: { 
                 isActive: true,
                 deactivatedAt: null
             }
         });
 
-        const accessToken = await SignAccessToken(user.id);
-        const refreshToken = await SignRefreshToken(user.id);
+        const accessToken = await SignAccessToken(client.id);
+        const refreshToken = await SignRefreshToken(client.id);
 
-        await this.cacheUser(updatedUser);
+        await this.cacheClient(updatedClient);
 
         return {
-            user: updatedUser,
+            client: updatedClient,
             accessToken,
             refreshToken
         };
     }
 
-    async updateBusinessProfileInfo(userId, profileData) {
-        const {
-            mechanicPercentage,
-            apprenticePercentage,
-            bussinesRole,
-            expertices
-        } = profileData;
-
-        const businessProfile = await prisma.businessProfile.upsert({
-            where: { userId },
-            update: {
-                mechanicPercentage,
-                apprenticePercentage,
-                bussinesRole,
-                expertices
-            },
-            create: {
-                userId,
-                mechanicPercentage,
-                apprenticePercentage,
-                bussinesRole,
-                expertices
-            }
-        });
-
-        const user = await this.getUserFromCache(userId);
-        if (user) {
-            user.businessProfile = businessProfile;
-            await this.cacheUser(user);
-        }
-
-        return businessProfile;
-    }
-
-    async updateSocialProfileInfo(userId, socialLinks) {
-        return await prisma.socialProfile.upsert({
-            where: { userId },
-            update: { socialLinks },
-            create: {
-                userId,
-                socialLinks
-            }
-        });
-    }
-
-    async updateLocationInfo(userId, locationData) {
-        const {
-            province,
-            city,
-            location,
-            garageLat_Lng,
-            supplierStoreLat_Lng
-        } = locationData;
-
-        return await prisma.userProfile.update({
-            where: { userId },
-            data: {
-                province,
-                city,
-                location,
-                garageLat_Lng,
-                supplierStoreLat_Lng
-            }
-        });
-    }
-
-    async updateFinancialInfo(userId, { nationalIdNumber, bankAccountNumber }) {
-        const existingProfile = await prisma.userProfile.findFirst({
-            where: {
-                OR: [
-                    { nationalIdNumber },
-                    { bankAccountNumber }
-                ],
-                NOT: {
-                    userId
-                }
-            }
-        });
-
-        if (existingProfile) {
-            throw createHttpError.Conflict("اطلاعات وارد شده تکراری است");
-        }
-
-        return await prisma.userProfile.update({
-            where: { userId },
-            data: {
-                nationalIdNumber,
-                bankAccountNumber
-            }
-        });
-    }
-
-    async updateUserStatus(adminId, userId, status, reason) {
-        const admin = await prisma.user.findUnique({
-            where: { id: adminId }
-        });
-
-        if (!admin.isSystemAdmin) {
-            throw createHttpError.Forbidden("شما دسترسی لازم را ندارید");
-        }
-
-        const user = await prisma.user.update({
-            where: { id: userId },
-            data: {
-                status,
-                isSuspended: status === 'SUSPENDED'
-            }
-        });
-
-        await prisma.userStatusLog.create({
-            data: {
-                userId,
-                adminId,
-                oldStatus: user.status,
-                newStatus: status,
-                reason
-            }
-        });
-
-        if (status === 'SUSPENDED') {
-            await this.invalidateAllUserTokens(userId);
-        }
-
-        return user;
-    }
-
-    async updateProfileMedia(userId, { profileImageUrl, coverImageUrl }) {
-        return await prisma.userProfile.update({
-            where: { userId },
+    async updateProfileMedia(clientId, { profileImageUrl, coverImageUrl }) {
+        return await prisma.clientProfile.update({
+            where: { clientId },
             data: {
                 profileImageUrl,
                 coverImageUrl,
@@ -601,28 +466,7 @@ class UserAuthService {
         });
     }
 
-    async updateUserRoles(adminId, userId, roles) {
-        const admin = await prisma.user.findUnique({
-            where: { id: adminId }
-        });
-
-        if (!admin.isSystemAdmin) {
-            throw createHttpError.Forbidden("شما دسترسی لازم را ندارید");
-        }
-
-        await prisma.userRole.deleteMany({
-            where: { userId }
-        });
-
-        return await prisma.userRole.createMany({
-            data: roles.map(role => ({
-                userId,
-                role
-            }))
-        });
-    }
-
-    async resetUserPassword(mobile, code, newPassword) {
+    async resetClientPassword(mobile, code, newPassword) {
         const storedOtp = await redisClient.get(`otp:${mobile}`);
         if (!storedOtp || storedOtp !== code) {
             throw createHttpError.Unauthorized("کد تایید نامعتبر است");
@@ -630,7 +474,7 @@ class UserAuthService {
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-        const user = await prisma.user.update({
+        const client = await prisma.client.update({
             where: { mobile },
             data: {
                 password: hashedPassword,
@@ -638,14 +482,14 @@ class UserAuthService {
             }
         });
 
-        await this.invalidateAllUserTokens(user.id);
-        return user;
+        await this.invalidateAllClientTokens(client.id);
+        return client;
     }
 
-    async requestAccountDeletion(userId, reason) {
+    async requestAccountDeletion(clientId, reason) {
         await prisma.accountDeletionRequest.create({
             data: {
-                userId,
+                clientId,
                 reason,
                 status: 'PENDING'
             }
@@ -653,9 +497,9 @@ class UserAuthService {
 
         await prisma.notification.create({
             data: {
-                userId: null,
+                clientId: null,
                 type: 'DELETION_REQUEST',
-                content: `درخواست حذف حساب کاربری جدید از کاربر ${userId}`
+                content: `درخواست حذف حساب کاربری جدید از کاربر ${clientId}`
             }
         });
 
@@ -663,61 +507,62 @@ class UserAuthService {
     }
 }
 module.exports = {
-    UserAuthService
+    ClientAuthService
 };
 
+/*
+آها! بذارید دقیقاً توضیح بدم تفاوت این دو مدل رو:
+مدل Notification شما (مدل فعلی):
+این مدل برای نگهداری محتوای خود نوتیفیکیشن‌هاست
+هر رکورد در این جدول یک پیام/نوتیفیکیشن مجزاست
+مثال‌های کاربرد:
 
-// آها! بذارید دقیقاً توضیح بدم تفاوت این دو مدل رو:
-// مدل Notification شما (مدل فعلی):
-// این مدل برای نگهداری محتوای خود نوتیفیکیشن‌هاست
-// هر رکورد در این جدول یک پیام/نوتیفیکیشن مجزاست
-// مثال‌های کاربرد:
-
-// نمایش نوتیفیکیشن‌ها در پنل کاربری
-// تاریخچه نوتیفیکیشن‌های ارسال شده
-// ذخیره وضعیت خوانده شدن پیام‌ها
-// نگهداری محتوای پیام‌هایی که از طریق FCM ارسال شده‌اند
+نمایش نوتیفیکیشن‌ها در پنل کاربری
+تاریخچه نوتیفیکیشن‌های ارسال شده
+ذخیره وضعیت خوانده شدن پیام‌ها
+نگهداری محتوای پیام‌هایی که از طریق FCM ارسال شده‌اند
 
 
-// مدل UserNotificationSettings (مدل پیشنهادی جدید):
-// این مدل برای نگهداری تنظیمات و پیکربندی نوتیفیکیشن هر کاربر است
-// هر کاربر فقط یک رکورد در این جدول دارد
-// مثال‌های کاربرد:
+مدل ClientNotificationSettings (مدل پیشنهادی جدید):
+این مدل برای نگهداری تنظیمات و پیکربندی نوتیفیکیشن هر کاربر است
+هر کاربر فقط یک رکورد در این جدول دارد
+مثال‌های کاربرد:
 
-// ذخیره FCM token های کاربر
-// تنظیمات فعال/غیرفعال کردن انواع نوتیفیکیشن
-// ذخیره ترجیحات کاربر برای نحوه دریافت نوتیفیکیشن
-// در واقع، شما به هر دو مدل نیاز دارید:
+ذخیره FCM token های کاربر
+تنظیمات فعال/غیرفعال کردن انواع نوتیفیکیشن
+ذخیره ترجیحات کاربر برای نحوه دریافت نوتیفیکیشن
+در واقع، شما به هر دو مدل نیاز دارید:
 
-// مثال کاربرد هر دو مدل با هم
-async function sendPushNotification(userId, message) {
-    // دریافت تنظیمات نوتیفیشن کاربر
-    const userSettings = await prisma.userNotificationSettings.findUnique({
-        where: { userId }
+مثال کاربرد هر دو مدل با هم
+async function sendPushNotification(clientId, message) {
+    دریافت تنظیمات نوتیفیکیشن کاربر
+    const clientSettings = await prisma.clientNotificationSettings.findUnique({
+        where: { clientId }
     });
 
-    // چک کردن اینکه آیا کاربر push notification رو فعال کرده
-    if (!userSettings.pushNotifications) {
+    چک کردن اینکه آیا کاربر push notification رو فعال کرده
+    if (!clientSettings.pushNotifications) {
         return;
     }
 
-    // ارسال نوتیفیکیشن با FCM
-    await firebase.messaging().sendToDevice(userSettings.deviceTokens, {
+    ارسال نوتیفیکیشن با FCM
+    await firebase.messaging().sendToDevice(clientSettings.deviceTokens, {
         notification: {
             title: message.title,
             body: message.body
         }
     });
 
-    // ذخیره نوتیفیکیشن در دیتابیس
+    ذخیره نوتیفیکیشن در دیتابیس
     await prisma.notification.create({
         data: {
-            userId,
+            clientId,
             type: message.type,
             title: message.title,
             message: message.body,
             status: 'SENT',
-            // ... سایر فیلدها
+            ... سایر فیلدها
         }
     });
 }
+    */
