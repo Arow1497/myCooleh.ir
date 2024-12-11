@@ -2,15 +2,15 @@ const { StatusCodes: HttpStatus } = require("http-status-codes");
 const Controller = require("../../controller");
 const noticeService = require("../../../services/mainApp/forums/notice.service");
 
-class AgahiEstNiazController extends Controller {
-    
+class AgahiDivarController extends Controller {
+
     /********************************************************
-     * 1. Creating New EstNiaz Notice
+     * 1. Creating New Apprentice Notice
      *******************************************************/
     async create(req, res, next) {
         try {
             const notice = await noticeService.createNotice(
-                'noticeEstNiaz',
+                'noticeDivar',
                 req.body,
                 req.user.id,
                 req.files,
@@ -19,7 +19,7 @@ class AgahiEstNiazController extends Controller {
 
             return res.status(HttpStatus.CREATED).json({
                 statusCode: HttpStatus.CREATED,
-                data: { noticeEstNiaz: notice }
+                data: { noticeDivar: notice }
             });
         } catch (error) {
             next(error);
@@ -27,13 +27,13 @@ class AgahiEstNiazController extends Controller {
     }
 
     /********************************************************
-     * 2. Get List Of All EstNiaz Notices For Feed
+     * 2. Get List Of All Divar Notices For Feed
      *******************************************************/
     async getAll(req, res, next) {
         try {
             const { page, limit, sortBy, order } = req.query;
             const result = await noticeService.getAllNotices(
-                'noticeEstNiaz',
+                'noticeDivar',
                 page,
                 limit,
                 sortBy,
@@ -43,7 +43,7 @@ class AgahiEstNiazController extends Controller {
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: {
-                    noticeEstNiazs: result.notices,
+                    noticeDivars: result.notices,
                     pagination: result.pagination
                 }
             });
@@ -53,18 +53,18 @@ class AgahiEstNiazController extends Controller {
     }
 
     /********************************************************
-     * 3. Get This Specific EstNiaz Notice From User Feed
+     * 3. Get This Specific Divar Notice From User Feed
      *******************************************************/
     async getOne(req, res, next) {
         try {
             const notice = await noticeService.getNoticeById(
-                'noticeEstNiaz',
+                'noticeDivar',
                 req.params.id
             );
 
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
-                data: { noticeEstNiaz: notice }
+                data: { noticeDivar: notice }
             });
         } catch (error) {
             next(error);
@@ -72,12 +72,12 @@ class AgahiEstNiazController extends Controller {
     }
 
     /********************************************************
-     * 4. Edit This Specific EstNiaz Notice
+     * 4. Edit This Specific Divar Notice
      *******************************************************/
     async edit(req, res, next) {
         try {
             const notice = await noticeService.updateNotice(
-                'noticeEstNiaz',
+                'noticeDivar',
                 req.params.id,
                 req.body,
                 req.user.id,
@@ -87,7 +87,7 @@ class AgahiEstNiazController extends Controller {
 
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
-                data: { noticeEstNiaz: notice }
+                data: { noticeDivar: notice }
             });
         } catch (error) {
             next(error);
@@ -95,19 +95,19 @@ class AgahiEstNiazController extends Controller {
     }
 
     /********************************************************
-     * 5. Remove This Specific EstNiaz Notice
+     * 5. Remove This Specific Divar Notice
      *******************************************************/
     async remove(req, res, next) {
         try {
             await noticeService.deleteNotice(
-                'noticeEstNiaz',
+                'noticeDivar',
                 req.params.id,
                 req.user.id
             );
 
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
-                message: "NoticeEstNiaz deleted successfully"
+                message: "NoticeDivar deleted successfully"
             });
         } catch (error) {
             next(error);
@@ -115,12 +115,12 @@ class AgahiEstNiazController extends Controller {
     }
 
     /********************************************************
-     * 6. Get Bookmarked EstNiaz Notices For This User
+     * 6. Get Bookmarked Divar Notices For This User
      *******************************************************/
-    async getBookmarked(req, res, next) {
+    async getBookmarkedNoticesByUserId(req, res, next) {
         try {
-            const result = await noticeService.getBookmarkedNoticesByUserId(
-                'noticeEstNiaz',
+            const result = await noticeService.getBookmarkedNotiocesByUserId(
+                'noticeDivar',
                 req.params.userId,
                 req.params.noticeId,
                 req.query.page,
@@ -137,13 +137,13 @@ class AgahiEstNiazController extends Controller {
     }
 
     /********************************************************
-     * 7. Search A Specific EstNiaz Notice From Feed
+     * 7. Bookmark This Specific Divar Notice
      *******************************************************/
-    async search(req, res, next) {
+    async searchNoticeDivars(req, res, next) {
         try {
             const { q, page, limit } = req.query;
             const result = await noticeService.searchNotices(
-                'noticeEstNiaz',
+                'noticeDivar',
                 q,
                 page,
                 limit
@@ -152,7 +152,7 @@ class AgahiEstNiazController extends Controller {
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: {
-                    noticeEstNiazs: result.notices,
+                    noticeDivars: result.notices,
                     pagination: result.pagination
                 }
             });
@@ -162,13 +162,13 @@ class AgahiEstNiazController extends Controller {
     }
 
     /********************************************************
-     * 8. Reporting A EstNiaz Notice
+     * 8. Reporting A Divar Notice
      *******************************************************/
-    async report(req, res, next) {
+    async reportNoticeDivar(req, res, next) {
         try {
             const report = await noticeService.reportNotice(
-                'noticeEstNiaz',
-                req.params.noticeEstNiazId,
+                'noticeDivar',
+                req.params.noticeDivarId,
                 req.user.id,
                 req.body.reason,
                 req.body.description
@@ -183,13 +183,13 @@ class AgahiEstNiazController extends Controller {
         }
     }
 
-     /********************************************************
-     * 9. Bookmark This Specific EstNiaz Notice
+    /********************************************************
+     * 9. Bookmark This Specific Divar Notice
      *******************************************************/
     async toggleBookmark(req, res, next) {
         try {
             const bookmark = await noticeService.bookmarkNotice(
-                req.params.noticeEstNiazId,
+                req.params.noticeDivarId,
                 req.user.id
             );
 
@@ -203,13 +203,13 @@ class AgahiEstNiazController extends Controller {
     }
 
     /********************************************************
-     * 10. Share This Specific EstNiaz Notice
+     * 10. Share This Specific Divar Notice
      *******************************************************/
     async share(req, res, next) {
         try {
             const share = await noticeService.shareNotice(
-                'noticeEstNiaz',
-                req.params.noticeEstNiazId,
+                'noticeDivar',
+                req.params.noticeDivarId,
                 req.user.id,
                 req.body.platform,
                 req.body.customMessage,
@@ -227,5 +227,5 @@ class AgahiEstNiazController extends Controller {
 }
 
 module.exports = {
-    AgahiEstNiazController: new AgahiEstNiazController()
+    AgahiDivarController : new AgahiDivarController()
 }

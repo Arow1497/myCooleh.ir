@@ -28,7 +28,7 @@ class PostController extends Controller {
     }
 
     /********************************************************
-     * 2. Get All Post For Feed
+     * 2. Creating New Post
      *******************************************************/
   async getAllPosts(req, res, next) {
         try {
@@ -45,7 +45,7 @@ class PostController extends Controller {
     }
 
     /********************************************************
-     * 3. Get This Specific Post
+     * 3. Creating New Post
      *******************************************************/
   async getOnePostById(req, res, next) {
         try {
@@ -61,7 +61,7 @@ class PostController extends Controller {
     }
 
     /********************************************************
-     * 4. Edit This Specific Post
+     * 4. Creating New Post
      *******************************************************/
   async editPostById(req, res, next) {
         try {
@@ -83,7 +83,7 @@ class PostController extends Controller {
     }
 
     /********************************************************
-     * 5. Remove This Specific Post
+     * 5. Creating New Post
      *******************************************************/
   async removePostById(req, res, next) {
         try {
@@ -100,7 +100,7 @@ class PostController extends Controller {
 
     // Post Retrieval Operations
     /********************************************************
-     * 6. Get All Of User Posts
+     * 6. Creating New Post
      *******************************************************/
   async getPostsByUserId(req, res, next) {
         try {
@@ -120,7 +120,7 @@ class PostController extends Controller {
     }
 
     /********************************************************
-     * 7. Get All Of Platfor Trending Posts
+     * 7. Creating New Post
      *******************************************************/
   async getTrendingPosts(req, res, next) {
         try {
@@ -155,7 +155,7 @@ class PostController extends Controller {
 
     // Post Interaction Operations
     /********************************************************
-     * 9. Like This Specific Post
+     * 9. Creating New Post
      *******************************************************/
   async likePost(req, res, next) {
         try {
@@ -171,7 +171,7 @@ class PostController extends Controller {
     }
 
     /********************************************************
-     * 10. Dislike This Specific Post
+     * 10. Creating New Post
      *******************************************************/
   async dislikePost(req, res, next) {
         try {
@@ -187,7 +187,7 @@ class PostController extends Controller {
     }
 
     /********************************************************
-     * 11. Bookmark This Specific Post
+     * 11. Creating New Post
      *******************************************************/
   async bookmarkPost(req, res, next) {
         try {
@@ -203,7 +203,7 @@ class PostController extends Controller {
     }
 
     /********************************************************
-     * 12. Share This Specific Post
+     * 12. Creating New Post
      *******************************************************/
   async sharePost(req, res, next) {
         try {
@@ -225,7 +225,7 @@ class PostController extends Controller {
     }
 
     /********************************************************
-     * 13. Report This Specific Post
+     * 13. Creating New Post
      *******************************************************/
   async reportPost(req, res, next) {
         try {
@@ -248,7 +248,7 @@ class PostController extends Controller {
 
     // Comment Operations
     /********************************************************
-     * 14. Creating New Comment For This Post
+     * 14. Creating New Post
      *******************************************************/
   async createComment(req, res, next) {
         try {
@@ -270,7 +270,7 @@ class PostController extends Controller {
     }
 
     /********************************************************
-     * 15. Get All Comments Of This Post
+     * 15. Creating New Post
      *******************************************************/
   async getPostComments(req, res, next) {
         try {
@@ -465,7 +465,7 @@ class PostController extends Controller {
     }
 
     /********************************************************
-     * 25. Get All Posts Belongs To Specific Category
+     * 25. Creating New Post
      *******************************************************/
   async getPostsByCategory(req, res, next) {
         try {
@@ -483,7 +483,7 @@ class PostController extends Controller {
     }
 
     /********************************************************
-     * 26. Repost This Post
+     * 26. Creating New Post
      *******************************************************/
   async repost(req, res, next) {
         try {

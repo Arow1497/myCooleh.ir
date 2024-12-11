@@ -465,7 +465,7 @@ class PostController extends Controller {
     }
 
     /********************************************************
-     * 25. Get All Posts Belongs To Specific Category
+     * 25. Creating New Post
      *******************************************************/
   async getPostsByCategory(req, res, next) {
         try {
@@ -483,7 +483,7 @@ class PostController extends Controller {
     }
 
     /********************************************************
-     * 26. Repost This Post
+     * 26. Creating New Post
      *******************************************************/
   async repost(req, res, next) {
         try {
