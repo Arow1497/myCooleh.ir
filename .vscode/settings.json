@@ -15,7 +15,7 @@
     "color-highlight.matchWords": true,
     "bitoAI.codeCompletion.enableAutoCompletion": true,
     "bitoAI.codeCompletion.enableCommentToCode": true,
-    "editor.fontFamily": "Ubuntu-Title, monospace",
+    "editor.fontFamily": "Consolas, 'Courier New', monospace",
     "editor.fontLigatures": true,
     "editor.inlineSuggest.showToolbar": "onHover",
     "files.associations": {

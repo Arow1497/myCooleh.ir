@@ -1,8 +1,8 @@
-/* ClanPartTrading
+/*
 * همه اعضای کلن سر یک لیست قطعات پر مصرف به تفاهم میرسن 
 * هر گاراژ تعداد مورد نیاز از اون قطعه رو اضافه میکنه یک نفر میشه نماینده
 * قطعات رو میخرن بصورت عمده و سود قطعه علاوه بر سود تعمیر درامد رو بوست میکنه
-************/
+*/
 const createError = require("http-errors");
 const { StatusCodes: HttpStatus } = require("http-status-codes");
 const Controller = require("../controller");

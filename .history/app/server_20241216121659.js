@@ -166,25 +166,14 @@ module.exports = class Application {
         this.#app.use(helmet.contentSecurityPolicy(cspConfig));
 
         // Enhanced CORS configuration
-        // const corsOptions = {
-        //     origin: (origin, callback) => {
-        //         const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:7000'];
-        //         if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        //             callback(null, true);
-        //         } else {
-        //             callback(new Error('Not allowed by CORS'));
-        //         }
-        //     },
-        //     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-        //     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-        //     credentials: true,
-        //     maxAge: 86400,
-        //     optionsSuccessStatus: 200
-        // };
         const corsOptions = {
             origin: (origin, callback) => {
-                // Allow all origins
-                callback(null, true);
+                const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'];
+                if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+                    callback(null, true);
+                } else {
+                    callback(new Error('Not allowed by CORS'));
+                }
             },
             methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
             allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
@@ -411,19 +400,19 @@ module.exports = class Application {
       this.#app.use(errorHandler);
   }
 
-  createServer() {
-    const http = require("http");
-    const server = http.createServer(this.#app);
-    const io = initialSocket(server);
+    createServer() {
+        const http = require("http");
+        const server = http.createServer(this.#app);
+        const io = initialSocket(server);
 
-    server.listen(this.#PORT, '0.0.0.0', () => {
-        logger.info(`Server is running at http://0.0.0.0:${this.#PORT}`);
-    });
+        server.listen(this.#PORT,'0.0.0.0', () => {
+            logger.info(`Server is running at http://localhost:${this.#PORT}`);
+        });
 
-    server.on("error", (err) => {
-        logger.error("Server Error:", err);
-    });
-}
+        server.on("error", (err) => {
+            logger.error("Server Error:", err);
+        });
+    }
 
     async connectToMongoDB() {
         try {

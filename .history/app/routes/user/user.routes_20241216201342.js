@@ -8,7 +8,7 @@ router.post("/auth/request-otp", UserAuthController.requestOtp);
 router.post("/auth/verify-otp", UserAuthController.verifyOtp);
 router.post("/auth/refresh-token", UserAuthController.refreshToken);
 router.post("/auth/logout", UserAuthController.logout);
-// router.post("/auth/complete-profile", UserAuthController.completeProfile);
+router.post("/auth/complete-profile", UserAuthController.completeProfile);
 router.post("/auth/update-mobile", UserAuthController.updateMobile);
 router.post("/auth/deactivate-account", UserAuthController.deactivateAccount);
 router.post("/auth/reactivate-account", UserAuthController.reactivateAccount);

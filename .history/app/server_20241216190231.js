@@ -181,18 +181,7 @@ module.exports = class Application {
         //     maxAge: 86400,
         //     optionsSuccessStatus: 200
         // };
-        const corsOptions = {
-            origin: (origin, callback) => {
-                // Allow all origins
-                callback(null, true);
-            },
-            methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-            allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-            credentials: true,
-            maxAge: 86400,
-            optionsSuccessStatus: 200
-        };
-        this.#app.use(cors(corsOptions));
+        // this.#app.use(cors(corsOptions));
 
         // Rate Limiters
         this.#app.use(sensitivePathLimiter);
@@ -360,36 +349,36 @@ module.exports = class Application {
 
     setupErrorHandlers() {
       // Prisma Error handlers
-      this.#app.use((err, req, res, next) => {
-          if (err instanceof PrismaClientKnownRequestError) {
-              logger.error('Prisma Known Error:', err);
-              return res.status(400).json({
-                  status: 'error',
-                  message: 'Database operation failed',
-                  code: err.code,
-                  target: err.meta?.target || []
-              });
-          }
+    //   this.#app.use((err, req, res, next) => {
+    //       if (err instanceof PrismaClientKnownRequestError) {
+    //           logger.error('Prisma Known Error:', err);
+    //           return res.status(400).json({
+    //               status: 'error',
+    //               message: 'Database operation failed',
+    //               code: err.code,
+    //               target: err.meta?.target || []
+    //           });
+    //       }
           
-          if (err instanceof PrismaClientValidationError) {
-              logger.error('Prisma Validation Error:', err);
-              return res.status(400).json({
-                  status: 'error',
-                  message: 'Invalid data provided',
-                  details: err.message
-              });
-          }
+    //       if (err instanceof PrismaClientValidationError) {
+    //           logger.error('Prisma Validation Error:', err);
+    //           return res.status(400).json({
+    //               status: 'error',
+    //               message: 'Invalid data provided',
+    //               details: err.message
+    //           });
+    //       }
           
-          if (err instanceof PrismaClientUnknownRequestError) {
-              logger.error('Prisma Unknown Error:', err);
-              return res.status(500).json({
-                  status: 'error',
-                  message: 'Internal server error'
-              });
-          }
+    //       if (err instanceof PrismaClientUnknownRequestError) {
+    //           logger.error('Prisma Unknown Error:', err);
+    //           return res.status(500).json({
+    //               status: 'error',
+    //               message: 'Internal server error'
+    //           });
+    //       }
           
-          next(err);
-      });
+    //       next(err);
+    //   });
       // Enhanced catch-all error handler
       this.#app.use((err, req, res, next) => {
         const statusCode = err.statusCode || 500;
@@ -411,19 +400,19 @@ module.exports = class Application {
       this.#app.use(errorHandler);
   }
 
-  createServer() {
-    const http = require("http");
-    const server = http.createServer(this.#app);
-    const io = initialSocket(server);
+    createServer() {
+        const http = require("http");
+        const server = http.createServer(this.#app);
+        const io = initialSocket(server);
 
-    server.listen(this.#PORT, '0.0.0.0', () => {
-        logger.info(`Server is running at http://0.0.0.0:${this.#PORT}`);
-    });
+        server.listen(this.#PORT, () => {
+            logger.info(`Server is running at http://localhost:${this.#PORT}`);
+        });
 
-    server.on("error", (err) => {
-        logger.error("Server Error:", err);
-    });
-}
+        server.on("error", (err) => {
+            logger.error("Server Error:", err);
+        });
+    }
 
     async connectToMongoDB() {
         try {
