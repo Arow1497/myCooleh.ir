@@ -103,7 +103,7 @@
     "socket.io-redis": "^5.4.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
-    "systeminformation": "^5.23.5",
+    "systeminformation": "^5.27.14",
     "uuid": "^10.0.0",
     "validator": "^13.12.0",
     "winston": "^3.14.2",
